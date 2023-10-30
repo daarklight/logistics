@@ -1,8 +1,8 @@
 package com.tsystems.logistics.logistics_vp.enums;
 
 public enum TechnicalCondition {
-    OK("ok"),
-    NOK("nok");
+    OK("OK"),
+    NOK("NOK");
 
     TechnicalCondition(String technicalCondition) {
         this.technicalCondition = technicalCondition;

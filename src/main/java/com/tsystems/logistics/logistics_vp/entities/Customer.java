@@ -34,14 +34,14 @@ public class Customer {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "customer_authentication_id", referencedColumnName = "id")
-    private AuthenticationInfo customerAuthenticationInfo;
+    private AuthenticationInfo customerAuthenticationId;
 
     @Column(name = "customer_name", length = 50, nullable = false)
     private String customerName;
 
-    @Column(name = "phone", length = 25, nullable = false)
+    @Column(name = "phone", length = 25, nullable = false, unique = true)
     private String phone;
 
-    @Column(name = "email", length = 50, nullable = false)
+    @Column(name = "email", length = 50, nullable = false, unique = true)
     private String email;
 }

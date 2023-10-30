@@ -1,8 +1,8 @@
 package com.tsystems.logistics.logistics_vp.enums;
 
 public enum Loaded {
-    YES("yes"),
-    NO("no");
+    YES("YES"),
+    NO("NO");
 
     private String loaded;
 

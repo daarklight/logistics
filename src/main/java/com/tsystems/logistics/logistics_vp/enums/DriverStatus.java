@@ -1,8 +1,8 @@
 package com.tsystems.logistics.logistics_vp.enums;
 
 public enum DriverStatus {
-    REST("rest"),
-    DRIVING("driving");
+    REST("REST"),
+    DRIVING("DRIVING");
 
     private String driverStatus;
 

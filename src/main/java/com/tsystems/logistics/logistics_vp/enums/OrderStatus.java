@@ -2,12 +2,12 @@ package com.tsystems.logistics.logistics_vp.enums;
 
 public enum OrderStatus {
 
-    NEW("new"),
-    EXPECT_DRIVERS_CONFIRMATION("expect driver(s) confirmation"),
-    CONFIRMED("confirmed"),
-    DECLINED_BY_DRIVERS("declined by driver(s)"),
-    ON_ROAD("on road"),
-    COMPLETED("completed");
+    NEW("NEW"),
+    EXPECT_DRIVERS_CONFIRMATION("EXPECT_DRIVERS_CONFIRMATION"),
+    CONFIRMED("CONFIRMED"),
+    DECLINED_BY_DRIVERS("DECLINED_BY_DRIVERS"),
+    ON_ROAD("ON_ROAD"),
+    COMPLETED("COMPLETED");
 
     private String orderStatus;
 

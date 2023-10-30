@@ -22,14 +22,16 @@ public class Cargo {
     //order_for_cargo_id INT,
     //cargo_name VARCHAR(40) NOT NULL,
     //weight DECIMAL(3,1) NOT NULL,
-    //start_city_and_state VARCHAR(50) NOT NULL,
+    //start_city VARCHAR(30) NOT NULL,
+    //start_state VARCHAR(30) NOT NULL,
     //start_address VARCHAR(50) NOT NULL,
-    //loaded SET('yes','no') DEFAULT 'no',
-    //final_city_and_state VARCHAR(50) NOT NULL,
+    //loaded ENUM('YES','NO') DEFAULT 'NO',
+    //final_city VARCHAR(30) NOT NULL,
+    //final_state VARCHAR(30) NOT NULL,
     //final_address VARCHAR(50) NOT NULL,
-    //unloaded SET('yes','no') DEFAULT 'no',
-    //expected_completion_date_and_time DATETIME,
-    //real_completion_date_and_time DATETIME,
+    //unloaded ENUM('YES','NO') DEFAULT 'NO',
+    //expected_completion_date_time DATETIME,
+    //real_completion_date_time DATETIME,
     //PRIMARY KEY cargo_id_pk (cargo_id),
     //FOREIGN KEY order_id_fk (order_for_cargo_id) REFERENCES logistics.orders(order_id)
     //)
@@ -53,29 +55,35 @@ public class Cargo {
     @Column(name = "weight", nullable = false)
     private double weight;
 
-    @Column(name = "start_city_and_state", length = 50, nullable = false)
-    private String startCityAndState;
+    @Column(name = "start_city", length = 30, nullable = false)
+    private String startCity;
+
+    @Column(name = "start_state", length = 30, nullable = false)
+    private String startState;
 
     @Column(name = "start_address", length = 50, nullable = false)
     private String startAddress;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "loaded", columnDefinition = "ENUM('yes','no') DEFAULT 'no'")
+    @Column(name = "loaded", columnDefinition = "ENUM('YES','NO') DEFAULT 'NO'")
     private Loaded loaded;
 
-    @Column(name = "final_city_and_state", length = 50, nullable = false)
-    private String finalCityAndState;
+    @Column(name = "final_city", length = 30, nullable = false)
+    private String finalCity;
+
+    @Column(name = "final_state", length = 30, nullable = false)
+    private String finalState;
 
     @Column(name = "final_address", length = 50, nullable = false)
     private String finalAddress;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "unloaded", columnDefinition = "ENUM('yes','no') DEFAULT 'no'")
+    @Column(name = "unloaded", columnDefinition = "ENUM('YES','NO') DEFAULT 'NO'")
     private Unloaded unloaded;
 
-    @Column(name = "expected_completion_date_and_time")
-    private LocalDateTime expectedCompletionDateAndTime;
+    @Column(name = "expected_completion_date_time")
+    private LocalDateTime expectedCompletionDateTime;
 
-    @Column(name = "real_completion_date_and_time")
-    private LocalDateTime realCompletionDateAndTime;
+    @Column(name = "real_completion_date_time")
+    private LocalDateTime realCompletionDateTime;
 }

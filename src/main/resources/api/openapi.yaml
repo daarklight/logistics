@@ -1,0 +1,2964 @@
+openapi: 3.0.2
+info:
+  description: Logistics API provides services to find and manage entities for logistics
+  title: Logistics API
+  version: "1.0"
+  contact:
+    email: vladislavprokopenko1@gmail.com
+servers:
+  - url: http://localhost:8080
+
+tags:
+  - name: Truck
+    description: Endpoints to find and manage trucks
+  - name: Driver
+    description: Endpoints to find and manage drivers
+  - name: Customer
+    description: Endpoints to find and manage customers
+  - name: Logistician
+    description: Endpoints to find and manage logisticians
+  - name: Order
+    description: Endpoints to find and manage orders
+  - name: Cargo
+    description: Endpoints to find and manage cargos
+  - name: AuthenticationInfo
+    description: Endpoints to find and manage AuthenticationInfo
+
+
+
+paths:
+
+  /trucks:
+    get:
+      tags:
+        - Truck
+      summary: Find all Trucks
+      operationId: trucksFindAll
+      responses:
+        200:
+          description: Trucks were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Truck'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Trucks were not found
+        500:
+          description: Internal Server Error
+
+    post:
+      tags:
+        - Truck
+      summary: Create a new Truck
+      operationId: truckCreate
+      requestBody:
+        description: Truck object that needs to be added to truck list
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTruck'
+      responses:
+        201:
+          description: Truck was created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Truck'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        500:
+          description: Internal Server Error
+
+  /trucks/byLogistician/{number}:
+    patch:
+      tags:
+        - Truck
+      summary: Update Truck
+      operationId: truckUpdateByLogistician
+      parameters:
+        - name: number
+          in: path
+          description: "Truck number in proper format"
+          required: true
+          schema:
+            type: string
+            example: ABC1234
+      requestBody:
+        description: Truck object that needs to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTruckByLogistician'
+      responses:
+        200:
+          description: Truck was updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Truck'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        500:
+          description: Internal Server Error
+
+  /trucks/byDriver/{number}:
+    patch:
+      tags:
+        - Truck
+      summary: Update Truck
+      operationId: truckUpdateByDriver
+      parameters:
+        - name: number
+          in: path
+          description: "Truck number in proper format"
+          required: true
+          schema:
+            type: string
+            example: ABC1234
+      requestBody:
+        description: Truck object that needs to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTruckByDriver'
+      responses:
+        200:
+          description: Truck was updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Truck'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        500:
+          description: Internal Server Error
+
+  /trucks/{number}:
+    delete:
+      tags:
+        - Truck
+      summary: Delete Truck
+      operationId: truckDelete
+      parameters:
+        - name: number
+          in: path
+          description: "Truck number in proper format"
+          required: true
+          schema:
+            type: string
+            example: ABC1234
+      responses:
+        204:
+          description: Truck was deleted successfully
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: This truck number was not found
+        500:
+          description: Internal Server Error
+
+    get:
+      tags:
+        - Truck
+      summary: Find Truck by number
+      operationId: truckFindByNumber
+      parameters:
+        - name: number
+          in: path
+          description: "Truck number in proper format"
+          required: true
+          schema:
+            type: string
+            example: ABC1234
+      responses:
+        200:
+          description: Truck was found successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Truck'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: This truck number was not found
+        500:
+          description: Internal Server Error
+
+  /trucks/technicalCondition/{technicalConditionStatus}:
+    get:
+      tags:
+        - Truck
+      summary: Find Trucks by technical condition
+      operationId: trucksFindByTechnicalCondition
+      parameters:
+        - name: technicalConditionStatus
+          in: path
+          description: "Technical condition can be: OK / NOK"
+          required: true
+          schema:
+            type: string
+            example: OK
+      responses:
+        200:
+          description: Trucks in this technical condition were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Truck'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Trucks in this technical condition were not found
+        500:
+          description: Internal Server Error
+
+  /trucks/busy/{busyStatus}:
+    get:
+      tags:
+        - Truck
+      summary: Find Trucks by busy status
+      operationId: trucksFindByBusyStatus
+      parameters:
+        - name: busyStatus
+          in: path
+          description: "Busy status can be: YES / NO"
+          allowEmptyValue: false
+          required: true
+          schema:
+            type: string
+            enum: ["YES","NO"]
+            example: "NO"
+      responses:
+        200:
+          description: Trucks with defined busy status were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Truck'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Trucks with defined busy status were not found
+        500:
+          description: Internal Server Error
+
+  /trucks/currentCityAndState:
+    get:
+      tags:
+        - Truck
+      summary: Find Trucks by current city and state
+      operationId: trucksFindByCurrentCityAndState
+      parameters:
+        - in: query
+          name: city
+          description: Current city
+          allowEmptyValue: false
+          required: true
+          schema:
+            type: string
+            example: Chicago
+          allowReserved: false
+        - in: query
+          name: state
+          description: Current state
+          allowEmptyValue: false
+          required: true
+          schema:
+            type: string
+            example: Illinois
+          allowReserved: false
+      responses:
+        200:
+          description: Trucks were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Truck'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Trucks in this city and state were not found
+        500:
+          description: Internal Server Error
+
+
+
+  /drivers:
+    get:
+      tags:
+        - Driver
+      summary: Find all Drivers
+      operationId: driversFindAll
+      responses:
+        200:
+          description: Drivers were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Driver'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Drivers were not found
+        500:
+          description: Internal Server Error
+
+    post:
+      tags:
+        - Driver
+      summary: Create a new Driver
+      operationId: driverCreate
+      requestBody:
+        description: Driver object that needs to be added to driver list
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDriver'
+      responses:
+        201:
+          description: Driver was created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        500:
+          description: Internal Server Error
+
+  /drivers/byLogistician/{personalNumber}:
+    patch:
+      tags:
+        - Driver
+      summary: Update Driver
+      operationId: driverUpdateByLogistician
+      parameters:
+        - name: personalNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 153001
+      requestBody:
+        description: Driver object that needs to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDriverByLogistician'
+      responses:
+        200:
+          description: Driver was updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        404:
+          description: This personal number for driver was not found
+        403:
+          description: "Forbidden: User does not have permissions"
+        500:
+          description: Internal Server Error
+
+  /drivers/byDriver/{personalNumber}:
+    patch:
+      tags:
+        - Driver
+      summary: Update Driver
+      operationId: driverUpdateByDriver
+      parameters:
+        - name: personalNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 153001
+      requestBody:
+        description: Driver object that needs to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDriverByDriver'
+      responses:
+        200:
+          description: Driver was updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        404:
+          description: This personal number for driver was not found
+        403:
+          description: "Forbidden: User does not have permissions"
+        500:
+          description: Internal Server Error
+
+  /drivers/{personalNumber}:
+    delete:
+      tags:
+        - Driver
+      summary: Delete Driver
+      operationId: driverDelete
+      parameters:
+        - name: personalNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 153001
+      responses:
+        204:
+          description: Driver was deleted successfully
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: This personal number for driver was not found
+        500:
+          description: Internal Server Error
+
+    get:
+      tags:
+        - Driver
+      summary: Find Driver by personal number
+      operationId: driverFindById
+      parameters:
+        - name: personalNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 153001
+      responses:
+        200:
+          description: Driver was found successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: This personal number for driver was not found
+        500:
+          description: Internal Server Error
+
+  /drivers/nameAndSurname:
+    get:
+      tags:
+        - Driver
+      summary: Find Drivers by name and surname
+      operationId: driverFindByNameAndSurname
+      parameters:
+        - in: query
+          name: name
+          description: Driver's name
+          allowEmptyValue: false
+          required: true
+          schema:
+            type: string
+            example: John
+          allowReserved: false
+        - in: query
+          name: surname
+          description: Driver's surname
+          allowEmptyValue: false
+          required: true
+          schema:
+            type: string
+            example: Smith
+          allowReserved: false
+      responses:
+        200:
+          description: Driver(s) were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Driver'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Driver(s) with defined name and surname were not found
+        500:
+          description: Internal Server Error
+
+  /drivers/busy/{busyStatus}:
+    get:
+      tags:
+        - Driver
+      summary: Find Drivers by busy status
+      operationId: driversFindByBusyStatus
+      parameters:
+        - name: busyStatus
+          in: path
+          description: "Busy status can be: YES / NO"
+          allowEmptyValue: false
+          required: true
+          schema:
+            type: string
+            example: "NO"
+      responses:
+        200:
+          description: Drivers with defined busy status were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Driver'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Drivers with defined busy status were not found
+        500:
+          description: Internal Server Error
+
+  /drivers/currentCityAndState:
+    get:
+      tags:
+        - Driver
+      summary: Find Drivers by current city and state
+      operationId: driversFindByCurrentCityAndState
+      parameters:
+        - in: query
+          name: city
+          description: Current city
+          allowEmptyValue: false
+          required: true
+          schema:
+            type: string
+            example: Chicago
+          allowReserved: false
+        - in: query
+          name: state
+          description: Current state
+          allowEmptyValue: false
+          required: true
+          schema:
+            type: string
+            example: Illinois
+          allowReserved: false
+      responses:
+        200:
+          description: Drivers in this city and state were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Driver'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Drivers in this city and state were not found
+        500:
+          description: Internal Server Error
+
+  /drivers/{currentTruckNumber}:
+    get:
+      tags:
+        - Driver
+      summary: Find Drivers by current truck number
+      operationId: driversFindByCurrentTruckNumber
+      parameters:
+        - name: currentTruckNumber
+          in: path
+          required: true
+          schema:
+            type: string
+            example: ABC1234
+      responses:
+        200:
+          description: Driver(s) were found successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: No drivers were found in this Truck
+        500:
+          description: Internal Server Error
+
+  /drivers/{currentOrderId}:
+    get:
+      tags:
+        - Driver
+      summary: Find Drivers by currentOrderId
+      operationId: driversFindByCurrentOrderId
+      parameters:
+        - name: currentOrderId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 12001
+      responses:
+        200:
+          description: Driver(s) were found successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: No drivers were found for this currentOrderId
+        500:
+          description: Internal Server Error
+
+
+
+
+  /customers:
+    get:
+      tags:
+        - Customer
+      summary: Find all Customers
+      operationId: customersFindAll
+      responses:
+        200:
+          description: Customers were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Customers were not found
+        500:
+          description: Internal Server Error
+
+    post:
+      tags:
+        - Customer
+      summary: Create a new Customer
+      operationId: customerCreate
+      requestBody:
+        description: Customer object that needs to be added to customer list
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCustomer'
+      responses:
+        201:
+          description: Customer was created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        500:
+          description: Internal Server Error
+
+  /customers/{customerId}:
+    patch:
+      tags:
+        - Customer
+      summary: Update Customer
+      operationId: customerUpdate
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 5001
+      requestBody:
+        description: Customer object that needs to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCustomer'
+      responses:
+        200:
+          description: Customer was updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        404:
+          description: This customerId was not found
+        403:
+          description: "Forbidden: User does not have permissions"
+        500:
+          description: Internal Server Error
+
+    delete:
+      tags:
+        - Customer
+      summary: Delete Customer
+      operationId: customerDelete
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 5001
+      responses:
+        204:
+          description: Customer was deleted successfully
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: This customerId was not found
+        500:
+          description: Internal Server Error
+
+    get:
+      tags:
+        - Customer
+      summary: Find Customer by id
+      operationId: customerFindById
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 5001
+      responses:
+        200:
+          description: Customer was found successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: This customerId was not found
+        500:
+          description: Internal Server Error
+
+  /customers/phone:
+    get:
+      tags:
+        - Customer
+      summary: Find Customer by phone
+      operationId: customerFindByPhone
+      parameters:
+        - in: query
+          name: phone
+          description: "Customer phone number"
+          allowEmptyValue: false
+          required: true
+          schema:
+            type: string
+            example: "+1 245 250 9876"
+          allowReserved: true
+      responses:
+        200:
+          description: Customer was found successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Customer with defined phone number was not found
+        500:
+          description: Internal Server Error
+
+  /customers/email:
+    get:
+      tags:
+        - Customer
+      summary: Find Customer by email
+      operationId: customerFindByEmail
+      parameters:
+        - in: query
+          name: email
+          description: "Customer email"
+          allowEmptyValue: false
+          required: true
+          schema:
+            type: string
+            example: "best_customer@gmail.com"
+          allowReserved: true
+      responses:
+        200:
+          description: Customer was found successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Customer with defined email was not found
+        500:
+          description: Internal Server Error
+
+
+
+  /logisticians:
+    get:
+      tags:
+        - Logistician
+      summary: Find all Logisticians
+      operationId: logisticiansFindAll
+      responses:
+        200:
+          description: Logisticians were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Logistician'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Logisticians were not found
+        500:
+          description: Internal Server Error
+
+    post:
+      tags:
+        - Logistician
+      summary: Create a new Logistician
+      operationId: logisticianCreate
+      requestBody:
+        description: Logistician object that needs to be added to logistician list
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLogistician'
+      responses:
+        201:
+          description: Logistician was created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Logistician'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        500:
+          description: Internal Server Error
+
+  /logisticians/{personalNumber}:
+    patch:
+      tags:
+        - Logistician
+      summary: Update Logistician
+      operationId: logisticianUpdate
+      parameters:
+        - name: personalNumber
+          in: path
+          description: "Logistician personal number"
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 1201
+      requestBody:
+        description: Logistician object that needs to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLogistician'
+      responses:
+        200:
+          description: Logistician was updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Logistician'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        404:
+          description: This personal number for logistician was not found
+        403:
+          description: "Forbidden: User does not have permissions"
+        500:
+          description: Internal Server Error
+
+    delete:
+      tags:
+        - Logistician
+      summary: Delete Logistician
+      operationId: logisticianDelete
+      parameters:
+        - name: personalNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 1201
+      responses:
+        204:
+          description: Logistician was deleted successfully
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: This personal number for logistician was not found
+        500:
+          description: Internal Server Error
+
+    get:
+      tags:
+        - Logistician
+      summary: Find Logistician by id
+      operationId: logisticianFindById
+      parameters:
+        - name: personalNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 1201
+      responses:
+        200:
+          description: Logistician was found successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Logistician'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: This personal number for Logistician was not found
+        500:
+          description: Internal Server Error
+
+  /logisticians/{name}/{surname}:
+    get:
+      tags:
+        - Logistician
+      summary: Find Logisticians by name and surname
+      operationId: logisticianFindByNameAndSurname
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+            example: Paul
+        - name: surname
+          in: path
+          required: true
+          schema:
+            type: string
+            example: White
+      responses:
+        200:
+          description: Logistician(s) were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Logistician'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Logistician(s) with defined name and surname were not found
+        500:
+          description: Internal Server Error
+
+
+
+  /orders:
+    get:
+      tags:
+        - Order
+      summary: Find all Orders
+      operationId: ordersFindAll
+      responses:
+        200:
+          description: Orders were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Orders were not found
+        500:
+          description: Internal Server Error
+
+    post:
+      tags:
+        - Order
+      summary: Create a new Order
+      operationId: orderCreate
+      requestBody:
+        description: Order object that needs to be added to order list
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrder'
+      responses:
+        201:
+          description: Order was created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        500:
+          description: Internal Server Error
+
+  /orders/{orderId}:
+    patch:
+      tags:
+        - Order
+      summary: Update Order
+      operationId: orderUpdate
+      parameters:
+        - name: orderId
+          in: path
+          description: "Order id"
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 12001
+      requestBody:
+        description: Order object that needs to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrder'
+      responses:
+        200:
+          description: Order was updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: This orderId was not found
+        500:
+          description: Internal Server Error
+
+    delete:
+      tags:
+        - Order
+      summary: Delete Order
+      operationId: orderDelete
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 12001
+      responses:
+        204:
+          description: Order was deleted successfully
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: This orderId was not found
+        500:
+          description: Internal Server Error
+
+    get:
+      tags:
+        - Order
+      summary: Find Order by id
+      operationId: orderFindById
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 12001
+      responses:
+        200:
+          description: Order was found successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: This orderId was not found
+        500:
+          description: Internal Server Error
+
+  /orders/{orderCustomerId}:
+    get:
+      tags:
+        - Order
+      summary: Find Orders by orderCustomerId
+      operationId: orderFindByOrderCustomerId
+      parameters:
+        - name: orderCustomerId
+          in: path
+          description: "Customer id of Order"
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 5001
+      responses:
+        200:
+          description: Orders were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: This orderCustomerId was not found
+        500:
+          description: Internal Server Error
+
+  /orders/category/{category}:
+    get:
+      tags:
+        - Order
+      summary: Find Orders by category
+      operationId: orderFindByCategory
+      parameters:
+        - name: category
+          in: path
+          description: "Order category"
+          required: true
+          schema:
+            type: string
+            example: Papers
+      responses:
+        200:
+          description: Orders were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Orders with defined category were not found
+        500:
+          description: Internal Server Error
+
+  /orders/status/{status}:
+    get:
+      tags:
+        - Order
+      summary: Find Orders by status
+      operationId: orderFindByStatus
+      parameters:
+        - name: status
+          in: path
+          description: "Order status. Possible statuses: NEW, EXPECT_DRIVERS_CONFIRMATION, CONFIRMED, DECLINED_BY_DRIVERS, ON_ROAD, COMPLETED"
+          required: true
+          schema:
+            type: string
+            example: NEW
+      responses:
+        200:
+          description: Orders were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Orders with defined category were not found
+        500:
+          description: Internal Server Error
+
+  /orders/{assignedTruckNumber}:
+    get:
+      tags:
+        - Order
+      summary: Find Order by assignedTruckNumber
+      operationId: orderFindByAssignedTruckNumber
+      parameters:
+        - name: assignedTruckNumber
+          in: path
+          description: "Assigned Truck number for Order"
+          required: true
+          schema:
+            type: string
+            example: ABC1234
+      responses:
+        200:
+          description: Order was found successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: This orderCustomerId was not found
+        500:
+          description: Internal Server Error
+
+  /orders/earlier/startDateTime/{startDateTime}:
+    get:
+      tags:
+        - Order
+      summary: Find Orders with startDateTime earlier or equal to defined
+      operationId: orderFindByEarlierThanStartDateTime
+      parameters:
+        - name: startDateTime
+          in: path
+          description: "Start date time"
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        200:
+          description: Orders were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Orders with start date time earlier or equal to defined were not found
+        500:
+          description: Internal Server Error
+
+  /orders/later/startDateTime/{startDateTime}:
+    get:
+      tags:
+        - Order
+      summary: Find Orders with startDateTime later or equal to defined
+      operationId: orderFindByLaterThanStartDateTime
+      parameters:
+        - name: startDateTime
+          in: path
+          description: "Start date time"
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        200:
+          description: Orders were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Orders with start date time later or equal to defined were not found
+        500:
+          description: Internal Server Error
+
+  /orders/earlier/limitDateTime/{limitDateTime}:
+    get:
+      tags:
+        - Order
+      summary: Find Orders with limitDateTime earlier or equal to defined
+      operationId: orderFindByEarlierThanLimitDateTime
+      parameters:
+        - name: limitDateTime
+          in: path
+          description: "Limit date time"
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        200:
+          description: Orders were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Orders with limit date time earlier or equal to defined were not found
+        500:
+          description: Internal Server Error
+
+  /orders/later/limitDateTime/{limitDateTime}:
+    get:
+      tags:
+        - Order
+      summary: Find Orders with limitDateTime later or equal to defined
+      operationId: orderFindByLaterThanLimitDateTime
+      parameters:
+        - name: limitDateTime
+          in: path
+          description: "Limit date time"
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        200:
+          description: Orders were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Orders with limit date time later or equal to defined were not found
+        500:
+          description: Internal Server Error
+
+
+  /cargos:
+    get:
+      tags:
+        - Cargo
+      summary: Find all Cargos
+      operationId: cargosFindAll
+      responses:
+        200:
+          description: Cargos were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cargo'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Cargos were not found
+        500:
+          description: Internal Server Error
+
+    post:
+      tags:
+        - Cargo
+      summary: Create a new Cargo
+      operationId: cargoCreate
+      requestBody:
+        description: Cargo object that needs to be added to cargo list
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCargo'
+      responses:
+        201:
+          description: Cargo was created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cargo'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        500:
+          description: Internal Server Error
+
+  /cargos/byLogistician/{cargoId}:
+    patch:
+      tags:
+        - Cargo
+      summary: Update Cargo
+      operationId: cargoUpdateByLogistician
+      parameters:
+        - name: cargoId
+          in: path
+          description: "Cargo id"
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 1001
+      requestBody:
+        description: Cargo object that needs to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCargoByLogistician'
+      responses:
+        200:
+          description: Cargo was updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cargo'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        500:
+          description: Internal Server Error
+
+  /cargos/byDriver/{cargoId}:
+    patch:
+      tags:
+        - Cargo
+      summary: Update Cargo
+      operationId: cargoUpdateByDriver
+      parameters:
+        - name: cargoId
+          in: path
+          description: "Cargo id"
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 1001
+      requestBody:
+        description: Cargo object that needs to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCargoByDriver'
+      responses:
+        200:
+          description: Cargo was updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cargo'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        500:
+          description: Internal Server Error
+
+    delete:
+      tags:
+        - Cargo
+      summary: Delete Cargo
+      operationId: cargoDelete
+      parameters:
+        - name: cargoId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 1001
+      responses:
+        204:
+          description: Cargo was deleted successfully
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: This cargoId was not found
+        500:
+          description: Internal Server Error
+
+    get:
+      tags:
+        - Cargo
+      summary: Find Cargo by id
+      operationId: cargoFindById
+      parameters:
+        - name: cargoId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 1001
+      responses:
+        200:
+          description: Cargo was found successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cargo'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: This cargoId was not found
+        500:
+          description: Internal Server Error
+
+  /cargos/{orderForCargoId}:
+    get:
+      tags:
+        - Cargo
+      summary: Find Cargos by order id
+      operationId: cargoFindByOrderId
+      parameters:
+        - name: orderForCargoId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 12001
+      responses:
+        200:
+          description: Cargos were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cargo'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: This cargoId was not found
+        500:
+          description: Internal Server Error
+
+  /cargos/name/{name}:
+    get:
+      tags:
+        - Cargo
+      summary: Find Cargos by name
+      operationId: cargoFindByCargoName
+      parameters:
+        - name: name
+          in: path
+          description: "Cargo name"
+          required: true
+          schema:
+            type: string
+            example: "Super Cola"
+      responses:
+        200:
+          description: Cargos were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cargo'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Cargos with defined category were not found
+        500:
+          description: Internal Server Error
+
+  /cargos/startCityAndState:
+    get:
+      tags:
+        - Cargo
+      summary: Find Cargos by start city and state
+      operationId: cargoFindByStartCityAndState
+      parameters:
+        - in: query
+          name: city
+          description: Start city
+          allowEmptyValue: false
+          required: true
+          schema:
+            type: string
+            example: Pittsburgh
+          allowReserved: false
+        - in: query
+          name: state
+          description: Start state
+          allowEmptyValue: false
+          required: true
+          schema:
+            type: string
+            example: Pennsylvania
+          allowReserved: false
+      responses:
+        200:
+          description: Cargos were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cargo'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Cargos with defined start city and state were not found
+        500:
+          description: Internal Server Error
+
+  /cargos/startAddress/{startAddress}:
+    get:
+      tags:
+        - Cargo
+      summary: Find Cargos by start address
+      operationId: cargoFindByStartAddress
+      parameters:
+        - name: startAddress
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "2129 Bedford Ave"
+      responses:
+        200:
+          description: Cargos were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cargo'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Cargos with defined start address were not found
+        500:
+          description: Internal Server Error
+
+  /cargos/nonLoaded:
+    get:
+      tags:
+        - Cargo
+      summary: "Find Cargos by status loaded = NO"
+      operationId: cargoFindByNonLoaded
+      responses:
+        200:
+          description: Cargos were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cargo'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Non-loaded cargos were not found
+        500:
+          description: Internal Server Error
+
+  /cargos/loaded:
+    get:
+      tags:
+        - Cargo
+      summary: "Find Cargos by status loaded = YES"
+      operationId: cargoFindByLoaded
+      responses:
+        200:
+          description: Cargos were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cargo'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Loaded cargos were not found
+        500:
+          description: Internal Server Error
+
+  /cargos/finalCityAndState:
+    get:
+      tags:
+        - Cargo
+      summary: Find Cargos by final city and state
+      operationId: cargoFindByFinalCityAndState
+      parameters:
+        - in: query
+          name: city
+          description: Final city
+          allowEmptyValue: false
+          required: true
+          schema:
+            type: string
+            example: Columbus
+          allowReserved: false
+        - in: query
+          name: state
+          description: Final state
+          allowEmptyValue: false
+          required: true
+          schema:
+            type: string
+            example: Ohio
+          allowReserved: false
+      responses:
+        200:
+          description: Cargos were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cargo'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Cargos with defined final city and state were not found
+        500:
+          description: Internal Server Error
+
+  /cargos/finalAddress/{finalAddress}:
+    get:
+      tags:
+        - Cargo
+      summary: Find Cargos by final address
+      operationId: cargoFindByFinalAddress
+      parameters:
+        - name: finalAddress
+          in: path
+          description: "Cargo final address"
+          required: true
+          schema:
+            type: string
+            example: "480 E Broad St"
+      responses:
+        200:
+          description: Cargos were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cargo'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Cargos with defined final address were not found
+        500:
+          description: Internal Server Error
+
+  /cargos/nonUnloaded:
+    get:
+      tags:
+        - Cargo
+      summary: "Find Cargos by status unloaded = NO"
+      operationId: cargoFindByNonUnloaded
+      responses:
+        200:
+          description: Cargos were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cargo'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Non-unloaded cargos were not found
+        500:
+          description: Internal Server Error
+
+  /cargos/unloaded:
+    get:
+      tags:
+        - Cargo
+      summary: "Find Cargos by status unloaded = YES"
+      operationId: cargoFindByUnloaded
+      responses:
+        200:
+          description: Cargos were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cargo'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Unloaded cargos were not found
+        500:
+          description: Internal Server Error
+
+  /cargos/earlier/expectedCompletionDateTime/{expectedCompletionDateTime}:
+    get:
+      tags:
+        - Cargo
+      summary: Find Cargos with expected completion date time earlier or equal to defined
+      operationId: cargoFindByEarlierThanExpectedCompletionDateTime
+      parameters:
+        - name: expectedCompletionDateTime
+          in: path
+          description: "Expected completion date time"
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        200:
+          description: Cargos were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cargo'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Cargos with expected completion date time earlier or equal to defined were not found
+        500:
+          description: Internal Server Error
+
+  /cargos/later/expectedCompletionDateTime/{expectedCompletionDateTime}:
+    get:
+      tags:
+        - Cargo
+      summary: Find Cargos with expected completion date time later or equal to defined
+      operationId: cargoFindByLaterThanExpectedCompletionDateTime
+      parameters:
+        - name: expectedCompletionDateTime
+          in: path
+          description: "Expected completion date time"
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        200:
+          description: Cargos were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cargo'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Cargos with expected completion date time later or equal to defined were not found
+        500:
+          description: Internal Server Error
+
+  /cargos/earlier/realCompletionDateTime/{realCompletionDateTime}:
+    get:
+      tags:
+        - Cargo
+      summary: Find Cargos with real completion date time earlier or equal to defined
+      operationId: cargoFindByEarlierThanRealCompletionDateTime
+      parameters:
+        - name: realCompletionDateTime
+          in: path
+          description: "Real completion date time"
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        200:
+          description: Cargos were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cargo'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Cargos with real completion date time earlier or equal to defined were not found
+        500:
+          description: Internal Server Error
+
+  /cargos/later/realCompletionDateTime/{realCompletionDateTime}:
+    get:
+      tags:
+        - Cargo
+      summary: Find Cargos with real completion date time later or equal to defined
+      operationId: cargoFindByLaterThanRealCompletionDateTime
+      parameters:
+        - name: realCompletionDateTime
+          in: path
+          description: "Real completion date time"
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        200:
+          description: Cargos were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cargo'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Cargos with real completion date time later or equal to defined were not found
+        500:
+          description: Internal Server Error
+
+
+
+  /authenticationInfo:
+    get:
+      tags:
+        - AuthenticationInfo
+      summary: Find all AuthenticationInfos
+      operationId: authenticationInfoFindAll
+      responses:
+        200:
+          description: AuthenticationInfos were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuthenticationInfo'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: AuthenticationInfos were not found
+        500:
+          description: Internal Server Error
+
+    post:
+      tags:
+        - AuthenticationInfo
+      summary: Create a new AuthenticationInfo
+      operationId: authenticationInfoCreate
+      requestBody:
+        description: AuthenticationInfo object that needs to be added to AuthenticationInfo list
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthenticationInfo'
+      responses:
+        201:
+          description: AuthenticationInfo was created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationInfo'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        500:
+          description: Internal Server Error
+
+  /authenticationInfo/{id}:
+    patch:
+      tags:
+        - AuthenticationInfo
+      summary: Update AuthenticationInfo
+      operationId: authenticationInfoUpdate
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 12001
+      requestBody:
+        description: AuthenticationInfo object that needs to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthenticationInfo'
+      responses:
+        200:
+          description: AuthenticationInfo was updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationInfo'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        500:
+          description: Internal Server Error
+
+    delete:
+      tags:
+        - AuthenticationInfo
+      summary: Delete AuthenticationInfo
+      operationId: authenticationInfoDelete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 12001
+      responses:
+        204:
+          description: AuthenticationInfo was deleted successfully
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: This AuthenticationInfo id was not found
+        500:
+          description: Internal Server Error
+
+    get:
+      tags:
+        - AuthenticationInfo
+      summary: Find AuthenticationInfo by id
+      operationId: authenticationInfoFindById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 12001
+      responses:
+        200:
+          description: AuthenticationInfo was found successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationInfo'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: This AuthenticationInfo was not found
+        500:
+          description: Internal Server Error
+
+  /authenticationInfo/{login}:
+    get:
+      tags:
+        - AuthenticationInfo
+      summary: Find AuthenticationInfo by login
+      operationId: authenticationInfoFindByLogin
+      parameters:
+        - name: login
+          in: path
+          description: "AuthenticationInfo login"
+          required: true
+          schema:
+            type: string
+            example: john_smith
+      responses:
+        200:
+          description: AuthenticationInfo was found successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationInfo'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: AuthenticationInfo with defined login was not found
+        500:
+          description: Internal Server Error
+
+
+
+components:
+  schemas:
+
+    CreateTruck:
+      description: Object representing Truck creating
+      type: object
+      properties:
+        number:
+          type: string
+          example: ABC1234
+        model:
+          type: string
+          example: "Peterbilt 358"
+        capacity:
+          description: Truck capacity, tons
+          type: number
+          format: double
+          example: 15.4
+        totalOperatingTime:
+          description: Total operating time, years
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 50
+          example: 10
+        currentCity:
+          type: string
+          example: Chicago
+        currentState:
+          type: string
+          example: Illinois
+
+    UpdateTruckByLogistician:
+      description: Object representing Truck updating by Logistician
+      type: object
+      properties:
+        model:
+          type: string
+          example: "Peterbilt 358"
+        capacity:
+          description: Truck capacity, tons
+          type: number
+          format: double
+          example: 15.4
+        totalOperatingTime:
+          description: Total operating time, years
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 50
+          example: 10
+        technicalCondition:
+          type: string
+          enum: [OK,NOK]
+          default: OK
+        currentCity:
+          type: string
+          example: Chicago
+        currentState:
+          type: string
+          example: Illinois
+
+    UpdateTruckByDriver:
+      description: Object representing Truck updating by Driver
+      type: object
+      properties:
+        technicalCondition:
+          type: string
+          enum: [OK,NOK]
+          default: OK
+
+    Truck:
+      description: Object representing Truck
+      type: object
+      properties:
+        number:
+          type: string
+          example: ABC1234
+        model:
+          type: string
+          example: "Peterbilt 358"
+        capacity:
+          description: Truck capacity, tons
+          type: number
+          format: double
+          example: 15.4
+        totalOperatingTime:
+          description: Total operating time, years
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 50
+          example: 10
+        technicalCondition:
+          type: string
+          enum: [OK,NOK]
+          default: OK
+        busy:
+          description: Busy status
+          type: string
+          enum: ["YES","NO"]
+          default: "NO"
+        currentCity:
+          type: string
+          example: Chicago
+        currentState:
+          type: string
+          example: Illinois
+
+
+
+    CreateDriver:
+      description: Object representing Driver creating
+      type: object
+      properties:
+        name:
+          type: string
+          example: John
+        surname:
+          type: string
+          example: Smith
+        workExperience:
+          type: integer
+          format: int32
+          example: 5
+          minimum: 0
+          maximum: 50
+        workingHoursInCurrentMonth:
+          type: integer
+          format: int32
+          example: 10
+          minimum: 0
+          maximum: 176
+        currentCity:
+          type: string
+          example: Chicago
+        currentState:
+          type: string
+          example: Illinois
+
+    UpdateDriverByLogistician:
+      description: Object representing Driver updating by Logistician
+      type: object
+      properties:
+        name:
+          type: string
+          example: John
+        surname:
+          type: string
+          example: Smith
+        workExperience:
+          type: integer
+          format: int32
+          example: 5
+          minimum: 0
+          maximum: 50
+        workingHoursInCurrentMonth:
+          type: integer
+          format: int32
+          example: 10
+          minimum: 0
+          maximum: 176
+        currentCity:
+          type: string
+          example: Chicago
+        currentState:
+          type: string
+          example: Illinois
+        currentTruckNumber:
+          type: string
+          example: ABC1234
+
+    UpdateDriverByDriver:
+      description: Object representing Driver updating dy Driver
+      type: object
+      properties:
+        status:
+          description: rest/driving status
+          type: string
+          enum: [REST, DRIVING]
+          default: REST
+
+    Driver:
+      description: Object representing Driver
+      type: object
+      properties:
+        personalNumber:
+          type: integer
+          format: int32
+          example: 153001
+        driverAuthenticationId:
+          type: integer
+          format: int32
+          example: 153001
+        name:
+          type: string
+          example: John
+        surname:
+          type: string
+          example: Smith
+        workExperience:
+          type: integer
+          format: int32
+          example: 5
+          minimum: 0
+          maximum: 50
+        workingHoursInCurrentMonth:
+          type: integer
+          format: int32
+          example: 10
+          minimum: 0
+          maximum: 176
+        status:
+          description: rest/driving status
+          type: string
+          enum: [REST,DRIVING]
+          default: REST
+        busy:
+          description: Busy status
+          type: string
+          enum: ["YES","NO"]
+          default: "NO"
+        currentCity:
+          type: string
+          example: Chicago
+        currentState:
+          type: string
+          example: Illinois
+        currentTruckNumber:
+          type: string
+          example: ABC1234
+        currentOrderId:
+          type: integer
+          format: int32
+          example: 12001
+
+
+
+    CreateCustomer:
+      description: Object representing Customer creating
+      type: object
+      properties:
+        customerName:
+          type: string
+          example: Best Customer
+        phone:
+          type: string
+          example: "+1 245 250 9876"
+        email:
+          type: string
+          example: best_customer@gmail.com
+
+    UpdateCustomer:
+      description: Object representing Customer updating
+      type: object
+      properties:
+        customerName:
+          type: string
+          example: Best Customer
+        phone:
+          type: string
+          example: "+1 245 250 9876"
+        email:
+          type: string
+          example: best_customer@gmail.com
+
+    Customer:
+      description: Object representing Customer
+      type: object
+      properties:
+        customerId:
+          type: integer
+          format: int32
+          example: 5001
+        customerAuthenticationId:
+          type: integer
+          format: int32
+          example: 5001
+        customerName:
+          type: string
+          example: Best Customer
+        phone:
+          type: string
+          example: "+1 245 250 9876"
+        email:
+          type: string
+          example: best_customer@gmail.com
+
+
+
+    CreateLogistician:
+      description: Object representing Logistician creating
+      type: object
+      properties:
+        name:
+          type: string
+          example: Paul
+        surname:
+          type: string
+          example: White
+
+    UpdateLogistician:
+      description: Object representing Logistician updating
+      type: object
+      properties:
+        name:
+          type: string
+          example: Paul
+        surname:
+          type: string
+          example: White
+
+    Logistician:
+      description: Object representing Logistician
+      type: object
+      properties:
+        personalNumber:
+          type: integer
+          format: int32
+          example: 1201
+        logisticianAuthenticationId:
+          type: integer
+          format: int32
+          example: 1201
+        name:
+          type: string
+          example: Paul
+        surname:
+          type: string
+          example: White
+
+
+
+    CreateOrder:
+      description: Object representing Order creating
+      type: object
+      properties:
+        orderCustomerId:
+          type: integer
+          format: int32
+          example: 5001
+        category:
+          type: string
+          example: Papers
+        weight:
+          description: Total order weight, tons
+          type: number
+          format: double
+          example: 14.2
+        limitDateTime:
+          type: string
+          format: date-time
+
+    UpdateOrder:
+      description: Object representing Order updating
+      type: object
+      properties:
+        orderCustomerId:
+          type: integer
+          format: int32
+          example: 5001
+        category:
+          type: string
+          example: Papers
+        weight:
+          description: Total order weight, tons
+          type: number
+          format: double
+          example: 14.2
+        status:
+          type: string
+          enum: [NEW,EXPECT_DRIVERS_CONFIRMATION,CONFIRMED,DECLINED_BY_DRIVERS,ON_ROAD,COMPLETED]
+          default: NEW
+        limitDateTime:
+          type: string
+          format: date-time
+
+    Order:
+      description: Object representing Order
+      type: object
+      properties:
+        orderId:
+          type: integer
+          format: int32
+          example: 12001
+        orderCustomerId:
+          type: integer
+          format: int32
+          example: 5001
+        category:
+          type: string
+          example: Papers
+        weight:
+          description: Total order weight, tons
+          type: number
+          format: double
+          example: 14.2
+        status:
+          type: string
+          enum: [NEW,EXPECT_DRIVERS_CONFIRMATION,CONFIRMED,DECLINED_BY_DRIVERS,ON_ROAD,COMPLETED]
+          default: NEW
+        startDateTime:
+          type: string
+          format: date-time
+        limitDateTime:
+          type: string
+          format: date-time
+        assignedTruckNumber:
+          type: string
+          example: ABC1234
+        driverComment:
+          type: string
+          example: I'm not going to drive with Sam
+
+
+
+    CreateCargo:
+      description: Object representing Cargo creating
+      type: object
+      properties:
+        orderForCargoId:
+          type: integer
+          format: int32
+          example: 12001
+        cargoName:
+          type: string
+          example: Super Cola
+        weight:
+          description: Cargo weight, tons
+          type: number
+          format: double
+          example: 5.6
+        startCity:
+          type: string
+          example: Pittsburgh
+        startState:
+          type: string
+          example: Pennsylvania
+        startAddress:
+          type: string
+          example: "2129 Bedford Ave"
+        finalCity:
+          type: string
+          example: Columbus
+        finalState:
+          type: string
+          example: Ohio
+        finalAddress:
+          type: string
+          example: "480 E Broad St"
+
+    UpdateCargoByLogistician:
+      description: Object representing Cargo updating by Logistician
+      type: object
+      properties:
+        orderForCargoId:
+          type: integer
+          format: int32
+          example: 12001
+        cargoName:
+          type: string
+          example: Super Cola
+        weight:
+          description: Cargo weight, tons
+          type: number
+          format: double
+          example: 5.6
+        startCity:
+          type: string
+          example: Pittsburgh
+        startState:
+          type: string
+          example: Pennsylvania
+        startAddress:
+          type: string
+          example: "2129 Bedford Ave"
+        finalCity:
+          type: string
+          example: Columbus
+        finalState:
+          type: string
+          example: Ohio
+        finalAddress:
+          type: string
+          example: "480 E Broad St"
+
+    UpdateCargoByDriver:
+      description: Object representing Cargo updating by Driver
+      type: object
+      properties:
+        loaded:
+          description: Loading status
+          type: string
+          enum: ["YES","NO"]
+          default: "NO"
+        unloaded:
+          description: Unloading status
+          type: string
+          enum: ["YES","NO"]
+          default: "NO"
+
+    Cargo:
+      description: Object representing Cargo
+      type: object
+      properties:
+        cargoId:
+          type: integer
+          format: int32
+          example: 1001
+        orderForCargoId:
+          type: integer
+          format: int32
+          example: 12001
+        cargoName:
+          type: string
+          example: Super Cola
+        weight:
+          description: Cargo weight, tons
+          type: number
+          format: double
+          example: 5.6
+        startCity:
+          type: string
+          example: Pittsburgh,
+        startState:
+          type: string
+          example: Pennsylvania
+        startAddress:
+          type: string
+          example: "2129 Bedford Ave"
+        loaded:
+          description: Loading status
+          type: string
+          enum: ["YES","NO"]
+          default: "NO"
+        finalCity:
+          type: string
+          example: Columbus
+        finalState:
+          type: string
+          example: Ohio
+        finalAddress:
+          type: string
+          example: "480 E Broad St"
+        unloaded:
+          description: Unloading status
+          type: string
+          enum: ["YES","NO"]
+          default: "NO"
+        expectedCompletionDateTime:
+          type: string
+          format: date-time
+        realCompletionDateTime:
+          type: string
+          format: date-time
+
+
+
+    AuthenticationInfo:
+      description: Object representing AuthenticationInfo
+      type: object
+      properties:
+        personalNumber:
+          type: integer
+          format: int32
+          example: 1201
+        login:
+          type: string
+          example: john_smith
+        password:
+          type: string
+          example: smith111

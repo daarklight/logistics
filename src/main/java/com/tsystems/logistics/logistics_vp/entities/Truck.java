@@ -22,9 +22,10 @@ public class Truck {
     //model VARCHAR(30) NOT NULL,
     //capacity DECIMAL(3,1) NOT NULL,
     //total_operating_time INT,
-    //technical_condition ENUM('ok','nok') DEFAULT 'ok',
-    //busy ENUM('yes','no') DEFAULT 'no',
-    //current_city_and_state VARCHAR(50) NOT NULL,
+    //technical_condition ENUM('OK','NOK') DEFAULT 'OK',
+    //busy ENUM('YES','NO') DEFAULT 'NO',
+    //current_city VARCHAR(30) NOT NULL,
+    //current_state VARCHAR(30) NOT NULL,
     //PRIMARY KEY number_pk (number)
     //);
 
@@ -42,15 +43,18 @@ public class Truck {
     private int totalOperatingTime;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "technical_condition", columnDefinition = "ENUM('ok','nok') DEFAULT 'ok'")
+    @Column(name = "technical_condition", columnDefinition = "ENUM('OK','NOK') DEFAULT 'OK'")
     private TechnicalCondition technicalCondition;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "busy", columnDefinition = "ENUM('yes','no') DEFAULT 'no'")
+    @Column(name = "busy", columnDefinition = "ENUM('YES','NO') DEFAULT 'NO'")
     private Busy busy;
 
-    @Column(name = "current_city_and_state", columnDefinition = "ENUM('yes','no') DEFAULT 'no'", length = 50, nullable = false)
-    private String currentCityAndState;
+    @Column(name = "current_city", length = 30, nullable = false)
+    private String currentCity;
+
+    @Column(name = "current_state", length = 30, nullable = false)
+    private String currentState;
 
     // Do we need fetch = FetchType.LAZY ???
     @OneToMany(mappedBy = "currentTruckNumber")

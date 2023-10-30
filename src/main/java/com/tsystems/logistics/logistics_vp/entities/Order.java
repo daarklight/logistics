@@ -22,10 +22,11 @@ public class Order {
     //order_customer_id INT,
     //category VARCHAR(40) NOT NULL,
     //weight DECIMAL(3,1) NOT NULL,
-    //status ENUM('new','expect driver(s) confirmation','confirmed','declined by driver(s)','on road','completed') DEFAULT 'new',
-    //start_date_and_time DATETIME,
-    //limit_date_and_time DATETIME NOT NULL,
+    //status ENUM('NEW','EXPECT_DRIVERS_CONFIRMATION','CONFIRMED','DECLINED_BY_DRIVERS','ON_ROAD','COMPLETED') DEFAULT 'NEW',
+    //start_date_time DATETIME,
+    //limit_date_time DATETIME NOT NULL,
     //assigned_truck_number VARCHAR(7),
+    //driver_comment VARCHAR(120),
     //PRIMARY KEY order_id_pk (order_id),
     //FOREIGN KEY truck_number_fk (assigned_truck_number) REFERENCES logistics.trucks(number),
     //FOREIGN KEY order_customer_id_fk (order_customer_id) REFERENCES logistics.customers(customer_id)
@@ -47,17 +48,21 @@ public class Order {
     private double weight;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", columnDefinition = "ENUM('new','expect driver(s) confirmation','confirmed','declined by driver(s)','on road','completed') DEFAULT 'new'")
+    @Column(name = "status", columnDefinition =
+            "ENUM('NEW','EXPECT_DRIVERS_CONFIRMATION','CONFIRMED','DECLINED_BY_DRIVERS','ON_ROAD','COMPLETED') DEFAULT 'NEW'")
     private OrderStatus status;
 
-    @Column(name = "start_date_and_time")
-    private LocalDateTime startDateAndTime;
+    @Column(name = "start_date_time")
+    private LocalDateTime startDateTime;
 
-    @Column(name = "limit_date_and_time", nullable = false)
-    private LocalDateTime limitDateAndTime;
+    @Column(name = "limit_date_time", nullable = false)
+    private LocalDateTime limitDateTime;
 
     @Column(name = "assigned_truck_number", length = 7)
     private String assignedTruckNumber;
+
+    @Column(name = "driver_comment", length = 120)
+    private String driverComment;
 
     // Do we need fetch = FetchType.LAZY ???
     @OneToMany(mappedBy = "currentOrderId")

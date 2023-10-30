@@ -22,9 +22,10 @@ public class Driver {
     //surname VARCHAR(35) NOT NULL,
     //work_experience INT,
     //working_hours_in_current_month INT,
-    //status SET('rest','driving') DEFAULT 'rest',
-    //busy SET('yes','no') DEFAULT 'no',
-    //current_city_and_state VARCHAR(50) NOT NULL,
+    //status ENUM('REST','DRIVING') DEFAULT 'REST',
+    //busy ENUM('YES','NO') DEFAULT 'NO',
+    //current_city VARCHAR(30) NOT NULL,
+    //current_state VARCHAR(30) NOT NULL,
     //current_truck_number VARCHAR(7),
     //current_order_id INT,
     //CONSTRAINT chk_working_hours CHECK (working_hours_in_current_month BETWEEN 0 AND 176),
@@ -45,7 +46,7 @@ public class Driver {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "driver_authentication_id", referencedColumnName = "id")
-    private AuthenticationInfo driverAuthenticationInfo;
+    private AuthenticationInfo driverAuthenticationId;
 
     @Column(name = "name", length = 35, nullable = false)
     private String name;
@@ -60,15 +61,18 @@ public class Driver {
     private int workingHoursInCurrentMonth;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", columnDefinition = "ENUM('rest','driving') DEFAULT 'rest'")
+    @Column(name = "status", columnDefinition = "ENUM('REST','DRIVING') DEFAULT 'REST'")
     private DriverStatus status;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "busy", columnDefinition = "ENUM('yes','no') DEFAULT 'no'")
+    @Column(name = "busy", columnDefinition = "ENUM('YES','NO') DEFAULT 'NO'")
     private Busy busy;
 
-    @Column(name = "current_city_and_state", length = 50, nullable = false)
-    private String currentCityAndState;
+    @Column(name = "current_city", length = 30, nullable = false)
+    private String currentCity;
+
+    @Column(name = "current_state", length = 30, nullable = false)
+    private String currentState;
 
 //    @Column(name = "current_truck_number", length = 7)
 //    private String currentTruckNumber;

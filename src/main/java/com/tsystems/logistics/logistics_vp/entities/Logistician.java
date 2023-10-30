@@ -32,7 +32,7 @@ public class Logistician {
 //    private int logisticianAuthenticationId;
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "logistician_authentication_id", referencedColumnName = "id")
-    private AuthenticationInfo logisticianAuthenticationInfo;
+    private AuthenticationInfo logisticianAuthenticationId;
 
     @Column(name = "name", length = 35, nullable = false)
     private String name;

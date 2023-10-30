@@ -31,12 +31,12 @@ public class AuthenticationInfo {
     @Column(name = "password", length = 40, nullable = false)
     private String password;
 
-    @OneToOne(mappedBy = "customerAuthenticationInfo")
+    @OneToOne(mappedBy = "customerAuthenticationId")
     private Customer customer;
 
-    @OneToOne(mappedBy = "driverAuthenticationInfo")
+    @OneToOne(mappedBy = "driverAuthenticationId")
     private Driver driver;
 
-    @OneToOne(mappedBy = "logisticianAuthenticationInfo")
+    @OneToOne(mappedBy = "logisticianAuthenticationId")
     private Logistician logistician;
 }
