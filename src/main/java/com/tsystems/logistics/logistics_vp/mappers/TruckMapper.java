@@ -7,7 +7,6 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface TruckMapper {
-    //https://mapstruct.org/
     TruckMapper INSTANCE = Mappers.getMapper(TruckMapper.class);
     TruckDto truckToTruckDto(Truck truck);
 }

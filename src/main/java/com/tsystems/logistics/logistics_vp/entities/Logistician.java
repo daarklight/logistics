@@ -1,10 +1,7 @@
 package com.tsystems.logistics.logistics_vp.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "logisticians", schema = "logistics")
@@ -12,6 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Logistician {
     //CREATE TABLE logistics.logisticians (
     //personal_number INT NOT NULL AUTO_INCREMENT,

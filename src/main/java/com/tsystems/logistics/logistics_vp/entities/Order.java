@@ -2,10 +2,7 @@ package com.tsystems.logistics.logistics_vp.entities;
 
 import com.tsystems.logistics.logistics_vp.enums.OrderStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,6 +13,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Order {
     //CREATE TABLE logistics.orders (
     //order_id INT NOT NULL AUTO_INCREMENT,
@@ -50,7 +48,7 @@ public class Order {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", columnDefinition =
             "ENUM('NEW','EXPECT_DRIVERS_CONFIRMATION','CONFIRMED','DECLINED_BY_DRIVERS','ON_ROAD','COMPLETED') DEFAULT 'NEW'")
-    private OrderStatus status;
+    private OrderStatus status = OrderStatus.NEW;
 
     @Column(name = "start_date_time")
     private LocalDateTime startDateTime;

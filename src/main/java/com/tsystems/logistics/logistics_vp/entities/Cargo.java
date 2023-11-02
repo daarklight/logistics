@@ -3,10 +3,7 @@ package com.tsystems.logistics.logistics_vp.entities;
 import com.tsystems.logistics.logistics_vp.enums.Loaded;
 import com.tsystems.logistics.logistics_vp.enums.Unloaded;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -16,6 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Cargo {
     //CREATE TABLE logistics.cargos (
     //cargo_id INT NOT NULL AUTO_INCREMENT,
@@ -66,7 +64,7 @@ public class Cargo {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "loaded", columnDefinition = "ENUM('YES','NO') DEFAULT 'NO'")
-    private Loaded loaded;
+    private Loaded loaded = Loaded.NO;
 
     @Column(name = "final_city", length = 30, nullable = false)
     private String finalCity;
@@ -79,7 +77,7 @@ public class Cargo {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "unloaded", columnDefinition = "ENUM('YES','NO') DEFAULT 'NO'")
-    private Unloaded unloaded;
+    private Unloaded unloaded = Unloaded.NO;
 
     @Column(name = "expected_completion_date_time")
     private LocalDateTime expectedCompletionDateTime;

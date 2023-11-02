@@ -9,6 +9,7 @@ import com.tsystems.logistics.logistics_vp.enums.Busy;
 import com.tsystems.logistics.logistics_vp.enums.TechnicalCondition;
 import com.tsystems.logistics.logistics_vp.services.interfaces.TruckService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,7 +25,7 @@ public class TruckController implements TrucksApi {
     public ResponseEntity<TruckDto> truckCreate(CreateTruckDto createTruckDto) {
         TruckDto truckDto = truckService.truckCreate(createTruckDto);
         return ResponseEntity
-                .status(201)
+                .status(HttpStatus.CREATED)
                 .body(truckDto);
     }
 
@@ -32,7 +33,7 @@ public class TruckController implements TrucksApi {
     public ResponseEntity<Void> truckDelete(String number) {
         truckService.truckDelete(number);
         return ResponseEntity
-                .status(204)
+                .status(HttpStatus.NO_CONTENT)
                 .build();
     }
 
@@ -47,7 +48,7 @@ public class TruckController implements TrucksApi {
     public ResponseEntity<TruckDto> truckUpdateByLogistician(String number, UpdateTruckByLogisticianDto updateTruckDto) {
         TruckDto truckDto = truckService.truckUpdateByLogistician(number, updateTruckDto);
         return ResponseEntity
-                .status(200)
+                .status(HttpStatus.OK)
                 .body(truckDto);
     }
 
@@ -55,7 +56,7 @@ public class TruckController implements TrucksApi {
     public ResponseEntity<TruckDto> truckUpdateByDriver(String number, UpdateTruckByDriverDto updateTruckDto) {
         TruckDto truckDto = truckService.truckUpdateByDriver(number, updateTruckDto);
         return ResponseEntity
-                .status(200)
+                .status(HttpStatus.OK)
                 .body(truckDto);
     }
 
@@ -68,7 +69,14 @@ public class TruckController implements TrucksApi {
 
     @Override
     public ResponseEntity<List<TruckDto>> trucksFindByCurrentCityAndState(String city, String state) {
-        List<TruckDto> allTrucks = truckService.trucksFindAllByCurrentCityAndCurrentState(city, state);
+        List<TruckDto> allTrucks = truckService.trucksFindAllByCurrentCityAndState(city, state);
+        return ResponseEntity
+                .ok(allTrucks);
+    }
+
+    @Override
+    public ResponseEntity<List<TruckDto>> trucksFindForOrder(Integer orderId, String city, String state, Double capacity) {
+        List<TruckDto> allTrucks = truckService.findAllForOrder(orderId, city, state, capacity);
         return ResponseEntity
                 .ok(allTrucks);
     }
@@ -82,12 +90,9 @@ public class TruckController implements TrucksApi {
 
     @Override
     public ResponseEntity<List<TruckDto>> trucksFindByTechnicalCondition(String technicalConditionStatus) {
-        List<TruckDto> allTrucks = truckService.trucksFindAllByTechnicalCondition(TechnicalCondition.valueOf(technicalConditionStatus));
+        List<TruckDto> allTrucks = truckService.trucksFindAllByTechnicalCondition(
+                TechnicalCondition.valueOf(technicalConditionStatus));
         return ResponseEntity
                 .ok(allTrucks);
     }
-
-//    public ResponseEntity<TruckDto> truckUpdate(String number, UpdateTruckByLogisticianDto updateTruckDto) {
-//        return null;
-//    }
 }

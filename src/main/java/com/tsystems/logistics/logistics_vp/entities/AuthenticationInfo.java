@@ -1,10 +1,7 @@
 package com.tsystems.logistics.logistics_vp.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "authentication_info", schema = "logistics")
@@ -12,6 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class AuthenticationInfo {
     //CREATE TABLE logistics.authentication_info (
     //id INT,

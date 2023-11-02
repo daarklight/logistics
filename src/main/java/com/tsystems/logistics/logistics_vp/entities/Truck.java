@@ -3,10 +3,7 @@ package com.tsystems.logistics.logistics_vp.entities;
 import com.tsystems.logistics.logistics_vp.enums.Busy;
 import com.tsystems.logistics.logistics_vp.enums.TechnicalCondition;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -16,6 +13,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Truck {
     //CREATE TABLE logistics.trucks (
     //number VARCHAR(7) NOT NULL,
@@ -44,11 +42,11 @@ public class Truck {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "technical_condition", columnDefinition = "ENUM('OK','NOK') DEFAULT 'OK'")
-    private TechnicalCondition technicalCondition;
+    private TechnicalCondition technicalCondition = TechnicalCondition.OK;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "busy", columnDefinition = "ENUM('YES','NO') DEFAULT 'NO'")
-    private Busy busy;
+    private Busy busy = Busy.NO;
 
     @Column(name = "current_city", length = 30, nullable = false)
     private String currentCity;

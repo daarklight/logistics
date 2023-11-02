@@ -1,12 +1,11 @@
 package com.tsystems.logistics.logistics_vp.controllers;
 
 import com.tsystems.logistics.logistics_vp.code.api.DriversApi;
-import com.tsystems.logistics.logistics_vp.code.model.CreateDriverDto;
-import com.tsystems.logistics.logistics_vp.code.model.DriverDto;
-import com.tsystems.logistics.logistics_vp.code.model.UpdateDriverByDriverDto;
-import com.tsystems.logistics.logistics_vp.code.model.UpdateDriverByLogisticianDto;
-import com.tsystems.logistics.logistics_vp.repositories.DriverRepository;
+import com.tsystems.logistics.logistics_vp.code.model.*;
+import com.tsystems.logistics.logistics_vp.enums.Busy;
+import com.tsystems.logistics.logistics_vp.services.interfaces.DriverService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,58 +15,111 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DriverController implements DriversApi {
 
+    private final DriverService driverService;
+
     @Override
     public ResponseEntity<DriverDto> driverCreate(CreateDriverDto createDriverDto) {
-        return null;
+        DriverDto driverDto = driverService.driverCreate(createDriverDto);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(driverDto);
     }
 
     @Override
     public ResponseEntity<Void> driverDelete(Integer personalNumber) {
-        return null;
+        driverService.driverDelete(personalNumber);
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
     }
 
     @Override
     public ResponseEntity<DriverDto> driverFindById(Integer personalNumber) {
-        return null;
+        DriverDto resultDriverDto = driverService.driverFindByNumber(personalNumber);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(resultDriverDto);
     }
 
     @Override
     public ResponseEntity<List<DriverDto>> driverFindByNameAndSurname(String name, String surname) {
-        return null;
+        List<DriverDto> resultDriverDto = driverService.driverFindByNameAndSurname(name, surname);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(resultDriverDto);
     }
 
     @Override
     public ResponseEntity<DriverDto> driverUpdateByLogistician(Integer personalNumber, UpdateDriverByLogisticianDto updateDriverDto) {
-        return null;
+        DriverDto driverDto = driverService.driverUpdateByLogistician(personalNumber, updateDriverDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(driverDto);
     }
 
     @Override
-    public ResponseEntity<DriverDto> driverUpdateByDriver(Integer personalNumber, UpdateDriverByDriverDto updateDriverDto) {
-        return null;
+    public ResponseEntity<DriverDto> driverUpdateStatusByDriver(Integer personalNumber, UpdateDriverStatusByDriverDto updateDriverDto) {
+        DriverDto driverDto = driverService.driverUpdateStatusByDriver(personalNumber, updateDriverDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(driverDto);
     }
 
     @Override
     public ResponseEntity<List<DriverDto>> driversFindAll() {
-        return null;
+        List<DriverDto> allDrivers = driverService.driversFindAll();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(allDrivers);
     }
 
     @Override
     public ResponseEntity<List<DriverDto>> driversFindByBusyStatus(String busyStatus) {
-        return null;
+        List<DriverDto> allDrivers = driverService.driversFindByBusyStatus(Busy.valueOf(busyStatus));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(allDrivers);
     }
 
     @Override
     public ResponseEntity<List<DriverDto>> driversFindByCurrentCityAndState(String city, String state) {
-        return null;
+        List<DriverDto> allDrivers = driverService.driversFindAllByCurrentCityAndCurrentState(city, state);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(allDrivers);
     }
 
     @Override
-    public ResponseEntity<DriverDto> driversFindByCurrentOrderId(Integer currentOrderId) {
-        return null;
+    public ResponseEntity<List<DriverDto>> driversFindByCurrentOrderId(Integer currentOrderId) {
+        List<DriverDto> allDrivers = driverService.driversFindAllByCurrentOrderId(currentOrderId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(allDrivers);
     }
 
     @Override
-    public ResponseEntity<DriverDto> driversFindByCurrentTruckNumber(String currentTruckNumber) {
-        return null;
+    public ResponseEntity<List<DriverDto>> driversFindByCurrentTruckNumber(String currentTruckNumber) {
+        List<DriverDto> allDrivers = driverService.driversFindAllByCurrentTruckNumber(currentTruckNumber);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(allDrivers);
+    }
+
+    @Override
+    public ResponseEntity<List<DriverDto>> driversFindForOrder(Integer orderId, String city, String state,
+                                                               Integer workingHoursInCurrentMonth) {
+        List<DriverDto> allDrivers = driverService.driversFindAllForOrder(orderId, city, state, workingHoursInCurrentMonth);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(allDrivers);
+    }
+
+    @Override
+    public ResponseEntity<DriverDto> driversUpdateOrderAcceptance(
+            Integer personalNumber, UpdateDriverOrderAcceptanceDto updateDriverOrderAcceptanceDto) {
+        DriverDto driverDto = driverService.driverOrderAcceptance(personalNumber, updateDriverOrderAcceptanceDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(driverDto);
     }
 }

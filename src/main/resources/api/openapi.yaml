@@ -330,6 +330,69 @@ paths:
         500:
           description: Internal Server Error
 
+  /trucks/forOrder/{orderId}:
+    get:
+      tags:
+        - Truck
+      summary: "Find proper Trucks for Order: not busy, in current city and state, having required capacity"
+      operationId: trucksFindForOrder
+      parameters:
+        - name: orderId
+          in: path
+          description: "Order id"
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 12001
+        - in: query
+          name: city
+          description: Current city
+          allowEmptyValue: false
+          required: true
+          schema:
+            type: string
+            example: Chicago
+          allowReserved: false
+        - in: query
+          name: state
+          description: Current state
+          allowEmptyValue: false
+          required: true
+          schema:
+            type: string
+            example: Illinois
+          allowReserved: false
+        - in: query
+          name: capacity
+          description: Minimum required Truck capacity
+          allowEmptyValue: false
+          required: true
+          schema:
+            type: number
+            format: double
+            example: 15.4
+          allowReserved: false
+      responses:
+        200:
+          description: Trucks were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Truck'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Proper Trucks for this Order were not found
+        500:
+          description: Internal Server Error
+
 
 
   /drivers:
@@ -390,7 +453,7 @@ paths:
     patch:
       tags:
         - Driver
-      summary: Update Driver
+      summary: Update Driver by Logistician
       operationId: driverUpdateByLogistician
       parameters:
         - name: personalNumber
@@ -425,12 +488,12 @@ paths:
         500:
           description: Internal Server Error
 
-  /drivers/byDriver/{personalNumber}:
+  /drivers/statusByDriver/{personalNumber}:
     patch:
       tags:
         - Driver
-      summary: Update Driver
-      operationId: driverUpdateByDriver
+      summary: Update Driver status by Driver
+      operationId: driverUpdateStatusByDriver
       parameters:
         - name: personalNumber
           in: path
@@ -445,7 +508,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateDriverByDriver'
+              $ref: '#/components/schemas/UpdateDriverStatusByDriver'
       responses:
         200:
           description: Driver was updated successfully
@@ -648,7 +711,7 @@ paths:
         500:
           description: Internal Server Error
 
-  /drivers/{currentTruckNumber}:
+  /drivers/currentTruckNumber/{currentTruckNumber}:
     get:
       tags:
         - Driver
@@ -667,7 +730,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Driver'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Driver'
         400:
           description: Bad request
         401:
@@ -679,7 +744,7 @@ paths:
         500:
           description: Internal Server Error
 
-  /drivers/{currentOrderId}:
+  /drivers/currentOrderId/{currentOrderId}:
     get:
       tags:
         - Driver
@@ -699,7 +764,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Driver'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Driver'
         400:
           description: Bad request
         401:
@@ -708,6 +775,109 @@ paths:
           description: "Forbidden: User does not have permissions"
         404:
           description: No drivers were found for this currentOrderId
+        500:
+          description: Internal Server Error
+
+  /drivers/orderAcceptance/{personalNumber}:
+    patch:
+      tags:
+        - Driver
+      summary: Update Order acceptance by Driver
+      operationId: driversUpdateOrderAcceptance
+      parameters:
+        - name: personalNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 153001
+      requestBody:
+        description: Driver object that needs to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDriverOrderAcceptance'
+      responses:
+        201:
+          description: Order acceptance by driver was updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: This personal number for driver was not found
+        500:
+          description: Internal Server Error
+
+  /drivers/forOrder/{orderId}:
+    get:
+      tags:
+        - Driver
+      summary: Find proper Drivers for Order
+      operationId: driversFindForOrder
+      parameters:
+        - name: orderId
+          in: path
+          description: "Order id"
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 12001
+        - in: query
+          name: city
+          description: Current city
+          allowEmptyValue: false
+          required: true
+          schema:
+            type: string
+            example: Chicago
+          allowReserved: false
+        - in: query
+          name: state
+          description: Current state
+          allowEmptyValue: false
+          required: true
+          schema:
+            type: string
+            example: Illinois
+          allowReserved: false
+        - in: query
+          name: hours
+          description: Working hours in current month
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 10
+            minimum: 0
+            maximum: 176
+
+      responses:
+        200:
+          description: Drivers in this city and state were found successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Driver'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Drivers in this city and state were not found
         500:
           description: Internal Server Error
 
@@ -2356,7 +2526,7 @@ paths:
         500:
           description: Internal Server Error
 
-  /authenticationInfo/{login}:
+  /authenticationInfo/login/{login}:
     get:
       tags:
         - AuthenticationInfo
@@ -2505,6 +2675,10 @@ components:
       description: Object representing Driver creating
       type: object
       properties:
+        driverAuthenticationId:
+          type: integer
+          format: int32
+          example: 153001
         name:
           type: string
           example: John
@@ -2562,8 +2736,8 @@ components:
           type: string
           example: ABC1234
 
-    UpdateDriverByDriver:
-      description: Object representing Driver updating dy Driver
+    UpdateDriverStatusByDriver:
+      description: Object representing Driver status updating dy Driver
       type: object
       properties:
         status:
@@ -2571,6 +2745,34 @@ components:
           type: string
           enum: [REST, DRIVING]
           default: REST
+
+    UpdateDriverOrderAcceptance:
+      description: Object representing Order acceptance request for Driver
+      type: object
+      properties:
+        orderAcceptance:
+          description: Order acceptance
+          type: string
+          enum: ["YES","NO"]
+
+    UpdatedDriverOrderAcceptance:
+      description: Object representing Order acceptance response for Driver
+      type: object
+      properties:
+        personalNumber:
+          type: integer
+          format: int32
+          example: 153001
+        name:
+          type: string
+          example: John
+        surname:
+          type: string
+          example: Smith
+        orderAcceptance:
+          description: Order acceptance
+          type: string
+          enum: ["YES","NO"]
 
     Driver:
       description: Object representing Driver
@@ -2625,6 +2827,10 @@ components:
           type: integer
           format: int32
           example: 12001
+        orderAcceptance:
+          description: Order acceptance
+          type: string
+          enum: ["YES","NO"]
 
 
 
@@ -2632,6 +2838,10 @@ components:
       description: Object representing Customer creating
       type: object
       properties:
+        customerAuthenticationId:
+          type: integer
+          format: int32
+          example: 5001
         customerName:
           type: string
           example: Best Customer
@@ -2684,6 +2894,10 @@ components:
       description: Object representing Logistician creating
       type: object
       properties:
+        logisticianAuthenticationId:
+          type: integer
+          format: int32
+          example: 1201
         name:
           type: string
           example: Paul
@@ -2952,7 +3166,7 @@ components:
       description: Object representing AuthenticationInfo
       type: object
       properties:
-        personalNumber:
+        id:
           type: integer
           format: int32
           example: 1201

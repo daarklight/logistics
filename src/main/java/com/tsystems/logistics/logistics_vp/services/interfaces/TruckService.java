@@ -16,7 +16,8 @@ public interface TruckService {
     TruckDto truckUpdateByLogistician(String number, UpdateTruckByLogisticianDto truckDto);
     TruckDto truckUpdateByDriver(String number, UpdateTruckByDriverDto truckDto);
     List<TruckDto> trucksFindAll();
-    List<TruckDto> trucksFindAllByCurrentCityAndCurrentState(String city, String state);
+    List<TruckDto> trucksFindAllByCurrentCityAndState(String city, String state);
     List<TruckDto> trucksFindByBusyStatus(Busy busy);
     List<TruckDto> trucksFindAllByTechnicalCondition(TechnicalCondition technicalCondition);
+    List<TruckDto> findAllForOrder(Integer orderId, String city, String state, Double capacity);
 }

@@ -8,7 +8,7 @@ import com.tsystems.logistics.logistics_vp.entities.Truck;
 import com.tsystems.logistics.logistics_vp.enums.Busy;
 import com.tsystems.logistics.logistics_vp.enums.TechnicalCondition;
 import com.tsystems.logistics.logistics_vp.mappers.TruckMapper;
-import com.tsystems.logistics.logistics_vp.repositories.CustomizedTruckRepository;
+import com.tsystems.logistics.logistics_vp.repositories.customized.CustomizedTruckRepository;
 import com.tsystems.logistics.logistics_vp.repositories.TruckRepository;
 import com.tsystems.logistics.logistics_vp.services.interfaces.TruckService;
 import jakarta.transaction.Transactional;
@@ -29,9 +29,14 @@ public class TruckServiceImpl implements TruckService {
         return truckRepository.findAll().stream().map(truck -> truckDto(truck)).toList();
     }
 
-    public List<TruckDto> trucksFindAllByCurrentCityAndCurrentState(String city, String state) {
+    public List<TruckDto> trucksFindAllByCurrentCityAndState(String city, String state) {
         return customizedTruckRepository.findAllByCurrentCityAndCurrentState(city, state)
                 .stream().map(truck -> truckDto(truck)).toList();
+    }
+
+    public List<TruckDto> findAllForOrder(Integer orderId, String city, String state, Double capacity) {
+        return customizedTruckRepository.findAllByCurrentCityAndCurrentStateAndCapacityGreaterThanEqual(city, state, capacity)
+                .stream().map(truck -> truckDto(truck)).filter(dto -> dto.getBusy().toString().equals("NO")).toList();
     }
 
     public List<TruckDto> trucksFindByBusyStatus(Busy busy){
@@ -41,7 +46,6 @@ public class TruckServiceImpl implements TruckService {
     public List<TruckDto> trucksFindAllByTechnicalCondition(TechnicalCondition technicalCondition){
         return customizedTruckRepository.findAllByTechnicalCondition(technicalCondition).stream().map(truck -> truckDto(truck)).toList();
     }
-
 
     public void truckDelete(String number) {
         truckRepository.deleteById(number);
@@ -53,22 +57,22 @@ public class TruckServiceImpl implements TruckService {
     }
 
     public TruckDto truckCreate(CreateTruckDto truckDto) {
-        Truck truck = new Truck();
-        truck.setNumber(truckDto.getNumber());
-        truck.setModel(truckDto.getModel());
-        truck.setCapacity(truckDto.getCapacity());
-        truck.setTotalOperatingTime(truckDto.getTotalOperatingTime());
-        truck.setTechnicalCondition(TechnicalCondition.OK);
-        truck.setBusy(Busy.NO);
-        truck.setCurrentCity(truckDto.getCurrentCity());
-        truck.setCurrentState(truckDto.getCurrentState());
+        Truck truck = Truck.builder()
+                .number(truckDto.getNumber())
+                .model(truckDto.getModel())
+                .capacity(truckDto.getCapacity())
+                .totalOperatingTime(truckDto.getTotalOperatingTime())
+                .technicalCondition(TechnicalCondition.OK)
+                .busy(Busy.NO)
+                .currentCity(truckDto.getCurrentCity())
+                .currentState(truckDto.getCurrentState())
+                .build();
         truckRepository.save(truck);
         return truckDto(truck);
     }
 
     public TruckDto truckUpdateByLogistician(String number, UpdateTruckByLogisticianDto truckDto) {
         Truck truck = truckRepository.findById(number).orElseThrow();
-        truck.setModel(number);
         truck.setModel(truckDto.getModel());
         truck.setCapacity(truckDto.getCapacity());
         truck.setTotalOperatingTime(truckDto.getTotalOperatingTime());
