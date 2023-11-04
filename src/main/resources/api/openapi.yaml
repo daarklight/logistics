@@ -1257,25 +1257,31 @@ paths:
         500:
           description: Internal Server Error
 
-  /logisticians/{name}/{surname}:
+  /logisticians/nameAndSurname:
     get:
       tags:
         - Logistician
       summary: Find Logisticians by name and surname
       operationId: logisticianFindByNameAndSurname
       parameters:
-        - name: name
-          in: path
+        - in: query
+          name: name
+          description: Logistician's name
+          allowEmptyValue: false
           required: true
           schema:
             type: string
             example: Paul
-        - name: surname
-          in: path
+          allowReserved: false
+        - in: query
+          name: surname
+          description: Logistician's surname
+          allowEmptyValue: false
           required: true
           schema:
             type: string
             example: White
+          allowReserved: false
       responses:
         200:
           description: Logistician(s) were found successfully
@@ -1450,7 +1456,7 @@ paths:
         500:
           description: Internal Server Error
 
-  /orders/{orderCustomerId}:
+  /orders/byCustomer/{orderCustomerId}:
     get:
       tags:
         - Order
@@ -1553,7 +1559,7 @@ paths:
         500:
           description: Internal Server Error
 
-  /orders/{assignedTruckNumber}:
+  /orders/truckNumber/{assignedTruckNumber}:
     get:
       tags:
         - Order
@@ -1721,6 +1727,160 @@ paths:
         500:
           description: Internal Server Error
 
+  /orders/status/{orderId}:
+    patch:
+      tags:
+        - Order
+      summary: Update Order status
+      operationId: orderUpdateStatus
+      parameters:
+        - name: orderId
+          in: path
+          description: "Order id"
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 12001
+      requestBody:
+        description: Order object that needs to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrderStatus'
+      responses:
+        200:
+          description: Order status was updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: This orderId was not found
+        500:
+          description: Internal Server Error
+
+  /orders/driverComment/{orderId}:
+    patch:
+      tags:
+        - Order
+      summary: Update driver comment for Order
+      operationId: orderUpdateDriverComment
+      parameters:
+        - name: orderId
+          in: path
+          description: "Order id"
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 12001
+      requestBody:
+        description: Order object that needs to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrderDriverComment'
+      responses:
+        200:
+          description: Driver comment for Order was updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: This orderId was not found
+        500:
+          description: Internal Server Error
+
+  /orders/setStartDateTime/{orderId}:
+    patch:
+      tags:
+        - Order
+      summary: Set current date-time as Order start date-time
+      operationId: orderUpdateStartDateTime
+      parameters:
+        - name: orderId
+          in: path
+          description: "Order id"
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 12001
+      responses:
+        200:
+          description: Order start date-time was updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: This orderId was not found
+        500:
+          description: Internal Server Error
+
+  /orders/assignedTruckNumber/{orderId}:
+    patch:
+      tags:
+        - Order
+      summary: Update assigned truck number for Order
+      operationId: orderUpdateAssignedTruckNumber
+      parameters:
+        - name: orderId
+          in: path
+          description: "Order id"
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 12001
+      requestBody:
+        description: Order object that needs to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrderAssignedTruckNumber'
+      responses:
+        200:
+          description: Assigned truck number for Order was updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: This orderId was not found
+        500:
+          description: Internal Server Error
+
+
 
   /cargos:
     get:
@@ -1852,6 +2012,7 @@ paths:
         500:
           description: Internal Server Error
 
+  /cargos/{cargoId}:
     delete:
       tags:
         - Cargo
@@ -1910,11 +2071,11 @@ paths:
         500:
           description: Internal Server Error
 
-  /cargos/{orderForCargoId}:
+  /cargos/byOrder/{orderForCargoId}:
     get:
       tags:
         - Cargo
-      summary: Find Cargos by order id
+      summary: Find Cargos by Order id
       operationId: cargoFindByOrderId
       parameters:
         - name: orderForCargoId
@@ -2023,19 +2184,40 @@ paths:
         500:
           description: Internal Server Error
 
-  /cargos/startAddress/{startAddress}:
+  /cargos/startCityAndStateAndAddress:
     get:
       tags:
         - Cargo
-      summary: Find Cargos by start address
-      operationId: cargoFindByStartAddress
+      summary: Find Cargos by start city, state and address
+      operationId: cargoFindByStartCityAndStateAndAddress
       parameters:
-        - name: startAddress
-          in: path
+        - in: query
+          name: city
+          description: Cargo start city
+          allowEmptyValue: false
+          required: true
+          schema:
+            type: string
+            example: Pittsburgh
+          allowReserved: false
+        - in: query
+          name: state
+          description: Cargo start state
+          allowEmptyValue: false
+          required: true
+          schema:
+            type: string
+            example: Pennsylvania
+          allowReserved: false
+        - in: query
+          name: address
+          description: Cargo start address
+          allowEmptyValue: false
           required: true
           schema:
             type: string
             example: "2129 Bedford Ave"
+          allowReserved: false
       responses:
         200:
           description: Cargos were found successfully
@@ -2117,7 +2299,7 @@ paths:
       parameters:
         - in: query
           name: city
-          description: Final city
+          description: Cargo final city
           allowEmptyValue: false
           required: true
           schema:
@@ -2126,7 +2308,7 @@ paths:
           allowReserved: false
         - in: query
           name: state
-          description: Final state
+          description: Cargo final state
           allowEmptyValue: false
           required: true
           schema:
@@ -2153,20 +2335,40 @@ paths:
         500:
           description: Internal Server Error
 
-  /cargos/finalAddress/{finalAddress}:
+  /cargos/finalCityAndStateAndAddress:
     get:
       tags:
         - Cargo
-      summary: Find Cargos by final address
-      operationId: cargoFindByFinalAddress
+      summary: Find Cargos by final city, state and address
+      operationId: cargoFindByFinalCityAndStateAndAddress
       parameters:
-        - name: finalAddress
-          in: path
-          description: "Cargo final address"
+        - in: query
+          name: city
+          description: Cargo final city
+          allowEmptyValue: false
+          required: true
+          schema:
+            type: string
+            example: Columbus
+          allowReserved: false
+        - in: query
+          name: state
+          description: Cargo final state
+          allowEmptyValue: false
+          required: true
+          schema:
+            type: string
+            example: Ohio
+          allowReserved: false
+        - in: query
+          name: address
+          description: Cargo final address
+          allowEmptyValue: false
           required: true
           schema:
             type: string
             example: "480 E Broad St"
+          allowReserved: false
       responses:
         200:
           description: Cargos were found successfully
@@ -2755,25 +2957,6 @@ components:
           type: string
           enum: ["YES","NO"]
 
-    UpdatedDriverOrderAcceptance:
-      description: Object representing Order acceptance response for Driver
-      type: object
-      properties:
-        personalNumber:
-          type: integer
-          format: int32
-          example: 153001
-        name:
-          type: string
-          example: John
-        surname:
-          type: string
-          example: Smith
-        orderAcceptance:
-          description: Order acceptance
-          type: string
-          enum: ["YES","NO"]
-
     Driver:
       description: Object representing Driver
       type: object
@@ -2981,6 +3164,33 @@ components:
           type: string
           format: date-time
 
+    UpdateOrderDriverComment:
+      description: Object representing updating driver comment for Order
+      type: object
+      properties:
+        driverComment:
+          description: Driver comment
+          type: string
+          example: "I'm not going to drive with Sam"
+
+    UpdateOrderAssignedTruckNumber:
+      description: Object representing updating assigned truck number for Order
+      type: object
+      properties:
+        assignedTruckNumber:
+          description: Assigned truck number
+          type: string
+          example: "ABC1234"
+
+    UpdateOrderStatus:
+      description: Object representing Order updating
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [NEW,EXPECT_DRIVERS_CONFIRMATION,CONFIRMED,DECLINED_BY_DRIVERS,ON_ROAD,COMPLETED]
+          default: NEW
+
     Order:
       description: Object representing Order
       type: object
@@ -3059,10 +3269,6 @@ components:
       description: Object representing Cargo updating by Logistician
       type: object
       properties:
-        orderForCargoId:
-          type: integer
-          format: int32
-          example: 12001
         cargoName:
           type: string
           example: Super Cola

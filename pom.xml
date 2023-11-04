@@ -136,6 +136,9 @@
 							<generateModelTests>false</generateModelTests>
 							<generateModelDocumentation>false</generateModelDocumentation>
 							<generateSupportingFiles>false</generateSupportingFiles>
+							<typeMappings>
+								<typeMapping>OffsetDateTime=java.time.LocalDateTime</typeMapping>
+							</typeMappings>
 							<configOptions>
 								<useSpringBoot3>true</useSpringBoot3>
 								<delegatePattern>false</delegatePattern>

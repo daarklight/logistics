@@ -23,10 +23,10 @@ public class TruckController implements TrucksApi {
 
     @Override
     public ResponseEntity<TruckDto> truckCreate(CreateTruckDto createTruckDto) {
-        TruckDto truckDto = truckService.truckCreate(createTruckDto);
+        TruckDto resultTruckDto = truckService.truckCreate(createTruckDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(truckDto);
+                .body(resultTruckDto);
     }
 
     @Override
@@ -46,53 +46,53 @@ public class TruckController implements TrucksApi {
 
     @Override
     public ResponseEntity<TruckDto> truckUpdateByLogistician(String number, UpdateTruckByLogisticianDto updateTruckDto) {
-        TruckDto truckDto = truckService.truckUpdateByLogistician(number, updateTruckDto);
+        TruckDto resultTruckDto = truckService.truckUpdateByLogistician(number, updateTruckDto);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(truckDto);
+                .body(resultTruckDto);
     }
 
     @Override
     public ResponseEntity<TruckDto> truckUpdateByDriver(String number, UpdateTruckByDriverDto updateTruckDto) {
-        TruckDto truckDto = truckService.truckUpdateByDriver(number, updateTruckDto);
+        TruckDto resultTruckDto = truckService.truckUpdateByDriver(number, updateTruckDto);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(truckDto);
+                .body(resultTruckDto);
     }
 
     @Override
     public ResponseEntity<List<TruckDto>> trucksFindAll() {
-        List<TruckDto> allTrucks = truckService.trucksFindAll();
+        List<TruckDto> allResultTruckDtos = truckService.trucksFindAll();
         return ResponseEntity
-                .ok(allTrucks);
+                .ok(allResultTruckDtos);
     }
 
     @Override
     public ResponseEntity<List<TruckDto>> trucksFindByCurrentCityAndState(String city, String state) {
-        List<TruckDto> allTrucks = truckService.trucksFindAllByCurrentCityAndState(city, state);
+        List<TruckDto> allResultTruckDtos = truckService.trucksFindAllByCurrentCityAndState(city, state);
         return ResponseEntity
-                .ok(allTrucks);
+                .ok(allResultTruckDtos);
     }
 
     @Override
     public ResponseEntity<List<TruckDto>> trucksFindForOrder(Integer orderId, String city, String state, Double capacity) {
-        List<TruckDto> allTrucks = truckService.findAllForOrder(orderId, city, state, capacity);
+        List<TruckDto> allResultTruckDtos = truckService.findAllForOrder(orderId, city, state, capacity);
         return ResponseEntity
-                .ok(allTrucks);
+                .ok(allResultTruckDtos);
     }
 
     @Override
     public ResponseEntity<List<TruckDto>> trucksFindByBusyStatus(String busy) {
-        List<TruckDto> allTrucks = truckService.trucksFindByBusyStatus(Busy.valueOf(busy));
+        List<TruckDto> allResultTruckDtos = truckService.trucksFindByBusyStatus(Busy.valueOf(busy));
         return ResponseEntity
-                .ok(allTrucks);
+                .ok(allResultTruckDtos);
     }
 
     @Override
     public ResponseEntity<List<TruckDto>> trucksFindByTechnicalCondition(String technicalConditionStatus) {
-        List<TruckDto> allTrucks = truckService.trucksFindAllByTechnicalCondition(
+        List<TruckDto> allResultTruckDtos = truckService.trucksFindAllByTechnicalCondition(
                 TechnicalCondition.valueOf(technicalConditionStatus));
         return ResponseEntity
-                .ok(allTrucks);
+                .ok(allResultTruckDtos);
     }
 }

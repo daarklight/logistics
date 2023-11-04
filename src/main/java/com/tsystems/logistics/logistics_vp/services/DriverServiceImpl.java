@@ -41,6 +41,8 @@ public class DriverServiceImpl implements DriverService {
                 .surname(driverDto.getSurname())
                 .workExperience(driverDto.getWorkExperience())
                 .workingHoursInCurrentMonth(driverDto.getWorkingHoursInCurrentMonth())
+                .status(DriverStatus.REST)
+                .busy(Busy.NO)
                 .currentCity(driverDto.getCurrentCity())
                 .currentState(driverDto.getCurrentState())
                 .build();

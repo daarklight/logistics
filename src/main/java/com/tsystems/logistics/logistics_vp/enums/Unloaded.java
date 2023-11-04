@@ -22,21 +22,4 @@ public enum Unloaded {
     public String toString() {
         return unloaded;
     }
-
-//    Unloaded(String loaded) {
-//        this.loaded = loaded;
-//    }
-//
-//    public String getLoaded() {
-//        return loaded;
-//    }
-//
-//    public void setLoaded(String loaded) {
-//        this.loaded = loaded;
-//    }
-//
-//    @Override
-//    public String toString() {
-//        return loaded;
-//    }
 }

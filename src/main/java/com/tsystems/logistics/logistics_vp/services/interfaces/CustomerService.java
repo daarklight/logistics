@@ -13,7 +13,5 @@ public interface CustomerService {
     void customerDelete(Integer customerId);
     CustomerDto customerFindById(Integer customerId);
     CustomerDto customerFindByPhone(String phone);
-    CustomerDto customerFindByEmail(String phone);
-
-
+    CustomerDto customerFindByEmail(String email);
 }

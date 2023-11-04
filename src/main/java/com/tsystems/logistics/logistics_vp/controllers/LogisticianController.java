@@ -4,8 +4,9 @@ import com.tsystems.logistics.logistics_vp.code.api.LogisticiansApi;
 import com.tsystems.logistics.logistics_vp.code.model.CreateLogisticianDto;
 import com.tsystems.logistics.logistics_vp.code.model.LogisticianDto;
 import com.tsystems.logistics.logistics_vp.code.model.UpdateLogisticianDto;
-import com.tsystems.logistics.logistics_vp.repositories.LogisticianRepository;
+import com.tsystems.logistics.logistics_vp.services.interfaces.LogisticianService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,33 +16,53 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LogisticianController implements LogisticiansApi {
 
+    private final LogisticianService logisticianService;
+
     @Override
     public ResponseEntity<LogisticianDto> logisticianCreate(CreateLogisticianDto createLogisticianDto) {
-        return null;
+        LogisticianDto logisticianDto = logisticianService.logisticianCreate(createLogisticianDto);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(logisticianDto);
     }
 
     @Override
     public ResponseEntity<Void> logisticianDelete(Integer personalNumber) {
-        return null;
+        logisticianService.deleteLogistician(personalNumber);
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
     }
 
     @Override
     public ResponseEntity<LogisticianDto> logisticianFindById(Integer personalNumber) {
-        return null;
+        LogisticianDto resultLogisticianDto = logisticianService.logisticianFindByNumber(personalNumber);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(resultLogisticianDto);
     }
 
     @Override
     public ResponseEntity<List<LogisticianDto>> logisticianFindByNameAndSurname(String name, String surname) {
-        return null;
+        List<LogisticianDto> resultLogisticianDto = logisticianService.logisticianFindByNameAndSurname(name, surname);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(resultLogisticianDto);
     }
 
     @Override
     public ResponseEntity<LogisticianDto> logisticianUpdate(Integer personalNumber, UpdateLogisticianDto updateLogisticianDto) {
-        return null;
+        LogisticianDto logisticianDto = logisticianService.logisticianUpdate(personalNumber, updateLogisticianDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(logisticianDto);
     }
 
     @Override
     public ResponseEntity<List<LogisticianDto>> logisticiansFindAll() {
-        return null;
+        List<LogisticianDto> allLogisticians = logisticianService.logisticiansFindAll();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(allLogisticians);
     }
 }
