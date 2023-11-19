@@ -330,15 +330,15 @@ paths:
         500:
           description: Internal Server Error
 
-  /trucks/forOrder/{orderId}:
+  /trucks/forOrder:
     get:
       tags:
         - Truck
       summary: "Find proper Trucks for Order: not busy, in current city and state, having required capacity"
       operationId: trucksFindForOrder
       parameters:
-        - name: orderId
-          in: path
+        - in: query
+          name: orderId
           description: "Order id"
           required: true
           schema:
@@ -817,15 +817,15 @@ paths:
         500:
           description: Internal Server Error
 
-  /drivers/forOrder/{orderId}:
+  /drivers/forOrder:
     get:
       tags:
         - Driver
       summary: Find proper Drivers for Order
       operationId: driversFindForOrder
       parameters:
-        - name: orderId
-          in: path
+        - in: query
+          name: orderId
           description: "Order id"
           required: true
           schema:
@@ -2887,6 +2887,12 @@ components:
         surname:
           type: string
           example: Smith
+        phone:
+          type: string
+          example: "+1 638 478 3001"
+        email:
+          type: string
+          example: charley_adams@gmail.com
         workExperience:
           type: integer
           format: int32
@@ -2916,6 +2922,12 @@ components:
         surname:
           type: string
           example: Smith
+        phone:
+          type: string
+          example: "+1 638 478 3001"
+        email:
+          type: string
+          example: charley_adams@gmail.com
         workExperience:
           type: integer
           format: int32
@@ -2965,16 +2977,18 @@ components:
           type: integer
           format: int32
           example: 153001
-        driverAuthenticationId:
-          type: integer
-          format: int32
-          example: 153001
         name:
           type: string
           example: John
         surname:
           type: string
           example: Smith
+        phone:
+          type: string
+          example: "+1 638 478 3001"
+        email:
+          type: string
+          example: charley_adams@gmail.com
         workExperience:
           type: integer
           format: int32
@@ -3057,10 +3071,6 @@ components:
           type: integer
           format: int32
           example: 5001
-        customerAuthenticationId:
-          type: integer
-          format: int32
-          example: 5001
         customerName:
           type: string
           example: Best Customer
@@ -3104,10 +3114,6 @@ components:
       type: object
       properties:
         personalNumber:
-          type: integer
-          format: int32
-          example: 1201
-        logisticianAuthenticationId:
           type: integer
           format: int32
           example: 1201

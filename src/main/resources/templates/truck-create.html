@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="https://wwww.thymeleaf.org">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Register truck</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/css/general-styles.css"/>
+    <link rel="stylesheet" th:href="@{/css/general-styles.css}"/>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+
+<div class="center" style="width: 750px">
+    <h1 class="text-center">Truck registration</h1>
+    <form action="#" th:action="@{/trucks/registered}" method="post" th:object="${truck}">
+
+        <div class="form-outline" style="width: 250px; margin-left: 30px">
+            <label for="truckNumber" class="form-label" style="font-size:15px"><b>Truck number</b></label>
+
+            <div class="box">
+                <div>
+                    <input type="text" id="truckNumber" class="form-control" style="width: 250px; margin-top: -8px" th:field="*{number}"
+                           placeholder="ABC1234">
+                </div>
+                <div>
+                    <p th:if="${#fields.hasErrors('number')}"
+                       style="color: red; font-style: italic; width: 450px; margin-left: 180px" th:errors="*{number}">
+                        Incorrect number</p>
+                </div>
+            </div>
+            <div id="numberFormatLimitations" class="form-text" style="font-size:10px; margin-top: -5px">
+                Must consist of 3 letters and 4 digits, like ABC1234
+            </div>
+        </div>
+
+
+        <div class="form-outline" style="width: 250px; margin-left: 30px">
+            <label for="truckModel" class="form-label" style="font-size:15px"><b>Truck model</b></label>
+
+            <div class="box">
+                <div>
+                    <input type="text" id="truckModel" class="form-control" style="width: 250px; margin-top: -8px" th:field="*{model}"
+                           placeholder="Peterbilt 358">
+                </div>
+                <div>
+                    <p th:if="${#fields.hasErrors('model')}"
+                       style="color: red; font-style: italic; width: 450px; margin-left: 180px" th:errors="*{model}">
+                        Incorrect model</p>
+                </div>
+            </div>
+        </div>
+        <br>
+
+
+        <div class="form-outline" style="width: 250px; margin-left: 30px">
+            <label for="truckCapacity" class="form-label" style="font-size:15px"><b>Truck maximum capacity,
+                tons</b></label>
+
+            <div class="box">
+                <div>
+                    <input type="text" id="truckCapacity" class="form-control" style="width: 250px; margin-top: -8px"
+                           th:field="*{capacity}">
+                </div>
+                <div>
+                    <p th:if="${not #lists.isEmpty(#fields.errors('capacity'))}"
+                       style="color: red; font-style: italic; width: 450px; margin-left: 180px"
+                       th:text="${#fields.errors('capacity')[#lists.size(#fields.errors('capacity')) - 1]}">
+                        Incorrect capacity</p>
+                </div>
+            </div>
+        </div>
+        <br>
+
+
+        <div class="form-outline" style="width: 250px; margin-left: 30px">
+            <label for="truckTotalOperatingTime" class="form-label" style="font-size:15px"><b>Truck total
+                operating time, years</b></label>
+            <div class="box">
+                <div>
+                    <input type="text" id="truckTotalOperatingTime" class="form-control" style="width: 250px; margin-top: -8px"
+                           th:field="*{totalOperatingTime}">
+                </div>
+                <div>
+                    <p th:if="${not #lists.isEmpty(#fields.errors('totalOperatingTime'))}"
+                       style="color: red; font-style: italic; width: 450px; margin-left: 180px"
+                       th:text="${#fields.errors('totalOperatingTime')[#lists.size(#fields.errors('totalOperatingTime')) - 1]}">
+                        Incorrect total operating time</p>
+                </div>
+            </div>
+        </div>
+        <br>
+
+        <div class="input-group">
+
+            <div class="form-outline" style="width: 250px; margin-left: 30px">
+                <label for="truckCurrentCity" class="form-label" style="font-size:15px"><b>Current city where
+                    truck is</b></label>
+                <input type="text" id="truckCurrentCity" class="form-control" style="width: 250px; margin-top: -8px"
+                       th:field="*{currentCity}">
+            </div>
+            <br>
+            <div class="form-outline" style="width: 250px; margin-left: 30px">
+                <label for="truckCurrentState" class="form-label" style="font-size:15px; margin-left: 20px"><b>Current
+                    state where truck is</b></label>
+                <input type="text" id="truckCurrentState" class="form-control" style="width: 250px; margin-left: 20px; margin-top: -8px"
+                       th:field="*{currentState}">
+            </div>
+
+            <div>
+                <ul>
+                    <li th:if="${#fields.hasErrors('currentCity')}"
+                        style="color: red; font-style: italic; width: 500px; margin-left: 50px" th:errorclass="error1"
+                        th:errors="*{currentCity}">
+                    </li>
+                    <li th:if="${#fields.hasErrors('currentState')}"
+                        style="color: red; font-style: italic; width: 500px; margin-left: 50px" th:errorclass="error2"
+                        th:errors="*{currentState}">
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <br>
+
+        <button type="submit" class="btn btn-secondary btn-lg" style="margin-left: 30px">Register</button>
+        <br>
+        <br>
+    </form>
+</div>
+</body>
+</html>

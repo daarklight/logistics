@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="https://wwww.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Trucks filtered for order</title>
+    <!--
+    <link href="assets/images/favicon.png" rel="icon">
+    <link href="assets/images/favicon.png" rel="apple-touch-icon">
+    -->
+    <!--
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    -->
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <script th:src="@{./assets/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{./assets/js/bootstrap.min.js}"></script>
+
+
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/datatables.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}"/>
+
+    <link rel="stylesheet" href="../static/assets/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../static/assets/css/datatables.min.css"/>
+    <link rel="stylesheet" href="../static/assets/css/style.css"/>
+
+    <link rel="stylesheet" href="../static/css/general-styles.css"/>
+    <link rel="stylesheet" th:href="@{/css/general-styles.css}"/>
+
+
+</head>
+<body>
+
+<header class="header_part">
+    <!--
+    <img src="assets/images/logo.png" alt="" class="img-fluid">
+    -->
+    <h4>Trucks filtered for order</h4>
+</header>
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-12">
+
+            <div class="data_table">
+
+                <table id="example" class="table table-striped table-bordered">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>Number</th>
+                        <th>Model</th>
+                        <th>Capacity, tons</th>
+                        <th>Total operating time, years</th>
+                        <th>Technical condition</th>
+                        <th>Busy status</th>
+                        <th>Current city</th>
+                        <th>Current state</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="truck : ${trucks}">
+                        <td th:text="${truck.number}"></td>
+                        <td th:text="${truck.model}"></td>
+                        <td th:text="${truck.capacity}"></td>
+                        <td th:text="${truck.totalOperatingTime}"></td>
+                        <td th:text="${truck.technicalCondition}"></td>
+                        <td th:text="${truck.busy}"></td>
+                        <td th:text="${truck.currentCity}"></td>
+                        <td th:text="${truck.currentState}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/jquery-3.6.0.min.js"></script>
+<script src="/assets/js/datatables.min.js"></script>
+<script src="/assets/js/pdfmake.min.js"></script>
+<script src="/assets/js/vfs_fonts.js"></script>
+<script src="/assets/js/custom.js"></script>
+
+<script src="../static/assets/js/bootstrap.bundle.min.js"></script>
+<script src="../static/assets/js/jquery-3.6.0.min.js"></script>
+<script src="../static/assets/js/datatables.min.js"></script>
+<script src="../static/assets/js/pdfmake.min.js"></script>
+<script src="../static/assets/js/vfs_fonts.js"></script>
+<script src="../static/assets/js/custom.js"></script>
+
+</body>
+</html>
