@@ -8,7 +8,6 @@ import com.tsystems.logistics.logistics_vp.entity.Logistician;
 import com.tsystems.logistics.logistics_vp.mapper.LogisticianMapper;
 import com.tsystems.logistics.logistics_vp.repository.AuthenticationInfoRepository;
 import com.tsystems.logistics.logistics_vp.repository.LogisticianRepository;
-import com.tsystems.logistics.logistics_vp.repository.customized.CustomizedLogisticianRepository;
 import com.tsystems.logistics.logistics_vp.service.interfaces.LogisticianService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +22,6 @@ public class LogisticianServiceImpl implements LogisticianService {
 
     private final AuthenticationInfoRepository authenticationInfoRepository;
     private final LogisticianRepository logisticianRepository;
-    private final CustomizedLogisticianRepository customizedLogisticianRepository;
-
 
     @Override
     public List<LogisticianDto> logisticiansFindAll() {
@@ -66,7 +63,7 @@ public class LogisticianServiceImpl implements LogisticianService {
 
     @Override
     public List<LogisticianDto> logisticianFindByNameAndSurname(String name, String surname) {
-        return customizedLogisticianRepository.findAllByNameAndSurname(name, surname).stream().map(
+        return logisticianRepository.findAllByNameAndSurname(name, surname).stream().map(
                 logistician -> logisticianDto(logistician)).toList();
     }
 

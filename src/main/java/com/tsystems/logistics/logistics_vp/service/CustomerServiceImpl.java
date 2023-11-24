@@ -8,7 +8,6 @@ import com.tsystems.logistics.logistics_vp.entity.Customer;
 import com.tsystems.logistics.logistics_vp.mapper.CustomerMapper;
 import com.tsystems.logistics.logistics_vp.repository.AuthenticationInfoRepository;
 import com.tsystems.logistics.logistics_vp.repository.CustomerRepository;
-import com.tsystems.logistics.logistics_vp.repository.customized.CustomizedCustomerRepository;
 import com.tsystems.logistics.logistics_vp.service.interfaces.CustomerService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +22,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final AuthenticationInfoRepository authenticationInfoRepository;
     private final CustomerRepository customerRepository;
-    private final CustomizedCustomerRepository customizedCustomerRepository;
-
 
     @Override
     public List<CustomerDto> customersFindAll() {
@@ -68,13 +65,13 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDto customerFindByPhone(String phone) {
-        Customer customer = customizedCustomerRepository.findCustomerByPhone(phone);
+        Customer customer = customerRepository.findCustomerByPhone(phone);
         return customerDto(customer);
     }
 
     @Override
     public CustomerDto customerFindByEmail(String email) {
-        Customer customer = customizedCustomerRepository.findCustomerByEmail(email);
+        Customer customer = customerRepository.findCustomerByEmail(email);
         return customerDto(customer);
     }
 

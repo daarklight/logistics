@@ -10,7 +10,6 @@ import com.tsystems.logistics.logistics_vp.enums.DriverStatus;
 import com.tsystems.logistics.logistics_vp.enums.OrderAcceptance;
 import com.tsystems.logistics.logistics_vp.mapper.DriverMapper;
 import com.tsystems.logistics.logistics_vp.repository.*;
-import com.tsystems.logistics.logistics_vp.repository.customized.CustomizedDriverRepository;
 import com.tsystems.logistics.logistics_vp.service.interfaces.DriverService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,6 @@ public class DriverServiceImpl implements DriverService {
 
     private final AuthenticationInfoRepository authenticationInfoRepository;
     private final DriverRepository driverRepository;
-    private final CustomizedDriverRepository customizedDriverRepository;
     private final TruckRepository truckRepository;
     private final OrderRepository orderRepository;
 
@@ -88,37 +86,37 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public List<DriverDto> driverFindByNameAndSurname(String name, String surname) {
-        return customizedDriverRepository.findAllByNameAndSurname(name, surname).stream().map(
+        return driverRepository.findAllByNameAndSurname(name, surname).stream().map(
                 driver -> driverDto(driver)).toList();
     }
 
     @Override
     public List<DriverDto> driversFindByBusyStatus(Busy busy) {
-        return customizedDriverRepository.findAllByBusy(busy).stream().map(driver -> driverDto(driver)).toList();
+        return driverRepository.findAllByBusy(busy).stream().map(driver -> driverDto(driver)).toList();
     }
 
     @Override
     public List<DriverDto> driversFindAllByCurrentCityAndCurrentState(String city, String state) {
-        return customizedDriverRepository.findAllByCurrentCityAndCurrentState(city, state)
+        return driverRepository.findAllByCurrentCityAndCurrentState(city, state)
                 .stream().map(driver -> driverDto(driver)).toList();
     }
 
     @Override
     public List<DriverDto> driversFindAllByCurrentTruckNumber(String truckNumber) {
         Truck truck = truckRepository.findById(truckNumber).orElseThrow();
-        return customizedDriverRepository.findAllByCurrentTruckNumber(truck).stream().map(driver -> driverDto(driver)).toList();
+        return driverRepository.findAllByCurrentTruckNumber(truck).stream().map(driver -> driverDto(driver)).toList();
     }
 
     @Override
     public List<DriverDto> driversFindAllByCurrentOrderId(Integer currentOrderId) {
         Order order = orderRepository.findById(currentOrderId).orElseThrow();
-        return customizedDriverRepository.findAllByCurrentOrderId(order).stream().map(
+        return driverRepository.findAllByCurrentOrderId(order).stream().map(
                 driver -> driverDto(driver)).toList();
     }
 
     @Override
     public List<DriverDto> driversFindAllForOrder(Integer orderId, String city, String state, Integer hours) {
-        return customizedDriverRepository.findAllByCurrentCityAndCurrentStateAndWorkingHoursInCurrentMonthLessThan(
+        return driverRepository.findAllByCurrentCityAndCurrentStateAndWorkingHoursInCurrentMonthLessThan(
                 city, state, hours).stream().map(driver -> driverDto(driver))
                 .filter(dto -> dto.getBusy().toString().equals("NO")).toList();
     }

@@ -8,7 +8,6 @@ import com.tsystems.logistics.logistics_vp.enums.Unloaded;
 import com.tsystems.logistics.logistics_vp.mapper.CargoMapper;
 import com.tsystems.logistics.logistics_vp.repository.CargoRepository;
 import com.tsystems.logistics.logistics_vp.repository.OrderRepository;
-import com.tsystems.logistics.logistics_vp.repository.customized.CustomizedCargoRepository;
 import com.tsystems.logistics.logistics_vp.service.interfaces.CargoService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,6 @@ import java.util.List;
 public class CargoServiceImpl implements CargoService {
 
     private final CargoRepository cargoRepository;
-    private final CustomizedCargoRepository customizedCargoRepository;
     private final OrderRepository orderRepository;
 
     @Override
@@ -89,23 +87,23 @@ public class CargoServiceImpl implements CargoService {
     @Override
     public List<CargoDto> cargosFindByOrderForCargoId(Integer orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow();
-        return customizedCargoRepository.findAllByOrderForCargoId(order).stream().map(cargo -> cargoDto(cargo)).toList();
+        return cargoRepository.findAllByOrderForCargoId(order).stream().map(cargo -> cargoDto(cargo)).toList();
     }
 
     @Override
     public List<CargoDto> cargosFindByName(String name) {
-        return customizedCargoRepository.findAllByCargoName(name).stream().map(cargo -> cargoDto(cargo)).toList();
+        return cargoRepository.findAllByCargoName(name).stream().map(cargo -> cargoDto(cargo)).toList();
     }
 
     @Override
     public List<CargoDto> cargosFindAllByStartCityAndState(String city, String state) {
-        return customizedCargoRepository.findAllByStartCityAndStartState(city, state).stream().map(
+        return cargoRepository.findAllByStartCityAndStartState(city, state).stream().map(
                 cargo -> cargoDto(cargo)).toList();
     }
 
     @Override
     public List<CargoDto> cargosFindAllByStartCityAndStateAndAddress(String city, String state, String address) {
-        return customizedCargoRepository.findAllByStartCityAndStartStateAndStartAddress(city, state, address).stream().map(
+        return cargoRepository.findAllByStartCityAndStartStateAndStartAddress(city, state, address).stream().map(
                 cargo -> cargoDto(cargo)).toList();
     }
 
@@ -123,13 +121,13 @@ public class CargoServiceImpl implements CargoService {
 
     @Override
     public List<CargoDto> cargosFindAllByFinalCityAndState(String city, String state) {
-        return customizedCargoRepository.findAllByFinalCityAndFinalState(city, state).stream()
+        return cargoRepository.findAllByFinalCityAndFinalState(city, state).stream()
                 .map(cargo -> cargoDto(cargo)).toList();
     }
 
     @Override
     public List<CargoDto> cargosFindAllByFinalCityAndStateAndAddress(String city, String state, String address) {
-        return customizedCargoRepository.findAllByFinalCityAndFinalStateAndFinalAddress(city, state, address).stream()
+        return cargoRepository.findAllByFinalCityAndFinalStateAndFinalAddress(city, state, address).stream()
                 .map(cargo -> cargoDto(cargo)).toList();
     }
 
@@ -147,25 +145,25 @@ public class CargoServiceImpl implements CargoService {
 
     @Override
     public List<CargoDto> cargosFindEarlierThanExpectedCompletionDateTime(LocalDateTime expectedCompletionDateTime) {
-        return customizedCargoRepository.findAllByExpectedCompletionDateTimeLessThanEqual(expectedCompletionDateTime).stream()
+        return cargoRepository.findAllByExpectedCompletionDateTimeLessThanEqual(expectedCompletionDateTime).stream()
                 .map(cargo -> cargoDto(cargo)).toList();
     }
 
     @Override
     public List<CargoDto> cargosFindLaterThanExpectedCompletionDateTime(LocalDateTime expectedCompletionDateTime) {
-        return customizedCargoRepository.findAllByExpectedCompletionDateTimeGreaterThanEqual(expectedCompletionDateTime).stream()
+        return cargoRepository.findAllByExpectedCompletionDateTimeGreaterThanEqual(expectedCompletionDateTime).stream()
                 .map(cargo -> cargoDto(cargo)).toList();
     }
 
     @Override
     public List<CargoDto> cargosFindEarlierThanRealCompletionDateTime(LocalDateTime realCompletionDateTime) {
-        return customizedCargoRepository.findAllByRealCompletionDateTimeLessThanEqual(realCompletionDateTime).stream()
+        return cargoRepository.findAllByRealCompletionDateTimeLessThanEqual(realCompletionDateTime).stream()
                 .map(cargo -> cargoDto(cargo)).toList();
     }
 
     @Override
     public List<CargoDto> cargosFindLaterThanRealCompletionDateTime(LocalDateTime realCompletionDateTime) {
-        return customizedCargoRepository.findAllByRealCompletionDateTimeGreaterThanEqual(realCompletionDateTime).stream()
+        return cargoRepository.findAllByRealCompletionDateTimeGreaterThanEqual(realCompletionDateTime).stream()
                 .map(cargo -> cargoDto(cargo)).toList();
     }
 

@@ -1,5 +1,10 @@
 package com.tsystems.logistics.logistics_vp.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.google.api.gax.rpc.ServerStream;
+import com.google.api.gax.rpc.ServerStreamingCallable;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -11,15 +16,21 @@ import com.google.maps.PendingResult;
 import com.google.maps.model.DistanceMatrix;
 import com.google.maps.model.TravelMode;
 import com.google.maps.model.Unit;
+import com.google.maps.routing.v2.*;
 import com.tsystems.logistics.logistics_vp.service.interfaces.GoogleMapsDistanceService;
+import com.tsystems.logistics.logistics_vp.service.pojo.DistanceMatrixPojo;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -96,5 +107,77 @@ public class GoogleMapsDistanceServiceImpl implements GoogleMapsDistanceService 
         durationAndDistance.add(rideDurationInSeconds[0]);
         durationAndDistance.add(rideDistanceInMeters[0]);
         return durationAndDistance;
+    }
+
+    private List<String> routeMatrix(String firstOriginAddress, String firstFinalAddress, String secondFinalAddress)
+            throws IOException {
+        List<String> routeMatrixResponseList = new ArrayList<>();
+        RoutesSettings routesSettings = RoutesSettings
+                .newBuilder()
+                .setHeaderProvider(() -> {
+                    Map headers = new HashMap<>();
+                    headers.put("X-Goog-FieldMask", "originIndex,destinationIndex,distance_meters,duration");
+                    return headers;
+                })
+                .build();
+        RoutesClient routesClient = RoutesClient.create(routesSettings);
+
+        ServerStreamingCallable computeRouteMatrix = routesClient.computeRouteMatrixCallable();
+        ServerStream stream = computeRouteMatrix.call(
+                ComputeRouteMatrixRequest
+                        .newBuilder()
+                        .addOrigins(RouteMatrixOrigin.newBuilder()
+                                .setWaypoint(Waypoint.newBuilder()
+                                        .setAddress(firstOriginAddress)
+                                        .build()))
+                        .addDestinations(RouteMatrixDestination.newBuilder()
+                                .setWaypoint(Waypoint.newBuilder()
+                                        .setAddress(
+                                                firstFinalAddress)
+                                        .build())
+                                .build())
+                        .addDestinations(RouteMatrixDestination.newBuilder()
+                                .setWaypoint(Waypoint.newBuilder()
+                                        .setAddress(
+                                                secondFinalAddress)
+                                        .build())
+                                .build())
+                        .setTravelMode(RouteTravelMode.DRIVE)
+                        .build());
+
+        for (Object element : stream) {
+            routeMatrixResponseList.add(element.toString());
+        }
+        return routeMatrixResponseList;
+    }
+
+    @Override
+    public List<List<Integer>> getRouteMatrixResults(String firstOriginAddress, String firstFinalAddress,
+                                                     String secondFinalAddress)
+            throws IOException {
+        List<List<Integer>> routeMatrixResults = new ArrayList<>();
+        List<String> routeMatrixResponseList = routeMatrix(firstOriginAddress, firstFinalAddress, secondFinalAddress);
+        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+        mapper.findAndRegisterModules();
+        List<DistanceMatrixPojo> allDistancesMatrices = routeMatrixResponseList.stream().map(
+                elem -> {
+                    try {
+                        return mapper.readValue(elem.replace("duration {", "duration: {"), DistanceMatrixPojo.class);
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).collect(
+                Collectors.toList());
+        List<Integer> destinationIndexes = allDistancesMatrices.stream().map(elem -> Integer.parseInt(
+                elem.getDestinationIndex())).collect(Collectors.toList());
+        List<Integer> distancesInMeters = allDistancesMatrices.stream().map(elem -> Integer.parseInt(
+                elem.getDistanceMeters())).collect(Collectors.toList());
+        List<Integer> durationsInSeconds = allDistancesMatrices.stream().map(elem -> Integer.parseInt(
+                elem.getDuration().getSeconds())).collect(Collectors.toList());
+
+        routeMatrixResults.add(destinationIndexes);
+        routeMatrixResults.add(distancesInMeters);
+        routeMatrixResults.add(durationsInSeconds);
+        return routeMatrixResults;
     }
 }

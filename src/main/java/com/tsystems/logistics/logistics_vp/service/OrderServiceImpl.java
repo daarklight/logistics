@@ -5,7 +5,6 @@ import com.tsystems.logistics.logistics_vp.entity.Order;
 import com.tsystems.logistics.logistics_vp.enums.OrderStatus;
 import com.tsystems.logistics.logistics_vp.mapper.OrderMapper;
 import com.tsystems.logistics.logistics_vp.repository.OrderRepository;
-import com.tsystems.logistics.logistics_vp.repository.customized.CustomizedOrderRepository;
 import com.tsystems.logistics.logistics_vp.service.interfaces.OrderService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,6 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
-    private final CustomizedOrderRepository customizedOrderRepository;
 
     @Override
     public List<OrderDto> ordersFindAll() {
@@ -65,49 +63,49 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDto> ordersFindByOrderCustomerId(Integer orderCustomerId) {
-        return customizedOrderRepository.findAllByOrderCustomerId(orderCustomerId).stream().map(
+        return orderRepository.findAllByOrderCustomerId(orderCustomerId).stream().map(
                 order -> orderDto(order)).toList();
     }
 
     @Override
     public List<OrderDto> ordersFindByCategory(String category) {
-        return customizedOrderRepository.findAllByCategory(category).stream().map(
+        return orderRepository.findAllByCategory(category).stream().map(
                 order -> orderDto(order)).toList();
     }
 
     @Override
     public List<OrderDto> ordersFindByStatus(OrderStatus orderStatus) {
-        return customizedOrderRepository.findAllByStatus(orderStatus).stream().map(
+        return orderRepository.findAllByStatus(orderStatus).stream().map(
                 order -> orderDto(order)).toList();
     }
 
     @Override
     public OrderDto orderFindByAssignedTruckNumber(String truckNumber) {
-        Order order = customizedOrderRepository.findOrderByAssignedTruckNumber(truckNumber);
+        Order order = orderRepository.findOrderByAssignedTruckNumber(truckNumber);
         return orderDto(order);
     }
 
     @Override
     public List<OrderDto> ordersFindEarlierThanStartDateTime(LocalDateTime startDateTime) {
-        return customizedOrderRepository.findAllByStartDateTimeLessThanEqual(startDateTime).stream().map(
+        return orderRepository.findAllByStartDateTimeLessThanEqual(startDateTime).stream().map(
                 order -> orderDto(order)).toList();
     }
 
     @Override
     public List<OrderDto> ordersFindLaterThanStartDateTime(LocalDateTime startDateTime) {
-        return customizedOrderRepository.findAllByStartDateTimeGreaterThanEqual(startDateTime).stream().map(
+        return orderRepository.findAllByStartDateTimeGreaterThanEqual(startDateTime).stream().map(
                 order -> orderDto(order)).toList();
     }
 
     @Override
     public List<OrderDto> ordersFindEarlierThanLimitDateTime(LocalDateTime limitDateTime) {
-        return customizedOrderRepository.findAllByLimitDateTimeLessThanEqual(limitDateTime).stream().map(
+        return orderRepository.findAllByLimitDateTimeLessThanEqual(limitDateTime).stream().map(
                 order -> orderDto(order)).toList();
     }
 
     @Override
     public List<OrderDto> ordersFindLaterThanLimitDateTime(LocalDateTime limitDateTime) {
-        return customizedOrderRepository.findAllByLimitDateTimeGreaterThanEqual(limitDateTime).stream().map(
+        return orderRepository.findAllByLimitDateTimeGreaterThanEqual(limitDateTime).stream().map(
                 order -> orderDto(order)).toList();
     }
 

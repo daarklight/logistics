@@ -3365,6 +3365,34 @@ components:
           type: string
           enum: ["YES","NO"]
           default: "NO"
+        waypointIndex:
+          description: Waypoint index based on Google Maps API optimization
+          type: integer
+          format: int32
+          example: 12001
+        rideDistanceFromStartPoint:
+          description: Ride distance from start point, km
+          type: integer
+          format: int32
+          example: 12001
+        rideDurationFromStartPoint:
+          description: Ride duration from start point, km
+          type: integer
+          format: int32
+          example: 12001
+        rideDistanceFromPreviousPoint:
+          description: Ride distance from previous point, km
+          type: integer
+          format: int32
+          example: 12001
+        rideDurationFromPreviousPoint:
+          description: Ride duration from previous point, km
+          type: integer
+          format: int32
+          example: 12001
+
+
+
         expectedCompletionDateTime:
           type: string
           format: date-time

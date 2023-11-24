@@ -4,7 +4,6 @@ import com.tsystems.logistics.logistics_vp.code.model.AuthenticationInfoDto;
 import com.tsystems.logistics.logistics_vp.entity.AuthenticationInfo;
 import com.tsystems.logistics.logistics_vp.mapper.AuthenticationInfoMapper;
 import com.tsystems.logistics.logistics_vp.repository.AuthenticationInfoRepository;
-import com.tsystems.logistics.logistics_vp.repository.customized.CustomizedAuthenticationInfoRepository;
 import com.tsystems.logistics.logistics_vp.service.interfaces.AuthenticationInfoService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,6 @@ import java.util.List;
 public class AuthenticationInfoServiceImpl implements AuthenticationInfoService {
 
     private final AuthenticationInfoRepository authenticationInfoRepository;
-    private final CustomizedAuthenticationInfoRepository customizedAuthenticationInfoRepository;
 
     @Override
     public List<AuthenticationInfoDto> authenticationInfoFindAll() {
@@ -59,7 +57,7 @@ public class AuthenticationInfoServiceImpl implements AuthenticationInfoService 
 
     @Override
     public AuthenticationInfoDto authenticationInfoFindByLogin(String login) {
-        AuthenticationInfo authenticationInfo = customizedAuthenticationInfoRepository.findByLogin(login);
+        AuthenticationInfo authenticationInfo = authenticationInfoRepository.findByLogin(login);
         return authenticationInfoDto(authenticationInfo);
     }
 

@@ -32,6 +32,11 @@ public class Cargo {
     //final_state VARCHAR(49) NOT NULL,
     //final_address VARCHAR(50) NOT NULL,
     //unloaded ENUM('YES','NO') DEFAULT 'NO',
+    //waypoint_index INT,
+    //ride_distance_from_start_point INT,
+    //ride_duration_from_start_point INT,
+    //ride_distance_from_previous_point INT,
+    //ride_duration_from_previous_point INT,
     //expected_completion_date_time DATETIME,
     //real_completion_date_time DATETIME,
     //deleted BIT(1) NOT NULL DEFAULT 0,
@@ -83,6 +88,21 @@ public class Cargo {
     @Enumerated(EnumType.STRING)
     @Column(name = "unloaded", columnDefinition = "ENUM('YES','NO') DEFAULT 'NO'")
     private Unloaded unloaded = Unloaded.NO;
+
+    @Column(name = "waypoint_index")
+    private int waypointIndex;
+
+    @Column(name = "ride_distance_from_start_point")
+    private int rideDistanceFromStartPoint;
+
+    @Column(name = "ride_duration_from_start_point")
+    private int rideDurationFromStartPoint;
+
+    @Column(name = "ride_distance_from_previous_point")
+    private int rideDistanceFromPreviousPoint;
+
+    @Column(name = "ride_duration_from_previous_point")
+    private int rideDurationFromPreviousPoint;
 
     @Column(name = "expected_completion_date_time")
     private LocalDateTime expectedCompletionDateTime;

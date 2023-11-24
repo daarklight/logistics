@@ -8,7 +8,6 @@ import com.tsystems.logistics.logistics_vp.entity.Truck;
 import com.tsystems.logistics.logistics_vp.enums.Busy;
 import com.tsystems.logistics.logistics_vp.enums.TechnicalCondition;
 import com.tsystems.logistics.logistics_vp.mapper.TruckMapper;
-import com.tsystems.logistics.logistics_vp.repository.customized.CustomizedTruckRepository;
 import com.tsystems.logistics.logistics_vp.repository.TruckRepository;
 import com.tsystems.logistics.logistics_vp.service.interfaces.TruckService;
 import jakarta.transaction.Transactional;
@@ -23,28 +22,27 @@ import java.util.List;
 public class TruckServiceImpl implements TruckService {
 
     private final TruckRepository truckRepository;
-    private final CustomizedTruckRepository customizedTruckRepository;
 
     public List<TruckDto> trucksFindAll() {
         return truckRepository.findAll().stream().map(truck -> truckDto(truck)).toList();
     }
 
     public List<TruckDto> trucksFindAllByCurrentCityAndState(String city, String state) {
-        return customizedTruckRepository.findAllByCurrentCityAndCurrentState(city, state)
+        return truckRepository.findAllByCurrentCityAndCurrentState(city, state)
                 .stream().map(truck -> truckDto(truck)).toList();
     }
 
     public List<TruckDto> findAllForOrder(Integer orderId, String city, String state, Double capacity) {
-        return customizedTruckRepository.findAllByCurrentCityAndCurrentStateAndCapacityGreaterThanEqual(city, state, capacity)
+        return truckRepository.findAllByCurrentCityAndCurrentStateAndCapacityGreaterThanEqual(city, state, capacity)
                 .stream().map(truck -> truckDto(truck)).filter(dto -> dto.getBusy().toString().equals("NO")).toList();
     }
 
     public List<TruckDto> trucksFindByBusyStatus(Busy busy){
-        return customizedTruckRepository.findAllByBusy(busy).stream().map(truck -> truckDto(truck)).toList();
+        return truckRepository.findAllByBusy(busy).stream().map(truck -> truckDto(truck)).toList();
     }
 
     public List<TruckDto> trucksFindAllByTechnicalCondition(TechnicalCondition technicalCondition){
-        return customizedTruckRepository.findAllByTechnicalCondition(technicalCondition).stream().map(truck -> truckDto(truck)).toList();
+        return truckRepository.findAllByTechnicalCondition(technicalCondition).stream().map(truck -> truckDto(truck)).toList();
     }
 
     public void truckDelete(String number) {
