@@ -3369,27 +3369,27 @@ components:
           description: Waypoint index based on Google Maps API optimization
           type: integer
           format: int32
-          example: 12001
+          example: 1
         rideDistanceFromStartPoint:
           description: Ride distance from start point, km
           type: integer
           format: int32
-          example: 12001
+          example: 355
         rideDurationFromStartPoint:
-          description: Ride duration from start point, km
+          description: Ride duration from start point, minutes
           type: integer
           format: int32
-          example: 12001
+          example: 220
         rideDistanceFromPreviousPoint:
           description: Ride distance from previous point, km
           type: integer
           format: int32
-          example: 12001
+          example: 216
         rideDurationFromPreviousPoint:
-          description: Ride duration from previous point, km
+          description: Ride duration from previous point, minutes
           type: integer
           format: int32
-          example: 12001
+          example: 123
 
 
 

@@ -52,7 +52,8 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public DriverDto driverUpdateByLogistician(Integer personalNumber, UpdateDriverByLogisticianDto driverDto) {
-        Truck truck = truckRepository.findById(driverDto.getCurrentTruckNumber()).orElseThrow();
+        // TO CHECK AND CHANGE findByDriverId and find truck by driver's personal number
+        //Truck truck = truckRepository.findById(driverDto.getCurrentTruckNumber()).orElseThrow();
         Driver driver = driverRepository.findById(personalNumber).orElseThrow();
         driver.setName(driverDto.getName());
         driver.setSurname(driverDto.getSurname());
@@ -61,7 +62,7 @@ public class DriverServiceImpl implements DriverService {
         driver.setWorkExperience(driverDto.getWorkExperience());
         driver.setCurrentCity(driverDto.getCurrentCity());
         driver.setCurrentState(driverDto.getCurrentState());
-        driver.setCurrentTruckNumber(truck);
+        //driver.setCurrentTruckNumber(truck);
         driverRepository.save(driver);
         return driverDto(driver);
     }
