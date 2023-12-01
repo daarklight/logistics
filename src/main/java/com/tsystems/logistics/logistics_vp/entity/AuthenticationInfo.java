@@ -1,5 +1,6 @@
 package com.tsystems.logistics.logistics_vp.entity;
 
+import com.tsystems.logistics.logistics_vp.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
@@ -17,22 +18,28 @@ import org.hibernate.annotations.Where;
 public class AuthenticationInfo {
     //CREATE TABLE logistics.authentication_info (
     //id INT,
-    //login VARCHAR(30) NOT NULL,
-    //password VARCHAR(40) NOT NULL,
+    //username VARCHAR(30) NOT NULL,
+    //password VARCHAR(90) NOT NULL,
+    //role ENUM('ADMIN','LOGISTICIAN','DRIVER','CUSTOMER') DEFAULT 'LOGISTICIAN' NOT NULL,
     //deleted BIT(1) NOT NULL DEFAULT 0,
     //PRIMARY KEY id_pk (id),
-    //UNIQUE KEY login_uk (login)
+    //UNIQUE KEY username_uk (username)
     //);
 
     @Id
     @Column(name = "id")
     private int id;
 
-    @Column(name = "login", length = 30, nullable = false, unique = true)
-    private String login;
+    @Column(name = "username", length = 30, nullable = false, unique = true)
+//    private String login;
+    private String username;
 
-    @Column(name = "password", length = 40, nullable = false)
+    @Column(name = "password", length = 90, nullable = false)
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", columnDefinition = "ENUM('ADMIN','LOGISTICIAN','DRIVER','CUSTOMER') DEFAULT 'LOGISTICIAN'")
+    private Role role;
 
     @OneToOne(mappedBy = "customerAuthenticationId")
     private Customer customer;

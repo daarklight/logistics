@@ -1,6 +1,7 @@
 package com.tsystems.logistics.logistics_vp.service;
 
 import com.tsystems.logistics.logistics_vp.code.model.AuthenticationInfoDto;
+import com.tsystems.logistics.logistics_vp.code.model.AuthenticationInfoToSendDto;
 import com.tsystems.logistics.logistics_vp.entity.AuthenticationInfo;
 import com.tsystems.logistics.logistics_vp.mapper.AuthenticationInfoMapper;
 import com.tsystems.logistics.logistics_vp.repository.AuthenticationInfoRepository;
@@ -28,7 +29,7 @@ public class AuthenticationInfoServiceImpl implements AuthenticationInfoService 
     public AuthenticationInfoDto authenticationInfoCreate(AuthenticationInfoDto authenticationInfoDto) {
         AuthenticationInfo authenticationInfo = AuthenticationInfo.builder()
                 .id(authenticationInfoDto.getId())
-                .login(authenticationInfoDto.getLogin())
+                .username(authenticationInfoDto.getUsername())
                 .password(authenticationInfoDto.getPassword())
                 .build();
         authenticationInfoRepository.save(authenticationInfo);
@@ -38,7 +39,7 @@ public class AuthenticationInfoServiceImpl implements AuthenticationInfoService 
     @Override
     public AuthenticationInfoDto authenticationInfoUpdate(Integer id, AuthenticationInfoDto authenticationInfoDto) {
         AuthenticationInfo authenticationInfo = authenticationInfoRepository.findById(id).orElseThrow();
-        authenticationInfo.setLogin(authenticationInfoDto.getLogin());
+        authenticationInfo.setUsername(authenticationInfoDto.getUsername());
         authenticationInfo.setPassword(authenticationInfoDto.getPassword());
         authenticationInfoRepository.save(authenticationInfo);
         return authenticationInfoDto(authenticationInfo);
@@ -56,9 +57,14 @@ public class AuthenticationInfoServiceImpl implements AuthenticationInfoService 
     }
 
     @Override
-    public AuthenticationInfoDto authenticationInfoFindByLogin(String login) {
-        AuthenticationInfo authenticationInfo = authenticationInfoRepository.findByLogin(login);
+    public AuthenticationInfoDto authenticationInfoFindByUsername(String username) {
+        AuthenticationInfo authenticationInfo = authenticationInfoRepository.findByUsername(username);
         return authenticationInfoDto(authenticationInfo);
+    }
+
+    @Override
+    public String authenticationInfoSend(AuthenticationInfoToSendDto authenticationInfoToSendDto) {
+        return authenticationInfoToSendDto.getUsername();
     }
 
     private AuthenticationInfoDto authenticationInfoDto(AuthenticationInfo authenticationInfo) {

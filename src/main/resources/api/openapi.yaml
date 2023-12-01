@@ -2728,16 +2728,16 @@ paths:
         500:
           description: Internal Server Error
 
-  /authenticationInfo/login/{login}:
+  /authenticationInfo/username/{username}:
     get:
       tags:
         - AuthenticationInfo
-      summary: Find AuthenticationInfo by login
-      operationId: authenticationInfoFindByLogin
+      summary: Find AuthenticationInfo by username
+      operationId: authenticationInfoFindByUsername
       parameters:
-        - name: login
+        - name: username
           in: path
-          description: "AuthenticationInfo login"
+          description: "AuthenticationInfo username"
           required: true
           schema:
             type: string
@@ -2756,10 +2756,45 @@ paths:
         403:
           description: "Forbidden: User does not have permissions"
         404:
-          description: AuthenticationInfo with defined login was not found
+          description: AuthenticationInfo with defined username was not found
         500:
           description: Internal Server Error
 
+  /authenticationInfo/login:
+    post:
+      tags:
+        - AuthenticationInfo
+      summary: Send data for authorization
+      operationId: authenticationInfoSend
+#      parameters:
+#        - in: header
+#          name: auth-token
+#          schema:
+#            type: string
+      requestBody:
+        description: AuthenticationInfo sending for authorization
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthenticationInfoToSend'
+      responses:
+        201:
+          description: AuthenticationInfo was sending successfully
+          content:
+            text/plain:
+              schema:
+                description: username
+                type: string
+                example: john_smith
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        500:
+          description: Internal Server Error
 
 
 components:
@@ -3410,9 +3445,20 @@ components:
           type: integer
           format: int32
           example: 1201
-        login:
+        username:
           type: string
           example: john_smith
         password:
           type: string
-          example: smith111
+          example: "{bcrypt}$2y$10$HC3hS53J4F3AYApUfV5bbewXBbV3kje5VckyZj/6QrN9RssHasDgC"
+
+    AuthenticationInfoToSend:
+      description: Object representing AuthenticationInfo to send
+      type: object
+      properties:
+        username:
+          type: string
+          example: john_smith
+        password:
+          type: string
+          example: "{bcrypt}$2y$10$HC3hS53J4F3AYApUfV5bbewXBbV3kje5VckyZj/6QrN9RssHasDgC"

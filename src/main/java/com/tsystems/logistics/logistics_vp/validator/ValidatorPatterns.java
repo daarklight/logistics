@@ -1,7 +1,7 @@
 package com.tsystems.logistics.logistics_vp.validator;
 
 public class ValidatorPatterns {
-    protected static final String LOGIN_PATTERN = "[A-Za-z1-9_\\s]+";
+    protected static final String USERNAME_PATTERN = "[A-Za-z1-9_\\s]+";
     protected static final String CAR_NUMBER_PATTERN = "[A-Z]{3}\\d{4}";
     protected static final String DOUBLE_PATTERN = "[+]?[0-9]*\\.?[0-9]+";
     protected static final String INTEGER_PATTERN = "\\d+";
