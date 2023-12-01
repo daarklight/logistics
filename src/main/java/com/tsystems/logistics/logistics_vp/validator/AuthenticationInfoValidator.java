@@ -18,7 +18,7 @@ public class AuthenticationInfoValidator extends ValidatorPatterns implements Va
         AuthenticationInfoDto authenticationInfoDto = (AuthenticationInfoDto) object;
 
         Integer id = authenticationInfoDto.getId();
-        String login = authenticationInfoDto.getLogin();
+        String login = authenticationInfoDto.getUsername();
 
         if (id == null) {
             errors.rejectValue("id", "INCORRECT_ID_PATTERN",
@@ -29,9 +29,9 @@ public class AuthenticationInfoValidator extends ValidatorPatterns implements Va
                         "Authentication Info id should not exceed 6 digits");
             }
         }
-        if (!login.toString().matches(LOGIN_PATTERN)) {
-            errors.rejectValue("id", "INCORRECT_LOGIN_PATTERN",
-                    "Authentication Info login can contain only letters, digits and underscores");
+        if (!login.toString().matches(USERNAME_PATTERN)) {
+            errors.rejectValue("id", "INCORRECT_USERNAME_PATTERN",
+                    "Authentication Info username can contain only letters, digits and underscores");
         }
         if (login.toString().length() > 30) {
             errors.rejectValue("id", "INCORRECT_LOGIN",

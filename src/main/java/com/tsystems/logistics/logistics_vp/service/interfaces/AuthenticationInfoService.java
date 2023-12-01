@@ -1,6 +1,7 @@
 package com.tsystems.logistics.logistics_vp.service.interfaces;
 
 import com.tsystems.logistics.logistics_vp.code.model.AuthenticationInfoDto;
+import com.tsystems.logistics.logistics_vp.code.model.AuthenticationInfoToSendDto;
 
 import java.util.List;
 
@@ -10,5 +11,6 @@ public interface AuthenticationInfoService {
     AuthenticationInfoDto authenticationInfoUpdate(Integer id, AuthenticationInfoDto authenticationInfoDto);
     void authenticationInfoDelete(Integer id);
     AuthenticationInfoDto authenticationInfoFindById(Integer id);
-    AuthenticationInfoDto authenticationInfoFindByLogin(String login);
+    AuthenticationInfoDto authenticationInfoFindByUsername(String login);
+    String authenticationInfoSend(AuthenticationInfoToSendDto authenticationInfoToSendDto);
 }
