@@ -13,4 +13,5 @@ public interface LogisticianService {
     void deleteLogistician(Integer personalNumber);
     LogisticianDto logisticianFindByNumber(Integer personalNumber);
     List<LogisticianDto> logisticianFindByNameAndSurname(String name, String surname);
+    LogisticianDto logisticianFindByUsername(String username);
 }

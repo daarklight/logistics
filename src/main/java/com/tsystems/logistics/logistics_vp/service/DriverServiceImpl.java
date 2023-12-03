@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -118,7 +119,7 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public List<DriverDto> driversFindAllForOrder(Integer orderId, String city, String state, Integer hours) {
         return driverRepository.findAllByCurrentCityAndCurrentStateAndWorkingHoursInCurrentMonthLessThan(
-                city, state, hours).stream().map(driver -> driverDto(driver))
+                        city, state, hours).stream().map(driver -> driverDto(driver))
                 .filter(dto -> dto.getBusy().toString().equals("NO")).toList();
     }
 
@@ -127,6 +128,32 @@ public class DriverServiceImpl implements DriverService {
         Driver driver = driverRepository.findById(personalNumber).orElseThrow();
         driver.setOrderAcceptance(OrderAcceptance.valueOf(updateDriverOrderAcceptanceDto.getOrderAcceptance().toString()));
         driverRepository.save(driver);
+        return driverDto(driver);
+    }
+
+    @Override
+    public DriverDto driverFindByUsername(String username) {
+        AuthenticationInfo authenticationInfo = authenticationInfoRepository.findByUsername(username);
+        Driver driver = authenticationInfo.getDriver();
+        return driverDto(driver);
+    }
+
+    @Override
+    public DriverDto driverFindCodriver(Integer currentOrderId, Integer personalNumber) {
+        List<DriverDto> allDriversForOrder = driversFindAllByCurrentOrderId(currentOrderId);
+        DriverDto driverDto = new DriverDto();
+        if(allDriversForOrder.size()==2){
+            driverDto = allDriversForOrder.stream().filter(elem -> !elem.getPersonalNumber().equals(personalNumber))
+                    .collect(Collectors.toList()).get(0);
+        }
+        return driverDto;
+    }
+
+    @Override
+    public DriverDto driverUpdateCurrentOrder(Integer orderId, Integer personalNumber) {
+        Order order = orderRepository.findById(orderId).orElseThrow();
+        Driver driver = driverRepository.findById(personalNumber).orElseThrow();
+        driver.setCurrentOrderId(order);
         return driverDto(driver);
     }
 

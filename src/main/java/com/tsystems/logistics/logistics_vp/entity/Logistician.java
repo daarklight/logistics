@@ -31,8 +31,6 @@ public class Logistician {
     @Column(name = "personal_number")
     private int personalNumber;
 
-//    @Column(name = "logistician_authentication_id")
-//    private int logisticianAuthenticationId;
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "logistician_authentication_id", referencedColumnName = "id")
     private AuthenticationInfo logisticianAuthenticationId;

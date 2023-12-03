@@ -1,5 +1,6 @@
 package com.tsystems.logistics.logistics_vp.service.interfaces;
 
+import com.tsystems.logistics.logistics_vp.code.model.AuthenticationInfoDto;
 import com.tsystems.logistics.logistics_vp.code.model.CreateCustomerDto;
 import com.tsystems.logistics.logistics_vp.code.model.CustomerDto;
 import com.tsystems.logistics.logistics_vp.code.model.UpdateCustomerDto;
@@ -14,4 +15,5 @@ public interface CustomerService {
     CustomerDto customerFindById(Integer customerId);
     CustomerDto customerFindByPhone(String phone);
     CustomerDto customerFindByEmail(String email);
+    CustomerDto customerFindByUsername(String username);
 }

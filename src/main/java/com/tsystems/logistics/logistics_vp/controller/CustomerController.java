@@ -1,6 +1,7 @@
 package com.tsystems.logistics.logistics_vp.controller;
 
 import com.tsystems.logistics.logistics_vp.code.api.CustomersApi;
+import com.tsystems.logistics.logistics_vp.code.model.AuthenticationInfoDto;
 import com.tsystems.logistics.logistics_vp.code.model.CreateCustomerDto;
 import com.tsystems.logistics.logistics_vp.code.model.CustomerDto;
 import com.tsystems.logistics.logistics_vp.code.model.UpdateCustomerDto;
@@ -83,5 +84,14 @@ public class CustomerController implements CustomersApi {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(allResultCustomerDtos);
+    }
+
+    @Override
+    public ResponseEntity<CustomerDto> customerFindByUsername(String username) {
+        log.info("Start to find customer by username");
+        CustomerDto resultCustomerDto = customerService.customerFindByUsername(username);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(resultCustomerDto);
     }
 }

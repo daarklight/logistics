@@ -4,10 +4,12 @@ import com.tsystems.logistics.logistics_vp.code.model.CreateTruckDto;
 import com.tsystems.logistics.logistics_vp.code.model.TruckDto;
 import com.tsystems.logistics.logistics_vp.code.model.UpdateTruckByDriverDto;
 import com.tsystems.logistics.logistics_vp.code.model.UpdateTruckByLogisticianDto;
+import com.tsystems.logistics.logistics_vp.entity.Driver;
 import com.tsystems.logistics.logistics_vp.entity.Truck;
 import com.tsystems.logistics.logistics_vp.enums.Busy;
 import com.tsystems.logistics.logistics_vp.enums.TechnicalCondition;
 import com.tsystems.logistics.logistics_vp.mapper.TruckMapper;
+import com.tsystems.logistics.logistics_vp.repository.DriverRepository;
 import com.tsystems.logistics.logistics_vp.repository.TruckRepository;
 import com.tsystems.logistics.logistics_vp.service.interfaces.TruckService;
 import jakarta.transaction.Transactional;
@@ -21,6 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TruckServiceImpl implements TruckService {
 
+    private final DriverRepository driverRepository;
     private final TruckRepository truckRepository;
 
     public List<TruckDto> trucksFindAll() {
@@ -81,22 +84,29 @@ public class TruckServiceImpl implements TruckService {
         return truckDto(truck);
     }
 
-    public TruckDto truckUpdateByLogisticianUi(String number, TruckDto truckDto) {
-        Truck truck = truckRepository.findById(number).orElseThrow();
-        truck.setModel(truckDto.getModel());
-        truck.setCapacity(truckDto.getCapacity());
-        truck.setTotalOperatingTime(truckDto.getTotalOperatingTime());
-        truck.setTechnicalCondition(TechnicalCondition.valueOf(truckDto.getTechnicalCondition().toString()));
-        truck.setCurrentCity(truckDto.getCurrentCity());
-        truck.setCurrentState(truckDto.getCurrentState());
-        truckRepository.save(truck);
-        return truckDto(truck);
-    }
+//    public TruckDto truckUpdateByLogisticianUi(String number, TruckDto truckDto) {
+//        Truck truck = truckRepository.findById(number).orElseThrow();
+//        truck.setModel(truckDto.getModel());
+//        truck.setCapacity(truckDto.getCapacity());
+//        truck.setTotalOperatingTime(truckDto.getTotalOperatingTime());
+//        truck.setTechnicalCondition(TechnicalCondition.valueOf(truckDto.getTechnicalCondition().toString()));
+//        truck.setCurrentCity(truckDto.getCurrentCity());
+//        truck.setCurrentState(truckDto.getCurrentState());
+//        truckRepository.save(truck);
+//        return truckDto(truck);
+//    }
 
     public TruckDto truckUpdateByDriver(String number, UpdateTruckByDriverDto truckDto) {
         Truck truck = truckRepository.findById(number).orElseThrow();
         truck.setModel(number);
         truck.setTechnicalCondition(TechnicalCondition.valueOf(truckDto.getTechnicalCondition().toString()));
+        return truckDto(truck);
+    }
+
+    @Override
+    public TruckDto truckFindByDriver(Integer personalNumber) {
+        Driver driver = driverRepository.findById(personalNumber).orElseThrow();
+        Truck truck = driver.getCurrentTruckNumber();
         return truckDto(truck);
     }
 

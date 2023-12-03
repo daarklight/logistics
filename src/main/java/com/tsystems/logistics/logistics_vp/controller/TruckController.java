@@ -109,4 +109,12 @@ public class TruckController implements TrucksApi {
         return ResponseEntity
                 .ok(allResultTruckDtos);
     }
+
+    @Override
+    public ResponseEntity<TruckDto> truckFindByDriver(Integer personalNumber) {
+        log.info("Start to find truck by driver");
+        TruckDto resultTruckDto = truckService.truckFindByDriver(personalNumber);
+        return ResponseEntity
+                .ok(resultTruckDto);
+    }
 }

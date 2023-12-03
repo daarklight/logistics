@@ -19,4 +19,7 @@ public interface DriverService {
     List<DriverDto> driversFindAllByCurrentOrderId(Integer currentOrderId);
     DriverDto driverOrderAcceptance(Integer personalNumber, UpdateDriverOrderAcceptanceDto updateDriverOrderAcceptanceDto);
     List<DriverDto> driversFindAllForOrder(Integer orderId, String city, String state, Integer hours);
+    DriverDto driverFindByUsername(String username);
+    DriverDto driverFindCodriver(Integer currentOrderId, Integer personalNumber);
+    DriverDto driverUpdateCurrentOrder(Integer currentOrderId, Integer personalNumber);
 }

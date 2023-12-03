@@ -67,6 +67,13 @@ public class LogisticianServiceImpl implements LogisticianService {
                 logistician -> logisticianDto(logistician)).toList();
     }
 
+    @Override
+    public LogisticianDto logisticianFindByUsername(String username) {
+        AuthenticationInfo authenticationInfo = authenticationInfoRepository.findByUsername(username);
+        Logistician logistician = authenticationInfo.getLogistician();
+        return logisticianDto(logistician);
+    }
+
     private LogisticianDto logisticianDto(Logistician logistician) {
         return LogisticianMapper.INSTANCE.logisticianToLogisticianDto(logistician);
     }

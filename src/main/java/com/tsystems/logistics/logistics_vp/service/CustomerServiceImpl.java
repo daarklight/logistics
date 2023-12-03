@@ -1,5 +1,6 @@
 package com.tsystems.logistics.logistics_vp.service;
 
+import com.tsystems.logistics.logistics_vp.code.model.AuthenticationInfoDto;
 import com.tsystems.logistics.logistics_vp.code.model.CreateCustomerDto;
 import com.tsystems.logistics.logistics_vp.code.model.CustomerDto;
 import com.tsystems.logistics.logistics_vp.code.model.UpdateCustomerDto;
@@ -72,6 +73,13 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDto customerFindByEmail(String email) {
         Customer customer = customerRepository.findCustomerByEmail(email);
+        return customerDto(customer);
+    }
+
+    @Override
+    public CustomerDto customerFindByUsername(String username) {
+        AuthenticationInfo authenticationInfo = authenticationInfoRepository.findByUsername(username);
+        Customer customer = authenticationInfo.getCustomer();
         return customerDto(customer);
     }
 

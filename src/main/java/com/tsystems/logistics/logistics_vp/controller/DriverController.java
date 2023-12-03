@@ -139,4 +139,42 @@ public class DriverController implements DriversApi {
                 .status(HttpStatus.OK)
                 .body(resultDriverDto);
     }
+
+    @Override
+    public ResponseEntity<DriverDto> driverFindByUsername(String username) {
+        log.info("Start to find driver by username");
+        DriverDto resultDriverDto = driverService.driverFindByUsername(username);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(resultDriverDto);
+    }
+
+    @Override
+    public ResponseEntity<DriverDto> driversFindCodriver(Integer currentOrderId, Integer personalNumber) {
+        log.info("Start to find co-driver for defined driver");
+        DriverDto resultDriverDto = driverService.driverFindCodriver(currentOrderId, personalNumber);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(resultDriverDto);
+    }
+
+//    @Override
+//    public ResponseEntity<DriverDto> driverUpdateCurrentOrder(Integer currentOrderId, Integer personalNumber) {
+//        log.info("Start to update current order for defined driver");
+//        DriverDto resultDriverDto = driverService.driverUpdateCurrentOrder(currentOrderId, personalNumber);
+//        return ResponseEntity
+//                .status(HttpStatus.OK)
+//                .body(resultDriverDto);
+//    }
+
+    @Override
+    public ResponseEntity<DriverDto> driverUpdateCurrentOrder(Integer orderId, Integer personalNumber) {
+        log.info("Start to update current order for defined driver");
+        DriverDto resultDriverDto = driverService.driverUpdateCurrentOrder(orderId, personalNumber);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(resultDriverDto);
+    }
+
+
 }

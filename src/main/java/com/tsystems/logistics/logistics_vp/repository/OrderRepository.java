@@ -16,4 +16,11 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     List<Order> findAllByStartDateTimeGreaterThanEqual(LocalDateTime startDateTime);
     List<Order> findAllByLimitDateTimeLessThanEqual(LocalDateTime limitDateTime);
     List<Order> findAllByLimitDateTimeGreaterThanEqual(LocalDateTime limitDateTime);
+
+    //
+    //    @Override
+    //    public ResponseEntity<List<OrderDto>> orderFindByDriver(Integer personalNumber) {
+    //        log.info("Start to find order by driver");
+    //        return null;
+    //    }
 }

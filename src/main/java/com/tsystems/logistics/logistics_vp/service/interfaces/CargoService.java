@@ -26,4 +26,6 @@ public interface CargoService {
     List<CargoDto> cargosFindLaterThanExpectedCompletionDateTime(LocalDateTime expectedCompletionDateTime);
     List<CargoDto> cargosFindEarlierThanRealCompletionDateTime(LocalDateTime realCompletionDateTime);
     List<CargoDto> cargosFindLaterThanRealCompletionDateTime(LocalDateTime realCompletionDateTime);
+    CargoDto cargoUpdateLoading(Integer cargoId);
+    CargoDto cargoUpdateUnloading(Integer cargoId);
 }

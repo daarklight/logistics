@@ -170,4 +170,20 @@ public class CargoServiceImpl implements CargoService {
     private CargoDto cargoDto(Cargo cargo) {
         return CargoMapper.INSTANCE.cargoToCargoDto(cargo);
     }
+
+    @Override
+    public CargoDto cargoUpdateLoading(Integer cargoId) {
+        Cargo cargo = cargoRepository.findById(cargoId).orElseThrow();
+        cargo.setLoaded(Loaded.YES);
+        cargoRepository.save(cargo);
+        return cargoDto(cargo);
+    }
+
+    @Override
+    public CargoDto cargoUpdateUnloading(Integer cargoId) {
+        Cargo cargo = cargoRepository.findById(cargoId).orElseThrow();
+        cargo.setUnloaded(Unloaded.YES);
+        cargoRepository.save(cargo);
+        return cargoDto(cargo);
+    }
 }

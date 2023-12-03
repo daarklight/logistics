@@ -1,10 +1,10 @@
 package com.tsystems.logistics.logistics_vp.enums;
 
 public enum Role {
-    ADMIN("ADMIN"),
-    LOGISTICIAN("LOGISTICIAN"),
-    DRIVER("DRIVER"),
-    CUSTOMER("CUSTOMER");
+    ROLE_ADMIN("ROLE_ADMIN"),
+    ROLE_LOGISTICIAN("ROLE_LOGISTICIAN"),
+    ROLE_DRIVER("ROLE_DRIVER"),
+    ROLE_CUSTOMER("ROLE_CUSTOMER");
 
     private String role;
 
