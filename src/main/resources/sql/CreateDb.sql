@@ -5,11 +5,12 @@ USE logistics;
 
 CREATE TABLE logistics.authentication_info (
 id INT,
-login VARCHAR(30) NOT NULL,
-password VARCHAR(40) NOT NULL,
+username VARCHAR(30) NOT NULL,
+password VARCHAR(90) NOT NULL,
+role ENUM('ROLE_ADMIN','ROLE_LOGISTICIAN','ROLE_DRIVER','ROLE_CUSTOMER') DEFAULT 'ROLE_LOGISTICIAN' NOT NULL,
 deleted BIT(1) NOT NULL DEFAULT 0,
 PRIMARY KEY id_pk (id),
-UNIQUE KEY login_uk (login)
+UNIQUE KEY username_uk (username)
 );
 
 CREATE TABLE logistics.trucks (

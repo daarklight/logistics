@@ -1,5 +1,6 @@
 package com.tsystems.logistics.logistics_vp.repository;
 
+import com.tsystems.logistics.logistics_vp.entity.AuthenticationInfo;
 import com.tsystems.logistics.logistics_vp.entity.Driver;
 import com.tsystems.logistics.logistics_vp.entity.Order;
 import com.tsystems.logistics.logistics_vp.entity.Truck;

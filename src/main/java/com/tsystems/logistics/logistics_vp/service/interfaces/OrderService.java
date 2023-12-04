@@ -1,8 +1,10 @@
 package com.tsystems.logistics.logistics_vp.service.interfaces;
 
 import com.tsystems.logistics.logistics_vp.code.model.*;
+import com.tsystems.logistics.logistics_vp.entity.Order;
 import com.tsystems.logistics.logistics_vp.enums.OrderStatus;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,8 +23,10 @@ public interface OrderService {
     List<OrderDto> ordersFindLaterThanStartDateTime(LocalDateTime startDateTime);
     List<OrderDto> ordersFindEarlierThanLimitDateTime(LocalDateTime limitDateTime);
     List<OrderDto> ordersFindLaterThanLimitDateTime(LocalDateTime limitDateTime);
-    OrderDto orderUpdateStatus(Integer orderId, UpdateOrderStatusDto orderDto);
+    OrderDto orderUpdateStatus(Integer orderId, String status);
     OrderDto orderUpdateStartDateTime(Integer orderId);
     OrderDto orderUpdateDriverComment(Integer orderId, UpdateOrderDriverCommentDto orderDto);
-    OrderDto orderUpdateAssignedTruckNumber(Integer orderId, UpdateOrderAssignedTruckNumberDto orderDto);
+    OrderDto orderUpdateAssignedTruckNumber(Integer orderId, String truckNumber);
+    OrderDto orderFindByDriver(Integer personalNumber);
+    Order getOrderFromDb(Integer orderId);
 }

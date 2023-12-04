@@ -20,7 +20,7 @@ public class AuthenticationInfo {
     //id INT,
     //username VARCHAR(30) NOT NULL,
     //password VARCHAR(90) NOT NULL,
-    //role ENUM('ADMIN','LOGISTICIAN','DRIVER','CUSTOMER') DEFAULT 'LOGISTICIAN' NOT NULL,
+    //role ENUM('ROLE_ADMIN','ROLE_LOGISTICIAN','ROLE_DRIVER','ROLE_CUSTOMER') DEFAULT 'ROLE_LOGISTICIAN' NOT NULL,
     //deleted BIT(1) NOT NULL DEFAULT 0,
     //PRIMARY KEY id_pk (id),
     //UNIQUE KEY username_uk (username)
@@ -38,7 +38,7 @@ public class AuthenticationInfo {
 
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", columnDefinition = "ENUM('ADMIN','LOGISTICIAN','DRIVER','CUSTOMER') DEFAULT 'LOGISTICIAN'")
+    @Column(name = "role", columnDefinition = "ENUM('ROLE_ADMIN','ROLE_LOGISTICIAN','ROLE_DRIVER','ROLE_CUSTOMER') DEFAULT 'ROLE_LOGISTICIAN'")
     private Role role;
 
     @OneToOne(mappedBy = "customerAuthenticationId")

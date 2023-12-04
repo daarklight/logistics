@@ -5,6 +5,7 @@ import com.tsystems.logistics.logistics_vp.code.model.LogisticianDto;
 import com.tsystems.logistics.logistics_vp.code.model.UpdateLogisticianDto;
 import com.tsystems.logistics.logistics_vp.entity.AuthenticationInfo;
 import com.tsystems.logistics.logistics_vp.entity.Logistician;
+import com.tsystems.logistics.logistics_vp.exceptions.custom.NoSuchLogisticianException;
 import com.tsystems.logistics.logistics_vp.mapper.LogisticianMapper;
 import com.tsystems.logistics.logistics_vp.repository.AuthenticationInfoRepository;
 import com.tsystems.logistics.logistics_vp.repository.LogisticianRepository;
@@ -43,7 +44,7 @@ public class LogisticianServiceImpl implements LogisticianService {
 
     @Override
     public LogisticianDto logisticianUpdate(Integer personalNumber, UpdateLogisticianDto logisticianDto) {
-        Logistician logistician = logisticianRepository.findById(personalNumber).orElseThrow();
+        Logistician logistician = getLogisticianFromDb(personalNumber);
         logistician.setName(logisticianDto.getName());
         logistician.setSurname(logisticianDto.getSurname());
         return logisticianDto(logistician);
@@ -51,20 +52,32 @@ public class LogisticianServiceImpl implements LogisticianService {
 
     @Override
     public void deleteLogistician(Integer personalNumber) {
+        getLogisticianFromDb(personalNumber);
         logisticianRepository.deleteById(personalNumber);
-
     }
 
     @Override
     public LogisticianDto logisticianFindByNumber(Integer personalNumber) {
-        Logistician logistician = logisticianRepository.findById(personalNumber).orElseThrow();
-        return logisticianDto(logistician);
+        return logisticianDto(getLogisticianFromDb(personalNumber));
     }
 
     @Override
     public List<LogisticianDto> logisticianFindByNameAndSurname(String name, String surname) {
         return logisticianRepository.findAllByNameAndSurname(name, surname).stream().map(
                 logistician -> logisticianDto(logistician)).toList();
+    }
+
+    @Override
+    public LogisticianDto logisticianFindByUsername(String username) {
+        AuthenticationInfo authenticationInfo = authenticationInfoRepository.findByUsername(username);
+        Logistician logistician = authenticationInfo.getLogistician();
+        return logisticianDto(logistician);
+    }
+
+    @Override
+    public Logistician getLogisticianFromDb(Integer personalNumber) {
+        return logisticianRepository.findById(personalNumber).orElseThrow(() ->
+                new NoSuchLogisticianException("This logistician does not exist in database"));
     }
 
     private LogisticianDto logisticianDto(Logistician logistician) {

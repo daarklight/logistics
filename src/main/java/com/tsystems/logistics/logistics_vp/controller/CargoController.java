@@ -1,10 +1,7 @@
 package com.tsystems.logistics.logistics_vp.controller;
 
 import com.tsystems.logistics.logistics_vp.code.api.CargosApi;
-import com.tsystems.logistics.logistics_vp.code.model.CargoDto;
-import com.tsystems.logistics.logistics_vp.code.model.CreateCargoDto;
-import com.tsystems.logistics.logistics_vp.code.model.UpdateCargoByDriverDto;
-import com.tsystems.logistics.logistics_vp.code.model.UpdateCargoByLogisticianDto;
+import com.tsystems.logistics.logistics_vp.code.model.*;
 import com.tsystems.logistics.logistics_vp.service.interfaces.CargoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -13,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,7 +25,14 @@ public class CargoController implements CargosApi {
     @Override
     public ResponseEntity<CargoDto> cargoCreate(CreateCargoDto createCargoDto) {
         log.info("Start to register new cargo");
-        CargoDto resultCargoDto = cargoService.cargoCreate(createCargoDto);
+        CargoDto resultCargoDto = null;
+        try {
+            resultCargoDto = cargoService.cargoCreate(createCargoDto);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(resultCargoDto);
@@ -207,5 +212,23 @@ public class CargoController implements CargosApi {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(allResultCargoDtos);
+    }
+
+    @Override
+    public ResponseEntity<CargoDto> cargoUpdateLoading(Integer cargoId) {
+        log.info("Start to update cargo loaded status");
+        CargoDto resultCargoDto = cargoService.cargoUpdateLoading(cargoId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(resultCargoDto);
+    }
+
+    @Override
+    public ResponseEntity<CargoDto> cargoUpdateUnloading(Integer cargoId) {
+        log.info("Start to update cargo unloaded status");
+        CargoDto resultCargoDto = cargoService.cargoUpdateUnloading(cargoId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(resultCargoDto);
     }
 }

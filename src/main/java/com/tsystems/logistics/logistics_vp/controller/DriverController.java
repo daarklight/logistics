@@ -3,7 +3,9 @@ package com.tsystems.logistics.logistics_vp.controller;
 import com.tsystems.logistics.logistics_vp.code.api.DriversApi;
 import com.tsystems.logistics.logistics_vp.code.model.*;
 import com.tsystems.logistics.logistics_vp.enums.Busy;
+import com.tsystems.logistics.logistics_vp.enums.OrderAcceptance;
 import com.tsystems.logistics.logistics_vp.service.interfaces.DriverService;
+import com.tsystems.logistics.logistics_vp.service.interfaces.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -131,10 +133,36 @@ public class DriverController implements DriversApi {
     }
 
     @Override
-    public ResponseEntity<DriverDto> driversUpdateOrderAcceptance(
-            Integer personalNumber, UpdateDriverOrderAcceptanceDto updateDriverOrderAcceptanceDto) {
+    public ResponseEntity<DriverDto> driversUpdateOrderAcceptance(Integer personalNumber, String orderAcceptance) {
         log.info("Start to update order acceptance from driver");
-        DriverDto resultDriverDto = driverService.driverOrderAcceptance(personalNumber, updateDriverOrderAcceptanceDto);
+        DriverDto resultDriverDto = driverService.driverOrderAcceptance(personalNumber, OrderAcceptance.valueOf(orderAcceptance));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(resultDriverDto);
+    }
+
+    @Override
+    public ResponseEntity<DriverDto> driverFindByUsername(String username) {
+        log.info("Start to find driver by username");
+        DriverDto resultDriverDto = driverService.driverFindByUsername(username);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(resultDriverDto);
+    }
+
+    @Override
+    public ResponseEntity<DriverDto> driversFindCodriver(Integer currentOrderId, Integer personalNumber) {
+        log.info("Start to find co-driver for defined driver");
+        DriverDto resultDriverDto = driverService.driverFindCodriver(currentOrderId, personalNumber);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(resultDriverDto);
+    }
+
+    @Override
+    public ResponseEntity<DriverDto> driverUpdateCurrentOrder(Integer orderId, Integer personalNumber) {
+        log.info("Start to update current order for defined driver");
+        DriverDto resultDriverDto = driverService.driverUpdateCurrentOrder(orderId, personalNumber);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(resultDriverDto);

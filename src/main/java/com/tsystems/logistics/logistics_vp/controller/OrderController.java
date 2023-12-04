@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -131,9 +132,9 @@ public class OrderController implements OrdersApi {
     }
 
     @Override
-    public ResponseEntity<OrderDto> orderUpdateAssignedTruckNumber(Integer orderId, UpdateOrderAssignedTruckNumberDto updateOrderDto) {
+    public ResponseEntity<OrderDto> orderUpdateAssignedTruckNumber(Integer orderId, String truckNumber) {
         log.info("Start to update assigned truck for order");
-        OrderDto resultOrderDto = orderService.orderUpdateAssignedTruckNumber(orderId, updateOrderDto);
+        OrderDto resultOrderDto = orderService.orderUpdateAssignedTruckNumber(orderId, truckNumber);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(resultOrderDto);
@@ -158,13 +159,22 @@ public class OrderController implements OrdersApi {
     }
 
     @Override
-    public ResponseEntity<OrderDto> orderUpdateStatus(Integer orderId, UpdateOrderStatusDto updateOrderStatusDto) {
+    public ResponseEntity<OrderDto> orderUpdateStatus(Integer orderId, String status) {
         log.info("Start to update order status");
-        OrderDto resultOrderDto = orderService.orderUpdateStatus(orderId, updateOrderStatusDto);
+        OrderDto resultOrderDto = orderService.orderUpdateStatus(orderId, status);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(resultOrderDto);
     }
+
+//    @Override
+//    public ResponseEntity<OrderDto> orderUpdateStatus(Integer orderId, UpdateOrderStatusDto updateOrderStatusDto) {
+//        log.info("Start to update order status");
+//        OrderDto resultOrderDto = orderService.orderUpdateStatus(orderId, updateOrderStatusDto);
+//        return ResponseEntity
+//                .status(HttpStatus.OK)
+//                .body(resultOrderDto);
+//    }
 
     @Override
     public ResponseEntity<List<OrderDto>> ordersFindAll() {
@@ -174,4 +184,26 @@ public class OrderController implements OrdersApi {
                 .status(HttpStatus.OK)
                 .body(allResultOrderDtos);
     }
+
+    @Override
+    public ResponseEntity<OrderDto> orderFindByDriver(Integer personalNumber) {
+        log.info("Start to find order by driver");
+        OrderDto resultOrderDto = orderService.orderFindByDriver(personalNumber);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(resultOrderDto);
+    }
+
+//    @Override
+//    public ResponseEntity<String> orderCalculateRide(Integer orderId) {
+//        log.info("Start to calculate and update ride for cargos of defined orders");
+//        try {
+//            orderService.calculateAndUpdateRide(orderId);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//        return null;
+//    }
 }

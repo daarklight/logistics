@@ -75,4 +75,13 @@ public class LogisticianController implements LogisticiansApi {
                 .status(HttpStatus.OK)
                 .body(allLogisticians);
     }
+
+    @Override
+    public ResponseEntity<LogisticianDto> logisticianFindByUsername(String username) {
+        log.info("Start to find logistician by username");
+        LogisticianDto resultLogisticianDto = logisticianService.logisticianFindByUsername(username);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(resultLogisticianDto);
+    }
 }

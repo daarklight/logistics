@@ -393,6 +393,39 @@ paths:
         500:
           description: Internal Server Error
 
+  /trucks/byDriver/{personalNumber}:
+    get:
+      tags:
+        - Truck
+      summary: Find current Truck for driver
+      operationId: truckFindByDriver
+      parameters:
+        - name: personalNumber
+          description: "Driver's personal number"
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 153001
+      responses:
+        200:
+          description: Truck was found successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Truck'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Truck for this driver was not found
+        500:
+          description: Internal Server Error
+
 
 
   /drivers:
@@ -458,6 +491,7 @@ paths:
       parameters:
         - name: personalNumber
           in: path
+          description: "Driver's personal number"
           required: true
           schema:
             type: integer
@@ -497,6 +531,7 @@ paths:
       parameters:
         - name: personalNumber
           in: path
+          description: "Driver's personal number"
           required: true
           schema:
             type: integer
@@ -536,6 +571,7 @@ paths:
       parameters:
         - name: personalNumber
           in: path
+          description: "Driver's personal number"
           required: true
           schema:
             type: integer
@@ -563,6 +599,7 @@ paths:
       parameters:
         - name: personalNumber
           in: path
+          description: "Driver's personal number"
           required: true
           schema:
             type: integer
@@ -595,7 +632,7 @@ paths:
       parameters:
         - in: query
           name: name
-          description: Driver's name
+          description: "Driver's name"
           allowEmptyValue: false
           required: true
           schema:
@@ -604,7 +641,7 @@ paths:
           allowReserved: false
         - in: query
           name: surname
-          description: Driver's surname
+          description: "Driver's surname"
           allowEmptyValue: false
           required: true
           schema:
@@ -720,6 +757,7 @@ paths:
       parameters:
         - name: currentTruckNumber
           in: path
+          description: "Current truck number for Driver"
           required: true
           schema:
             type: string
@@ -753,6 +791,7 @@ paths:
       parameters:
         - name: currentOrderId
           in: path
+          description: "Current order id for Driver"
           required: true
           schema:
             type: integer
@@ -778,7 +817,48 @@ paths:
         500:
           description: Internal Server Error
 
-  /drivers/orderAcceptance/{personalNumber}:
+  /drivers/currentOrderId/{currentOrderId}/{personalNumber}/codriver:
+    get:
+      tags:
+        - Driver
+      summary: Find codriver for defined Driver by currentOrderId and Driver personal number
+      operationId: driversFindCodriver
+      parameters:
+        - name: currentOrderId
+          in: path
+          description: "Current order id for river"
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 12001
+        - name: personalNumber
+          in: path
+          description: "Driver's personal number"
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 153001
+      responses:
+        200:
+          description: Driver(s) were found successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: No drivers were found for this currentOrderId
+        500:
+          description: Internal Server Error
+
+  /drivers/orderAcceptance/{personalNumber}/{orderAcceptance}:
     patch:
       tags:
         - Driver
@@ -787,18 +867,19 @@ paths:
       parameters:
         - name: personalNumber
           in: path
+          description: "Driver's personal number"
           required: true
           schema:
             type: integer
             format: int32
             example: 153001
-      requestBody:
-        description: Driver object that needs to be updated
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateDriverOrderAcceptance'
+        - name: orderAcceptance
+          in: path
+          description: "Order acceptance can be: YES / NO"
+          required: true
+          schema:
+            type: string
+            example: "NO"
       responses:
         201:
           description: Order acceptance by driver was updated
@@ -860,7 +941,6 @@ paths:
             example: 10
             minimum: 0
             maximum: 176
-
       responses:
         200:
           description: Drivers in this city and state were found successfully
@@ -878,6 +958,79 @@ paths:
           description: "Forbidden: User does not have permissions"
         404:
           description: Drivers in this city and state were not found
+        500:
+          description: Internal Server Error
+
+  /drivers/byUsername/{username}:
+    get:
+      tags:
+        - Driver
+      summary: Find Driver by username
+      operationId: driverFindByUsername
+      parameters:
+        - name: username
+          in: path
+          description: "Driver's username"
+          required: true
+          schema:
+            type: string
+            example: john_smith
+      responses:
+        200:
+          description: Driver was found successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Driver with defined username was not found
+        500:
+          description: Internal Server Error
+
+  /drivers/currentOrder/{orderId}/{personalNumber}:
+    patch:
+      tags:
+        - Driver
+      summary: Update assigned Order for Driver
+      operationId: driverUpdateCurrentOrder
+      parameters:
+        - name: orderId
+          in: path
+          description: "Order id"
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 12001
+        - name: personalNumber
+          in: path
+          description: "Driver's personal number"
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 153001
+      responses:
+        200:
+          description: Driver was updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        404:
+          description: This personal number for driver was not found
+        403:
+          description: "Forbidden: User does not have permissions"
         500:
           description: Internal Server Error
 
@@ -1103,6 +1256,38 @@ paths:
         500:
           description: Internal Server Error
 
+  /customers/byUsername/{username}:
+    get:
+      tags:
+        - Customer
+      summary: Find Customer by username
+      operationId: customerFindByUsername
+      parameters:
+        - name: username
+          in: path
+          description: "Customer's username"
+          required: true
+          schema:
+            type: string
+            example: best_customer
+      responses:
+        200:
+          description: Customer was found successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Customer with defined username was not found
+        500:
+          description: Internal Server Error
+
 
 
   /logisticians:
@@ -1168,7 +1353,7 @@ paths:
       parameters:
         - name: personalNumber
           in: path
-          description: "Logistician personal number"
+          description: "Logistician's personal number"
           required: true
           schema:
             type: integer
@@ -1207,6 +1392,7 @@ paths:
       parameters:
         - name: personalNumber
           in: path
+          description: "Logistician's personal number"
           required: true
           schema:
             type: integer
@@ -1234,6 +1420,7 @@ paths:
       parameters:
         - name: personalNumber
           in: path
+          description: "Logistician's personal number"
           required: true
           schema:
             type: integer
@@ -1299,6 +1486,38 @@ paths:
           description: "Forbidden: User does not have permissions"
         404:
           description: Logistician(s) with defined name and surname were not found
+        500:
+          description: Internal Server Error
+
+  /logisticians/byUsername/{username}:
+    get:
+      tags:
+        - Logistician
+      summary: Find Logistician by username
+      operationId: logisticianFindByUsername
+      parameters:
+        - name: username
+          in: path
+          description: "Logistician's username"
+          required: true
+          schema:
+            type: string
+            example: paul_white
+      responses:
+        200:
+          description: Logistician was found successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Logistician'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Logistician with defined username was not found
         500:
           description: Internal Server Error
 
@@ -1406,6 +1625,7 @@ paths:
       parameters:
         - name: orderId
           in: path
+          description: "Order id"
           required: true
           schema:
             type: integer
@@ -1433,6 +1653,7 @@ paths:
       parameters:
         - name: orderId
           in: path
+          description: "Order id"
           required: true
           schema:
             type: integer
@@ -1727,7 +1948,7 @@ paths:
         500:
           description: Internal Server Error
 
-  /orders/status/{orderId}:
+  /orders/status/{orderId}/{status}:
     patch:
       tags:
         - Order
@@ -1742,13 +1963,13 @@ paths:
             type: integer
             format: int32
             example: 12001
-      requestBody:
-        description: Order object that needs to be updated
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateOrderStatus'
+        - name: status
+          in: path
+          description: "Order status"
+          required: true
+          schema:
+            type: string
+            enum: [NEW,EXPECT_DRIVERS_CONFIRMATION,CONFIRMED,DECLINED_BY_DRIVERS,ON_ROAD,COMPLETED]
       responses:
         200:
           description: Order status was updated successfully
@@ -1840,7 +2061,7 @@ paths:
         500:
           description: Internal Server Error
 
-  /orders/assignedTruckNumber/{orderId}:
+  /orders/assignedTruckNumber/{orderId}/{number}:
     patch:
       tags:
         - Order
@@ -1855,13 +2076,13 @@ paths:
             type: integer
             format: int32
             example: 12001
-      requestBody:
-        description: Order object that needs to be updated
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateOrderAssignedTruckNumber'
+        - name: number
+          in: path
+          description: "Truck number in proper format"
+          required: true
+          schema:
+            type: string
+            example: ABC1234
       responses:
         200:
           description: Assigned truck number for Order was updated successfully
@@ -1877,6 +2098,39 @@ paths:
           description: "Forbidden: User does not have permissions"
         404:
           description: This orderId was not found
+        500:
+          description: Internal Server Error
+
+  /orders/byDriver/{personalNumber}:
+    get:
+      tags:
+        - Order
+      summary: Find Order by Driver
+      operationId: orderFindByDriver
+      parameters:
+        - name: personalNumber
+          description: "Driver's personal number"
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 153001
+      responses:
+        200:
+          description: Orders were found successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: Order for this Driver was not found
         500:
           description: Internal Server Error
 
@@ -2577,6 +2831,68 @@ paths:
         500:
           description: Internal Server Error
 
+  /cargos/loadingDone/{cargoId}:
+    get:
+      tags:
+        - Cargo
+      summary: Update loaded status to YES
+      operationId: cargoUpdateLoading
+      parameters:
+        - name: cargoId
+          in: path
+          description: "Cargo id"
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 1001
+      responses:
+        200:
+          description: Cargo loaded status was updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cargo'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        500:
+          description: Internal Server Error
+
+  /cargos/unloadingDone/{cargoId}:
+    get:
+      tags:
+        - Cargo
+      summary: Update unloaded status to YES
+      operationId: cargoUpdateUnloading
+      parameters:
+        - name: cargoId
+          in: path
+          description: "Cargo id"
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 1001
+      responses:
+        200:
+          description: Cargo unloaded status was updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cargo'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        500:
+          description: Internal Server Error
+
 
 
   /authenticationInfo:
@@ -2995,14 +3311,14 @@ components:
           enum: [REST, DRIVING]
           default: REST
 
-    UpdateDriverOrderAcceptance:
-      description: Object representing Order acceptance request for Driver
+    UpdateDriverCurrentOrder:
+      description: Object representing current Order updating for Driver
       type: object
       properties:
-        orderAcceptance:
-          description: Order acceptance
-          type: string
-          enum: ["YES","NO"]
+        currentOrderId:
+          type: integer
+          format: int32
+          example: 12001
 
     Driver:
       description: Object representing Driver
@@ -3425,9 +3741,6 @@ components:
           type: integer
           format: int32
           example: 123
-
-
-
         expectedCompletionDateTime:
           type: string
           format: date-time
@@ -3450,11 +3763,11 @@ components:
           example: john_smith
         password:
           type: string
-          example: "{bcrypt}$2y$10$HC3hS53J4F3AYApUfV5bbewXBbV3kje5VckyZj/6QrN9RssHasDgC"
+          example: "$2y$10$HC3hS53J4F3AYApUfV5bbewXBbV3kje5VckyZj/6QrN9RssHasDgC"
         role:
           type: string
-          enum: ["ADMIN","LOGISTICIAN","DRIVER","CUSTOMER"]
-          default: "LOGISTICIAN"
+          enum: ["ROLE_ADMIN","ROLE_LOGISTICIAN","ROLE_DRIVER","ROLE_CUSTOMER"]
+          default: "ROLE_LOGISTICIAN"
 
     AuthenticationInfoToSend:
       description: Object representing AuthenticationInfo to send
@@ -3465,4 +3778,5 @@ components:
           example: john_smith
         password:
           type: string
-          example: "{bcrypt}$2y$10$HC3hS53J4F3AYApUfV5bbewXBbV3kje5VckyZj/6QrN9RssHasDgC"
+          example: "$2y$10$HC3hS53J4F3AYApUfV5bbewXBbV3kje5VckyZj/6QrN9RssHasDgC"
+
