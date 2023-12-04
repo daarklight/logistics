@@ -1,6 +1,7 @@
 package com.tsystems.logistics.logistics_vp.service.interfaces;
 
 import com.tsystems.logistics.logistics_vp.code.model.*;
+import com.tsystems.logistics.logistics_vp.entity.Order;
 import com.tsystems.logistics.logistics_vp.enums.OrderStatus;
 
 import java.io.IOException;
@@ -25,7 +26,8 @@ public interface OrderService {
     OrderDto orderUpdateStatus(Integer orderId, String status);
     OrderDto orderUpdateStartDateTime(Integer orderId);
     OrderDto orderUpdateDriverComment(Integer orderId, UpdateOrderDriverCommentDto orderDto);
-    OrderDto orderUpdateAssignedTruckNumber(Integer orderId, UpdateOrderAssignedTruckNumberDto orderDto);
+    OrderDto orderUpdateAssignedTruckNumber(Integer orderId, String truckNumber);
     OrderDto orderFindByDriver(Integer personalNumber);
     String calculateAndUpdateRide(Integer orderId) throws InterruptedException, IOException;
+    Order getOrderFromDb(Integer orderId);
 }

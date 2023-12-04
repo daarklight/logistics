@@ -4,6 +4,7 @@ import com.tsystems.logistics.logistics_vp.code.model.CreateTruckDto;
 import com.tsystems.logistics.logistics_vp.code.model.TruckDto;
 import com.tsystems.logistics.logistics_vp.code.model.UpdateTruckByDriverDto;
 import com.tsystems.logistics.logistics_vp.code.model.UpdateTruckByLogisticianDto;
+import com.tsystems.logistics.logistics_vp.entity.Truck;
 import com.tsystems.logistics.logistics_vp.enums.Busy;
 import com.tsystems.logistics.logistics_vp.enums.TechnicalCondition;
 
@@ -22,4 +23,5 @@ public interface TruckService {
     List<TruckDto> trucksFindAllByTechnicalCondition(TechnicalCondition technicalCondition);
     List<TruckDto> findAllForOrder(Integer orderId, String city, String state, Double capacity);
     TruckDto truckFindByDriver(Integer personalNumber);
+    Truck getTruckFromDb(String number);
 }

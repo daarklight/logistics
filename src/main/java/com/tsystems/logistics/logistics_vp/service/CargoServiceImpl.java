@@ -1,16 +1,22 @@
 package com.tsystems.logistics.logistics_vp.service;
 
-import com.tsystems.logistics.logistics_vp.code.model.*;
+import com.tsystems.logistics.logistics_vp.code.model.CargoDto;
+import com.tsystems.logistics.logistics_vp.code.model.CreateCargoDto;
+import com.tsystems.logistics.logistics_vp.code.model.UpdateCargoByDriverDto;
+import com.tsystems.logistics.logistics_vp.code.model.UpdateCargoByLogisticianDto;
 import com.tsystems.logistics.logistics_vp.entity.Cargo;
+import com.tsystems.logistics.logistics_vp.entity.Driver;
 import com.tsystems.logistics.logistics_vp.entity.Order;
-import com.tsystems.logistics.logistics_vp.enums.Loaded;
-import com.tsystems.logistics.logistics_vp.enums.Unloaded;
+import com.tsystems.logistics.logistics_vp.entity.Truck;
+import com.tsystems.logistics.logistics_vp.enums.*;
+import com.tsystems.logistics.logistics_vp.exceptions.custom.*;
 import com.tsystems.logistics.logistics_vp.mapper.CargoMapper;
 import com.tsystems.logistics.logistics_vp.repository.CargoRepository;
 import com.tsystems.logistics.logistics_vp.repository.OrderRepository;
 import com.tsystems.logistics.logistics_vp.service.interfaces.CargoService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,6 +25,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Log4j2
 public class CargoServiceImpl implements CargoService {
 
     private final CargoRepository cargoRepository;
@@ -32,26 +39,50 @@ public class CargoServiceImpl implements CargoService {
     @Override
     public CargoDto cargoCreate(CreateCargoDto cargoDto) {
         Order order = orderRepository.findById(cargoDto.getOrderForCargoId()).orElseThrow();
-        Cargo cargo = Cargo.builder()
-                .orderForCargoId(order)
-                .cargoName(cargoDto.getCargoName())
-                .weight(cargoDto.getWeight())
-                .startCity(cargoDto.getStartCity())
-                .startState(cargoDto.getStartState())
-                .startAddress(cargoDto.getStartAddress())
-                .loaded(Loaded.NO)
-                .finalCity(cargoDto.getFinalCity())
-                .finalState(cargoDto.getFinalState())
-                .finalAddress(cargoDto.getFinalAddress())
-                .unloaded(Unloaded.NO)
-                .build();
-        cargoRepository.save(cargo);
+        Cargo cargo;
+        if (order.getCargos().size() < 2) {
+            cargo = Cargo.builder()
+                    .orderForCargoId(order)
+                    .cargoName(cargoDto.getCargoName())
+                    .weight(cargoDto.getWeight())
+                    .startCity(cargoDto.getStartCity())
+                    .startState(cargoDto.getStartState())
+                    .startAddress(cargoDto.getStartAddress())
+                    .loaded(Loaded.NO)
+                    .finalCity(cargoDto.getFinalCity())
+                    .finalState(cargoDto.getFinalState())
+                    .finalAddress(cargoDto.getFinalAddress())
+                    .unloaded(Unloaded.NO)
+                    .build();
+
+            Double totalWeightOfAllCargosForOrder = order.getCargos().stream().mapToDouble(elem ->
+                    elem.getWeight()).sum() + cargo.getWeight();
+            if (totalWeightOfAllCargosForOrder < 22) {
+                if (order.getCargos().size() == 0) {
+                    cargoRepository.save(cargo);
+                    order.setWeight(cargo.getWeight());
+                } else if (order.getCargos().size() == 1 && order.getCargos().get(0).getStartAddress().equals(cargo.getStartAddress())
+                        && order.getCargos().get(0).getStartCity().equals(cargo.getStartCity())
+                        && order.getCargos().get(0).getStartState().equals(cargo.getStartState())) {
+                    cargoRepository.save(cargo);
+                    order.setWeight(totalWeightOfAllCargosForOrder);
+                } else {
+                    throw new IncorrectCargoStartPointException("Start point of the second cargo has to be the same " +
+                            "as for the first cargo");
+                }
+            } else {
+                throw new TooHeavyCargosException("It is impossible to register the order with total weight of cargos " +
+                        "more than 22 tons");
+            }
+        } else {
+            throw new TooManyCargosException("It is impossible to put more than two cargos for one order");
+        }
         return cargoDto(cargo);
     }
 
     @Override
     public CargoDto cargoUpdateByLogistician(Integer cargoId, UpdateCargoByLogisticianDto cargoDto) {
-        Cargo cargo = cargoRepository.findById(cargoId).orElseThrow();
+        Cargo cargo = getCargoFromDb(cargoId);
         cargo.setCargoName(cargoDto.getCargoName());
         cargo.setWeight(cargoDto.getWeight());
         cargo.setStartCity(cargoDto.getStartCity());
@@ -66,7 +97,7 @@ public class CargoServiceImpl implements CargoService {
 
     @Override
     public CargoDto cargoUpdateByDriver(Integer cargoId, UpdateCargoByDriverDto cargoDto) {
-        Cargo cargo = cargoRepository.findById(cargoId).orElseThrow();
+        Cargo cargo = getCargoFromDb(cargoId);
         cargo.setLoaded(Loaded.valueOf(cargoDto.getLoaded().toString()));
         cargo.setUnloaded(Unloaded.valueOf(cargoDto.getLoaded().toString()));
         cargoRepository.save(cargo);
@@ -75,13 +106,13 @@ public class CargoServiceImpl implements CargoService {
 
     @Override
     public void cargoDelete(Integer cargoId) {
+        getCargoFromDb(cargoId);
         cargoRepository.deleteById(cargoId);
     }
 
     @Override
     public CargoDto cargoFindById(Integer cargoId) {
-        Cargo cargo = cargoRepository.findById(cargoId).orElseThrow();
-        return cargoDto(cargo);
+        return cargoDto(getCargoFromDb(cargoId));
     }
 
     @Override
@@ -167,10 +198,6 @@ public class CargoServiceImpl implements CargoService {
                 .map(cargo -> cargoDto(cargo)).toList();
     }
 
-    private CargoDto cargoDto(Cargo cargo) {
-        return CargoMapper.INSTANCE.cargoToCargoDto(cargo);
-    }
-
     @Override
     public CargoDto cargoUpdateLoading(Integer cargoId) {
         Cargo cargo = cargoRepository.findById(cargoId).orElseThrow();
@@ -182,8 +209,45 @@ public class CargoServiceImpl implements CargoService {
     @Override
     public CargoDto cargoUpdateUnloading(Integer cargoId) {
         Cargo cargo = cargoRepository.findById(cargoId).orElseThrow();
-        cargo.setUnloaded(Unloaded.YES);
-        cargoRepository.save(cargo);
-        return cargoDto(cargo);
+        List<Driver> driversForOrder = cargo.getOrderForCargoId().getDrivers();
+        Truck truckForOrder = driversForOrder.get(0).getCurrentTruckNumber();
+        if (cargo.getLoaded().equals(Loaded.YES)) {
+            cargo.setUnloaded(Unloaded.YES);
+            cargo.setRealCompletionDateTime(LocalDateTime.now());
+
+            Order order = cargo.getOrderForCargoId();
+            List<Cargo> allCargosForOrder = cargoRepository.findAll().stream()
+                    .filter(elem -> elem.getOrderForCargoId().equals(order))
+                    .toList();
+            List<Cargo> allUnloadedCargosForOrder = allCargosForOrder.stream()
+                    .filter(elem -> elem.getUnloaded().equals(Unloaded.YES))
+                    .toList();
+            if (allUnloadedCargosForOrder.size() == allCargosForOrder.size()) {
+                String cargoFinalCity = cargo.getFinalCity();
+                String cargoFinalState = cargo.getFinalState();
+
+                order.setStatus(OrderStatus.COMPLETED);
+                driversForOrder.stream().forEach(driver -> driver.setBusy(Busy.NO));
+                truckForOrder.setBusy(Busy.NO);
+                driversForOrder.stream().forEach(driver -> driver.setCurrentCity(cargoFinalCity));
+                driversForOrder.stream().forEach(driver -> driver.setCurrentState(cargoFinalState));
+                truckForOrder.setCurrentCity(cargoFinalCity);
+                truckForOrder.setCurrentState(cargoFinalState);
+                log.info("Order status was changed to COMPLETED after the last cargo was unloaded");
+            }
+            return cargoDto(cargo);
+        } else {
+            throw new UnloadingNonLoadedCargoException("It's impossible to unload non-loaded cargo");
+        }
+    }
+
+    @Override
+    public Cargo getCargoFromDb(Integer cargoId) {
+        return cargoRepository.findById(cargoId).orElseThrow(() ->
+                new NoSuchCargoException("This cargo does not exist in database"));
+    }
+
+    private CargoDto cargoDto(Cargo cargo) {
+        return CargoMapper.INSTANCE.cargoToCargoDto(cargo);
     }
 }

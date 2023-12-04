@@ -1,6 +1,7 @@
 package com.tsystems.logistics.logistics_vp.service.interfaces;
 
 import com.tsystems.logistics.logistics_vp.code.model.*;
+import com.tsystems.logistics.logistics_vp.entity.Cargo;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,4 +29,5 @@ public interface CargoService {
     List<CargoDto> cargosFindLaterThanRealCompletionDateTime(LocalDateTime realCompletionDateTime);
     CargoDto cargoUpdateLoading(Integer cargoId);
     CargoDto cargoUpdateUnloading(Integer cargoId);
+    Cargo getCargoFromDb(Integer cargoId);
 }

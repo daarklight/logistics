@@ -158,15 +158,6 @@ public class DriverController implements DriversApi {
                 .body(resultDriverDto);
     }
 
-//    @Override
-//    public ResponseEntity<DriverDto> driverUpdateCurrentOrder(Integer currentOrderId, Integer personalNumber) {
-//        log.info("Start to update current order for defined driver");
-//        DriverDto resultDriverDto = driverService.driverUpdateCurrentOrder(currentOrderId, personalNumber);
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(resultDriverDto);
-//    }
-
     @Override
     public ResponseEntity<DriverDto> driverUpdateCurrentOrder(Integer orderId, Integer personalNumber) {
         log.info("Start to update current order for defined driver");
@@ -175,6 +166,4 @@ public class DriverController implements DriversApi {
                 .status(HttpStatus.OK)
                 .body(resultDriverDto);
     }
-
-
 }

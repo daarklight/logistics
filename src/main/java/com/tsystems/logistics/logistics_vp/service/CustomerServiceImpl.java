@@ -6,6 +6,9 @@ import com.tsystems.logistics.logistics_vp.code.model.CustomerDto;
 import com.tsystems.logistics.logistics_vp.code.model.UpdateCustomerDto;
 import com.tsystems.logistics.logistics_vp.entity.AuthenticationInfo;
 import com.tsystems.logistics.logistics_vp.entity.Customer;
+import com.tsystems.logistics.logistics_vp.entity.Driver;
+import com.tsystems.logistics.logistics_vp.exceptions.custom.NoSuchCustomerException;
+import com.tsystems.logistics.logistics_vp.exceptions.custom.NoSuchDriverException;
 import com.tsystems.logistics.logistics_vp.mapper.CustomerMapper;
 import com.tsystems.logistics.logistics_vp.repository.AuthenticationInfoRepository;
 import com.tsystems.logistics.logistics_vp.repository.CustomerRepository;
@@ -45,7 +48,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDto customerUpdate(Integer customerId, UpdateCustomerDto customerDto) {
-        Customer customer = customerRepository.findById(customerId).orElseThrow();
+        Customer customer = getCustomerFromDb(customerId);
         customer.setCustomerName(customerDto.getCustomerName());
         customer.setPhone(customerDto.getPhone());
         customer.setEmail(customerDto.getEmail());
@@ -55,13 +58,13 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void customerDelete(Integer customerId) {
+        getCustomerFromDb(customerId);
         customerRepository.deleteById(customerId);
     }
 
     @Override
     public CustomerDto customerFindById(Integer customerId) {
-        Customer customer = customerRepository.findById(customerId).orElseThrow();
-        return customerDto(customer);
+        return customerDto(getCustomerFromDb(customerId));
     }
 
     @Override
@@ -81,6 +84,12 @@ public class CustomerServiceImpl implements CustomerService {
         AuthenticationInfo authenticationInfo = authenticationInfoRepository.findByUsername(username);
         Customer customer = authenticationInfo.getCustomer();
         return customerDto(customer);
+    }
+
+    @Override
+    public Customer getCustomerFromDb(Integer customerId){
+        return customerRepository.findById(customerId).orElseThrow(() ->
+                new NoSuchCustomerException("This customer does not exist in database"));
     }
 
     private CustomerDto customerDto(Customer customer) {

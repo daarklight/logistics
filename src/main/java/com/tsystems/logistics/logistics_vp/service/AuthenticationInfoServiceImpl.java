@@ -3,6 +3,7 @@ package com.tsystems.logistics.logistics_vp.service;
 import com.tsystems.logistics.logistics_vp.code.model.AuthenticationInfoDto;
 import com.tsystems.logistics.logistics_vp.code.model.AuthenticationInfoToSendDto;
 import com.tsystems.logistics.logistics_vp.entity.AuthenticationInfo;
+import com.tsystems.logistics.logistics_vp.exceptions.custom.NoSuchAuthenticationInfoException;
 import com.tsystems.logistics.logistics_vp.mapper.AuthenticationInfoMapper;
 import com.tsystems.logistics.logistics_vp.repository.AuthenticationInfoRepository;
 import com.tsystems.logistics.logistics_vp.service.interfaces.AuthenticationInfoService;
@@ -38,7 +39,7 @@ public class AuthenticationInfoServiceImpl implements AuthenticationInfoService 
 
     @Override
     public AuthenticationInfoDto authenticationInfoUpdate(Integer id, AuthenticationInfoDto authenticationInfoDto) {
-        AuthenticationInfo authenticationInfo = authenticationInfoRepository.findById(id).orElseThrow();
+        AuthenticationInfo authenticationInfo = getAuthenticationInfoFromDb(id);
         authenticationInfo.setUsername(authenticationInfoDto.getUsername());
         authenticationInfo.setPassword(authenticationInfoDto.getPassword());
         authenticationInfoRepository.save(authenticationInfo);
@@ -52,8 +53,7 @@ public class AuthenticationInfoServiceImpl implements AuthenticationInfoService 
 
     @Override
     public AuthenticationInfoDto authenticationInfoFindById(Integer id) {
-        AuthenticationInfo authenticationInfo = authenticationInfoRepository.findById(id).orElseThrow();
-        return authenticationInfoDto(authenticationInfo);
+        return authenticationInfoDto(getAuthenticationInfoFromDb(id));
     }
 
     @Override
@@ -65,6 +65,12 @@ public class AuthenticationInfoServiceImpl implements AuthenticationInfoService 
     @Override
     public String authenticationInfoSend(AuthenticationInfoToSendDto authenticationInfoToSendDto) {
         return authenticationInfoToSendDto.getUsername();
+    }
+
+    @Override
+    public AuthenticationInfo getAuthenticationInfoFromDb(Integer id) {
+        return authenticationInfoRepository.findById(id).orElseThrow(() ->
+                new NoSuchAuthenticationInfoException("This authentication info does not exist in database"));
     }
 
     private AuthenticationInfoDto authenticationInfoDto(AuthenticationInfo authenticationInfo) {

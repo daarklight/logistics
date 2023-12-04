@@ -1,6 +1,7 @@
 package com.tsystems.logistics.logistics_vp.service.interfaces;
 
 import com.tsystems.logistics.logistics_vp.code.model.*;
+import com.tsystems.logistics.logistics_vp.entity.Driver;
 import com.tsystems.logistics.logistics_vp.enums.Busy;
 
 import java.util.List;
@@ -22,4 +23,5 @@ public interface DriverService {
     DriverDto driverFindByUsername(String username);
     DriverDto driverFindCodriver(Integer currentOrderId, Integer personalNumber);
     DriverDto driverUpdateCurrentOrder(Integer currentOrderId, Integer personalNumber);
+    Driver getDriverFromDb(Integer personalNumber);
 }

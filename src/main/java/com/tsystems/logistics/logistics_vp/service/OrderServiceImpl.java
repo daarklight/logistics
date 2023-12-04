@@ -4,11 +4,15 @@ import com.tsystems.logistics.logistics_vp.code.model.*;
 import com.tsystems.logistics.logistics_vp.entity.Cargo;
 import com.tsystems.logistics.logistics_vp.entity.Driver;
 import com.tsystems.logistics.logistics_vp.entity.Order;
+import com.tsystems.logistics.logistics_vp.entity.Truck;
 import com.tsystems.logistics.logistics_vp.enums.OrderStatus;
+import com.tsystems.logistics.logistics_vp.exceptions.custom.NoSuchOrderException;
+import com.tsystems.logistics.logistics_vp.exceptions.custom.NonProperTruckCapacityException;
 import com.tsystems.logistics.logistics_vp.mapper.OrderMapper;
 import com.tsystems.logistics.logistics_vp.repository.CargoRepository;
 import com.tsystems.logistics.logistics_vp.repository.DriverRepository;
 import com.tsystems.logistics.logistics_vp.repository.OrderRepository;
+import com.tsystems.logistics.logistics_vp.repository.TruckRepository;
 import com.tsystems.logistics.logistics_vp.service.interfaces.CargoService;
 import com.tsystems.logistics.logistics_vp.service.interfaces.GoogleMapsDistanceService;
 import com.tsystems.logistics.logistics_vp.service.interfaces.OrderService;
@@ -30,6 +34,7 @@ public class OrderServiceImpl implements OrderService {
     private final CargoRepository cargoRepository;
     private final DriverRepository driverRepository;
     private final OrderRepository orderRepository;
+    private final TruckRepository truckRepository;
     private final CargoService cargoService;
     private final GoogleMapsDistanceService mapsService;
 
@@ -43,7 +48,8 @@ public class OrderServiceImpl implements OrderService {
         Order order = Order.builder()
                 .orderCustomerId(orderDto.getOrderCustomerId())
                 .category(orderDto.getCategory())
-                .weight(orderDto.getWeight())
+                //.weight(orderDto.getWeight())
+                .weight(0)
                 .status(OrderStatus.NEW)
                 .limitDateTime(orderDto.getLimitDateTime())
                 .build();
@@ -53,7 +59,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto orderUpdate(Integer orderId, UpdateOrderDto orderDto) {
-        Order order = orderRepository.findById(orderId).orElseThrow();
+        Order order = getOrderFromDb(orderId);
         order.setOrderCustomerId(orderDto.getOrderCustomerId());
         order.setCategory(orderDto.getCategory());
         order.setWeight(orderDto.getWeight());
@@ -65,13 +71,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void orderDelete(Integer orderId) {
+        getOrderFromDb(orderId);
         orderRepository.deleteById(orderId);
     }
 
     @Override
     public OrderDto orderFindById(Integer orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow();
-        return orderDto(order);
+        return orderDto(getOrderFromDb(orderId));
     }
 
     @Override
@@ -124,15 +130,18 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto orderUpdateStatus(Integer orderId, String status) {
-        Order order = orderRepository.findById(orderId).orElseThrow();
+        Order order = getOrderFromDb(orderId);
         order.setStatus(OrderStatus.valueOf(status));
-        orderRepository.save(order);
+//        if(status.equals(OrderStatus.EXPECT_DRIVERS_CONFIRMATION)){
+//
+//        }
+        //orderRepository.save(order);
         return orderDto(order);
     }
 
     @Override
     public OrderDto orderUpdateStartDateTime(Integer orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow();
+        Order order = getOrderFromDb(orderId);
         order.setStartDateTime(LocalDateTime.now());
         orderRepository.save(order);
         return orderDto(order);
@@ -140,18 +149,22 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto orderUpdateDriverComment(Integer orderId, UpdateOrderDriverCommentDto orderDto) {
-        Order order = orderRepository.findById(orderId).orElseThrow();
+        Order order = getOrderFromDb(orderId);
         order.setDriverComment(orderDto.getDriverComment());
         orderRepository.save(order);
         return orderDto(order);
     }
 
     @Override
-    public OrderDto orderUpdateAssignedTruckNumber(Integer orderId, UpdateOrderAssignedTruckNumberDto orderDto) {
-        Order order = orderRepository.findById(orderId).orElseThrow();
-        order.setAssignedTruckNumber(orderDto.getAssignedTruckNumber());
-        orderRepository.save(order);
-        return orderDto(order);
+    public OrderDto orderUpdateAssignedTruckNumber(Integer orderId, String truckNumber) {
+        Order order = getOrderFromDb(orderId);
+        Truck truck = truckRepository.findById(truckNumber).orElseThrow();
+        if (order.getWeight() <= truck.getCapacity()) {
+            order.setAssignedTruckNumber(truckNumber);
+            return orderDto(order);
+        } else {
+            throw new NonProperTruckCapacityException("The order is too heavy for this truck");
+        }
     }
 
     @Override
@@ -232,6 +245,17 @@ public class OrderServiceImpl implements OrderService {
         }
         log.info("Results of calculations: " + resultResponse);
         return resultResponse;
+    }
+
+//    private Order getOrderByCargoId(Integer cargoId){
+//        orderRepository.findAll().stream().filter(elem -> elem.getCargos().)
+//
+//    }
+
+    @Override
+    public Order getOrderFromDb(Integer orderId) {
+        return orderRepository.findById(orderId).orElseThrow(() ->
+                new NoSuchOrderException("This order does not exist in database"));
     }
 
     private OrderDto orderDto(Order order) {

@@ -132,9 +132,9 @@ public class OrderController implements OrdersApi {
     }
 
     @Override
-    public ResponseEntity<OrderDto> orderUpdateAssignedTruckNumber(Integer orderId, UpdateOrderAssignedTruckNumberDto updateOrderDto) {
+    public ResponseEntity<OrderDto> orderUpdateAssignedTruckNumber(Integer orderId, String truckNumber) {
         log.info("Start to update assigned truck for order");
-        OrderDto resultOrderDto = orderService.orderUpdateAssignedTruckNumber(orderId, updateOrderDto);
+        OrderDto resultOrderDto = orderService.orderUpdateAssignedTruckNumber(orderId, truckNumber);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(resultOrderDto);

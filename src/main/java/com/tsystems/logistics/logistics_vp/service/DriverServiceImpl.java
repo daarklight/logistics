@@ -8,8 +8,14 @@ import com.tsystems.logistics.logistics_vp.entity.Truck;
 import com.tsystems.logistics.logistics_vp.enums.Busy;
 import com.tsystems.logistics.logistics_vp.enums.DriverStatus;
 import com.tsystems.logistics.logistics_vp.enums.OrderAcceptance;
+import com.tsystems.logistics.logistics_vp.exceptions.custom.NoProperDriversException;
+import com.tsystems.logistics.logistics_vp.exceptions.custom.NoSuchDriverException;
+import com.tsystems.logistics.logistics_vp.exceptions.custom.TooManyDriversException;
 import com.tsystems.logistics.logistics_vp.mapper.DriverMapper;
-import com.tsystems.logistics.logistics_vp.repository.*;
+import com.tsystems.logistics.logistics_vp.repository.AuthenticationInfoRepository;
+import com.tsystems.logistics.logistics_vp.repository.DriverRepository;
+import com.tsystems.logistics.logistics_vp.repository.OrderRepository;
+import com.tsystems.logistics.logistics_vp.repository.TruckRepository;
 import com.tsystems.logistics.logistics_vp.service.interfaces.DriverService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -70,20 +76,21 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public DriverDto driverUpdateStatusByDriver(Integer personalNumber, UpdateDriverStatusByDriverDto driverDto) {
-        Driver driver = driverRepository.findById(personalNumber).orElseThrow();
+        Driver driver = getDriverFromDb(personalNumber);
         driver.setStatus(DriverStatus.valueOf(driverDto.getStatus().toString()));
         driverRepository.save(driver);
         return driverDto(driver);
     }
 
     public void driverDelete(Integer personalNumber) {
+        getDriverFromDb(personalNumber);
         driverRepository.deleteById(personalNumber);
     }
 
     @Override
     public DriverDto driverFindByNumber(Integer personalNumber) {
-        Driver driver = driverRepository.findById(personalNumber).orElseThrow();
-        return driverDto(driver);
+        getDriverFromDb(personalNumber);
+        return driverDto(getDriverFromDb(personalNumber));
     }
 
     @Override
@@ -118,14 +125,20 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public List<DriverDto> driversFindAllForOrder(Integer orderId, String city, String state, Integer hours) {
-        return driverRepository.findAllByCurrentCityAndCurrentStateAndWorkingHoursInCurrentMonthLessThan(
-                        city, state, hours).stream().map(driver -> driverDto(driver))
+        List<DriverDto> properDriversDtos = driverRepository
+                .findAllByCurrentCityAndCurrentStateAndWorkingHoursInCurrentMonthLessThan(city, state, hours).stream()
+                .map(driver -> driverDto(driver))
                 .filter(dto -> dto.getBusy().toString().equals("NO")).toList();
+        if (properDriversDtos.size() > 0) {
+            return properDriversDtos;
+        } else {
+            throw new NoProperDriversException("No proper drivers were found for this order");
+        }
     }
 
     @Override
     public DriverDto driverOrderAcceptance(Integer personalNumber, UpdateDriverOrderAcceptanceDto updateDriverOrderAcceptanceDto) {
-        Driver driver = driverRepository.findById(personalNumber).orElseThrow();
+        Driver driver = getDriverFromDb(personalNumber);
         driver.setOrderAcceptance(OrderAcceptance.valueOf(updateDriverOrderAcceptanceDto.getOrderAcceptance().toString()));
         driverRepository.save(driver);
         return driverDto(driver);
@@ -140,9 +153,10 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public DriverDto driverFindCodriver(Integer currentOrderId, Integer personalNumber) {
+        getDriverFromDb(personalNumber);
         List<DriverDto> allDriversForOrder = driversFindAllByCurrentOrderId(currentOrderId);
         DriverDto driverDto = new DriverDto();
-        if(allDriversForOrder.size()==2){
+        if (allDriversForOrder.size() == 2) {
             driverDto = allDriversForOrder.stream().filter(elem -> !elem.getPersonalNumber().equals(personalNumber))
                     .collect(Collectors.toList()).get(0);
         }
@@ -152,9 +166,19 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public DriverDto driverUpdateCurrentOrder(Integer orderId, Integer personalNumber) {
         Order order = orderRepository.findById(orderId).orElseThrow();
-        Driver driver = driverRepository.findById(personalNumber).orElseThrow();
-        driver.setCurrentOrderId(order);
-        return driverDto(driver);
+        if (order.getDrivers().size() < 2) {
+            Driver driver = driverRepository.findById(personalNumber).orElseThrow();
+            driver.setCurrentOrderId(order);
+            return driverDto(driver);
+        } else {
+            throw new TooManyDriversException("It is impossible to put more than two drivers for one order");
+        }
+    }
+
+    @Override
+    public Driver getDriverFromDb(Integer personalNumber) {
+        return driverRepository.findById(personalNumber).orElseThrow(() ->
+                new NoSuchDriverException("This driver does not exist in database"));
     }
 
     private DriverDto driverDto(Driver driver) {
