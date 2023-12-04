@@ -3,7 +3,9 @@ package com.tsystems.logistics.logistics_vp.controller;
 import com.tsystems.logistics.logistics_vp.code.api.DriversApi;
 import com.tsystems.logistics.logistics_vp.code.model.*;
 import com.tsystems.logistics.logistics_vp.enums.Busy;
+import com.tsystems.logistics.logistics_vp.enums.OrderAcceptance;
 import com.tsystems.logistics.logistics_vp.service.interfaces.DriverService;
+import com.tsystems.logistics.logistics_vp.service.interfaces.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -131,10 +133,9 @@ public class DriverController implements DriversApi {
     }
 
     @Override
-    public ResponseEntity<DriverDto> driversUpdateOrderAcceptance(
-            Integer personalNumber, UpdateDriverOrderAcceptanceDto updateDriverOrderAcceptanceDto) {
+    public ResponseEntity<DriverDto> driversUpdateOrderAcceptance(Integer personalNumber, String orderAcceptance) {
         log.info("Start to update order acceptance from driver");
-        DriverDto resultDriverDto = driverService.driverOrderAcceptance(personalNumber, updateDriverOrderAcceptanceDto);
+        DriverDto resultDriverDto = driverService.driverOrderAcceptance(personalNumber, OrderAcceptance.valueOf(orderAcceptance));
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(resultDriverDto);

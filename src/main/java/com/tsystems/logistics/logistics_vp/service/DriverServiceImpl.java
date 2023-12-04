@@ -8,6 +8,7 @@ import com.tsystems.logistics.logistics_vp.entity.Truck;
 import com.tsystems.logistics.logistics_vp.enums.Busy;
 import com.tsystems.logistics.logistics_vp.enums.DriverStatus;
 import com.tsystems.logistics.logistics_vp.enums.OrderAcceptance;
+import com.tsystems.logistics.logistics_vp.enums.OrderStatus;
 import com.tsystems.logistics.logistics_vp.exceptions.custom.NoProperDriversException;
 import com.tsystems.logistics.logistics_vp.exceptions.custom.NoSuchDriverException;
 import com.tsystems.logistics.logistics_vp.exceptions.custom.TooManyDriversException;
@@ -19,6 +20,7 @@ import com.tsystems.logistics.logistics_vp.repository.TruckRepository;
 import com.tsystems.logistics.logistics_vp.service.interfaces.DriverService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +29,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Log4j2
 public class DriverServiceImpl implements DriverService {
 
     private final AuthenticationInfoRepository authenticationInfoRepository;
@@ -137,10 +140,26 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public DriverDto driverOrderAcceptance(Integer personalNumber, UpdateDriverOrderAcceptanceDto updateDriverOrderAcceptanceDto) {
+    public DriverDto driverOrderAcceptance(Integer personalNumber, OrderAcceptance orderAcceptance) {
         Driver driver = getDriverFromDb(personalNumber);
-        driver.setOrderAcceptance(OrderAcceptance.valueOf(updateDriverOrderAcceptanceDto.getOrderAcceptance().toString()));
-        driverRepository.save(driver);
+        driver.setOrderAcceptance(OrderAcceptance.valueOf(orderAcceptance.toString()));
+        int orderId = driver.getCurrentOrderId().getOrderId();
+        if (orderAcceptance.equals(OrderAcceptance.YES)) {
+            // ADD LOGIC THAT FOR CASE OF CODRIVERS => ORDER STATUS IS CONFIRMED ONLY WHEN BOTH ACCEPT THE ORDER
+            // ALSO ADD LOGIC WHEN TRUCK BECOMES BUSY
+
+            driver.getCurrentOrderId().setStatus(OrderStatus.CONFIRMED);
+            driver.setBusy(Busy.YES);
+            log.info(String.format("Driver %s %s confirmed order# %s",
+                    driver.getName(), driver.getSurname(), driver.getCurrentOrderId().getOrderId()));
+        } else {
+            driver.getCurrentOrderId().setStatus(OrderStatus.DECLINED_BY_DRIVERS);
+            driver.setCurrentOrderId(null);
+            driver.setOrderAcceptance(null);
+            log.info(String.format("Driver %s %s declined order# %s",
+                    driver.getName(), driver.getSurname(), orderId));
+        }
+        //driverRepository.save(driver);
         return driverDto(driver);
     }
 
@@ -169,6 +188,8 @@ public class DriverServiceImpl implements DriverService {
         if (order.getDrivers().size() < 2) {
             Driver driver = driverRepository.findById(personalNumber).orElseThrow();
             driver.setCurrentOrderId(order);
+            //order.setStatus(OrderStatus.EXPECT_DRIVERS_CONFIRMATION);
+            log.info(String.format("Driver %s %s was preliminary assigned for order# %s", driver.getName(), driver.getSurname(), orderId));
             return driverDto(driver);
         } else {
             throw new TooManyDriversException("It is impossible to put more than two drivers for one order");

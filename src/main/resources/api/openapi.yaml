@@ -858,7 +858,7 @@ paths:
         500:
           description: Internal Server Error
 
-  /drivers/orderAcceptance/{personalNumber}:
+  /drivers/orderAcceptance/{personalNumber}/{orderAcceptance}:
     patch:
       tags:
         - Driver
@@ -873,13 +873,13 @@ paths:
             type: integer
             format: int32
             example: 153001
-      requestBody:
-        description: Driver object that needs to be updated
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateDriverOrderAcceptance'
+        - name: orderAcceptance
+          in: path
+          description: "Order acceptance can be: YES / NO"
+          required: true
+          schema:
+            type: string
+            example: "NO"
       responses:
         201:
           description: Order acceptance by driver was updated
@@ -2134,42 +2134,6 @@ paths:
         500:
           description: Internal Server Error
 
-  /orders/calculateRide/{orderId}:
-    get:
-      tags:
-        - Order
-      summary: Calculate and update ride distance and duration for all Cargos of defined Order
-      operationId: orderCalculateRide
-      parameters:
-        - name: orderId
-          in: path
-          description: "Order id"
-          required: true
-          schema:
-            type: integer
-            format: int32
-            example: 12001
-      responses:
-        200:
-          description: Ride distance and duration for all Cargos of defined Order were calculated and updated successfully
-          content:
-            text/plain:
-              schema:
-                description: Information about distance and duration
-                type: string
-                example: Detailed information
-
-        400:
-          description: Bad request
-        401:
-          description: "Unauthorized: Invalid credentials"
-        403:
-          description: "Forbidden: User does not have permissions"
-        404:
-          description: This orderId was not found
-        500:
-          description: Internal Server Error
-
 
 
   /cargos:
@@ -3346,15 +3310,6 @@ components:
           type: string
           enum: [REST, DRIVING]
           default: REST
-
-    UpdateDriverOrderAcceptance:
-      description: Object representing Order acceptance request for Driver
-      type: object
-      properties:
-        orderAcceptance:
-          description: Order acceptance
-          type: string
-          enum: ["YES","NO"]
 
     UpdateDriverCurrentOrder:
       description: Object representing current Order updating for Driver

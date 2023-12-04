@@ -194,16 +194,16 @@ public class OrderController implements OrdersApi {
                 .body(resultOrderDto);
     }
 
-    @Override
-    public ResponseEntity<String> orderCalculateRide(Integer orderId) {
-        log.info("Start to calculate and update ride for cargos of defined orders");
-        try {
-            orderService.calculateAndUpdateRide(orderId);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return null;
-    }
+//    @Override
+//    public ResponseEntity<String> orderCalculateRide(Integer orderId) {
+//        log.info("Start to calculate and update ride for cargos of defined orders");
+//        try {
+//            orderService.calculateAndUpdateRide(orderId);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//        return null;
+//    }
 }

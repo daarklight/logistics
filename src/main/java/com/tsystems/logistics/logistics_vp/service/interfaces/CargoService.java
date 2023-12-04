@@ -3,12 +3,13 @@ package com.tsystems.logistics.logistics_vp.service.interfaces;
 import com.tsystems.logistics.logistics_vp.code.model.*;
 import com.tsystems.logistics.logistics_vp.entity.Cargo;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public interface CargoService {
     List<CargoDto> cargosFindAll();
-    CargoDto cargoCreate(CreateCargoDto cargoDto);
+    CargoDto cargoCreate(CreateCargoDto cargoDto) throws IOException, InterruptedException;
     CargoDto cargoUpdateByLogistician(Integer cargoId, UpdateCargoByLogisticianDto cargoDto);
     CargoDto cargoUpdateByDriver(Integer cargoId, UpdateCargoByDriverDto cargoDto);
     void cargoDelete(Integer cargoId);

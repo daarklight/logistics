@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,7 +25,14 @@ public class CargoController implements CargosApi {
     @Override
     public ResponseEntity<CargoDto> cargoCreate(CreateCargoDto createCargoDto) {
         log.info("Start to register new cargo");
-        CargoDto resultCargoDto = cargoService.cargoCreate(createCargoDto);
+        CargoDto resultCargoDto = null;
+        try {
+            resultCargoDto = cargoService.cargoCreate(createCargoDto);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(resultCargoDto);

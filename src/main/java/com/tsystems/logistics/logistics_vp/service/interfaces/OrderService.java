@@ -28,6 +28,5 @@ public interface OrderService {
     OrderDto orderUpdateDriverComment(Integer orderId, UpdateOrderDriverCommentDto orderDto);
     OrderDto orderUpdateAssignedTruckNumber(Integer orderId, String truckNumber);
     OrderDto orderFindByDriver(Integer personalNumber);
-    String calculateAndUpdateRide(Integer orderId) throws InterruptedException, IOException;
     Order getOrderFromDb(Integer orderId);
 }
