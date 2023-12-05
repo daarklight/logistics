@@ -33,7 +33,7 @@ public class MyUserDetailsService implements UserDetailsService {
         }
 
         List<SimpleGrantedAuthority> roles = Arrays.asList(
-                new SimpleGrantedAuthority("ROLE_" + user.getRole().toString()));
+                new SimpleGrantedAuthority(user.getRole().toString()));
         return new User(username, user.getPassword(), roles);
     }
 }

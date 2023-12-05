@@ -1,7 +1,7 @@
 package com.tsystems.logistics.logistics_vp.service;
 
 import com.tsystems.logistics.logistics_vp.code.model.AuthenticationInfoDto;
-import com.tsystems.logistics.logistics_vp.code.model.AuthenticationInfoToSendDto;
+//import com.tsystems.logistics.logistics_vp.code.model.AuthenticationInfoToSendDto;
 import com.tsystems.logistics.logistics_vp.entity.AuthenticationInfo;
 import com.tsystems.logistics.logistics_vp.exceptions.custom.NoSuchAuthenticationInfoException;
 import com.tsystems.logistics.logistics_vp.mapper.AuthenticationInfoMapper;
@@ -62,10 +62,10 @@ public class AuthenticationInfoServiceImpl implements AuthenticationInfoService 
         return authenticationInfoDto(authenticationInfo);
     }
 
-    @Override
-    public String authenticationInfoSend(AuthenticationInfoToSendDto authenticationInfoToSendDto) {
-        return authenticationInfoToSendDto.getUsername();
-    }
+//    @Override
+//    public String authenticationInfoSend(AuthenticationInfoToSendDto authenticationInfoToSendDto) {
+//        return authenticationInfoToSendDto.getUsername();
+//    }
 
     @Override
     public AuthenticationInfo getAuthenticationInfoFromDb(Integer id) {

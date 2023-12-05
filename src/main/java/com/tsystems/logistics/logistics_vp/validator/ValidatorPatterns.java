@@ -5,9 +5,9 @@ public class ValidatorPatterns {
     protected static final String CAR_NUMBER_PATTERN = "[A-Z]{3}\\d{4}";
     protected static final String DOUBLE_PATTERN = "[+]?[0-9]*\\.?[0-9]+";
     protected static final String INTEGER_PATTERN = "\\d+";
-    protected static final String CITY_AND_ADDRESS_PATTERN = "[A-Za-z\\s]+";
+    protected static final String CITY_AND_ADDRESS_PATTERN = "[A-Za-z#\\d\\s]+";
     protected static final String NAME_SURNAME_PATTERN = "[A-Za-z\\d\\s]+";
-    protected static final String STATE_PATTERN = "[A-Za-z\\s]+";
+    protected static final String STATE_PATTERN = "[A-Za-z.\\s]+";
     protected static final String EMAIL_PATTERN = "^[A-Za-z0-9+_.-]+@(.+)$";
     protected static final String PHONE_PATTERN =
             "^(\\+\\d{1,3}( )?)?((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$"

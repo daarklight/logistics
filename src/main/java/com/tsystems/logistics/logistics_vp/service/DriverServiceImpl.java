@@ -149,7 +149,7 @@ public class DriverServiceImpl implements DriverService {
             // ALSO ADD LOGIC WHEN TRUCK BECOMES BUSY
 
             driver.getCurrentOrderId().setStatus(OrderStatus.CONFIRMED);
-            driver.setBusy(Busy.YES);
+            //driver.setBusy(Busy.YES);
             log.info(String.format("Driver %s %s confirmed order# %s",
                     driver.getName(), driver.getSurname(), driver.getCurrentOrderId().getOrderId()));
         } else {
@@ -188,6 +188,7 @@ public class DriverServiceImpl implements DriverService {
         if (order.getDrivers().size() < 2) {
             Driver driver = driverRepository.findById(personalNumber).orElseThrow();
             driver.setCurrentOrderId(order);
+            driver.setBusy(Busy.YES);
             //order.setStatus(OrderStatus.EXPECT_DRIVERS_CONFIRMATION);
             log.info(String.format("Driver %s %s was preliminary assigned for order# %s", driver.getName(), driver.getSurname(), orderId));
             return driverDto(driver);

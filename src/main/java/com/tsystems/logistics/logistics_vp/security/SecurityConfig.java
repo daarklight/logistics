@@ -60,12 +60,12 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        corsConfiguration.setAllowCredentials(false);
+        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         corsConfiguration.setAllowedOrigins(Arrays.asList("*"));
         corsConfiguration.setAllowedMethods(Arrays.asList("*"));
         corsConfiguration.setAllowedHeaders(Arrays.asList("*"));
-        corsConfiguration.setExposedHeaders(List.of("Authorization", "auth-token"));
+        corsConfiguration.setExposedHeaders(List.of("Authorization", "auth-token", "username", "roles"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
         return source;
@@ -82,11 +82,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilter(userAuthenticationFilter)
                 .authorizeHttpRequests(
-                        a ->
-                                a.requestMatchers("/authenticationInfo/login")
-                                        .permitAll()
-                                        .anyRequest()
-                                        .authenticated())
+                        auth -> auth
+                                .requestMatchers("/authenticationInfo/login").permitAll()
+                                .requestMatchers("/drivers").hasAuthority("ROLE_LOGISTICIAN").anyRequest().authenticated()
+                )
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

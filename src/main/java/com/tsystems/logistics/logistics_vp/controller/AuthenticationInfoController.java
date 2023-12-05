@@ -2,7 +2,7 @@ package com.tsystems.logistics.logistics_vp.controller;
 
 import com.tsystems.logistics.logistics_vp.code.api.AuthenticationInfoApi;
 import com.tsystems.logistics.logistics_vp.code.model.AuthenticationInfoDto;
-import com.tsystems.logistics.logistics_vp.code.model.AuthenticationInfoToSendDto;
+//import com.tsystems.logistics.logistics_vp.code.model.AuthenticationInfoToSendDto;
 import com.tsystems.logistics.logistics_vp.service.interfaces.AuthenticationInfoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -67,14 +67,14 @@ public class AuthenticationInfoController implements AuthenticationInfoApi {
                 .body(resultAuthenticationInfoDto);
     }
 
-    @Override
-    public ResponseEntity<String> authenticationInfoSend(AuthenticationInfoToSendDto authenticationInfoToSendDto, String authToken) {
-        log.info("Start authorization (to send username and password)");
-        String username = authenticationInfoService.authenticationInfoSend(authenticationInfoToSendDto);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(username);
-    }
+//    @Override
+//    public ResponseEntity<String> authenticationInfoSend(AuthenticationInfoToSendDto authenticationInfoToSendDto, String authToken) {
+//        log.info("Start authorization (to send username and password)");
+//        String username = authenticationInfoService.authenticationInfoSend(authenticationInfoToSendDto);
+//        return ResponseEntity
+//                .status(HttpStatus.CREATED)
+//                .body(username);
+//    }
 
     @Override
     public ResponseEntity<AuthenticationInfoDto> authenticationInfoUpdate(Integer id, AuthenticationInfoDto authenticationInfoDto) {
