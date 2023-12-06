@@ -3,6 +3,7 @@ package com.tsystems.logistics.logistics_vp.service;
 import com.tsystems.logistics.logistics_vp.code.model.AuthenticationInfoDto;
 //import com.tsystems.logistics.logistics_vp.code.model.AuthenticationInfoToSendDto;
 import com.tsystems.logistics.logistics_vp.entity.AuthenticationInfo;
+import com.tsystems.logistics.logistics_vp.enums.Role;
 import com.tsystems.logistics.logistics_vp.exceptions.custom.NoSuchAuthenticationInfoException;
 import com.tsystems.logistics.logistics_vp.mapper.AuthenticationInfoMapper;
 import com.tsystems.logistics.logistics_vp.repository.AuthenticationInfoRepository;
@@ -30,6 +31,7 @@ public class AuthenticationInfoServiceImpl implements AuthenticationInfoService 
     public AuthenticationInfoDto authenticationInfoCreate(AuthenticationInfoDto authenticationInfoDto) {
         AuthenticationInfo authenticationInfo = AuthenticationInfo.builder()
                 .id(authenticationInfoDto.getId())
+                .role(Role.valueOf(authenticationInfoDto.getRole().toString()))
                 .username(authenticationInfoDto.getUsername())
                 .password(authenticationInfoDto.getPassword())
                 .build();

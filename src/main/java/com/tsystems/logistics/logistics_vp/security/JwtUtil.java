@@ -42,7 +42,6 @@ public class JwtUtil {
         Collection<? extends GrantedAuthority> authorities =
                 authResult.getAuthorities();
 
-        // ROLE_ADMIN
         List<String> roles =
                 authorities.stream()
                         .map(authority -> authority.getAuthority().replace("ROLE_", ""))

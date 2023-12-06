@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -88,25 +89,41 @@ public class CargoServiceImpl implements CargoService {
 
     @Override
     public CargoDto cargoUpdateByLogistician(Integer cargoId, UpdateCargoByLogisticianDto cargoDto) {
-        Cargo cargoToUpdate = getCargoFromDb(cargoId);
-        OrderStatus orderStatus = cargoToUpdate.getOrderForCargoId().getStatus();
+        Cargo cargo = getCargoFromDb(cargoId);
+        Double updateCargoWeight = cargo.getWeight();
+        OrderStatus orderStatus = cargo.getOrderForCargoId().getStatus();
+        Order order = cargo.getOrderForCargoId();
+        Cargo otherCargo;
+        Double otherCargoWeight = 0.0;
+        if (order.getCargos().size() == 2) {
+            otherCargo = order.getCargos().stream().filter(elem -> elem.getCargoId() != cargoId)
+                    .toList().get(0);
+            otherCargoWeight = otherCargo.getWeight();
+        }
+        Double totalOrderWeight = updateCargoWeight + otherCargoWeight;
         if (orderStatus == OrderStatus.NEW || orderStatus == OrderStatus.DECLINED_BY_DRIVERS) {
-            Cargo cargo = getCargoFromDb(cargoId);
-            cargo.setCargoName(cargoDto.getCargoName());
-            cargo.setWeight(cargoDto.getWeight());
-            cargo.setStartCity(cargoDto.getStartCity());
-            cargo.setStartState(cargoDto.getStartState());
-            cargo.setStartAddress(cargoDto.getStartAddress());
-            cargo.setFinalCity(cargoDto.getFinalCity());
-            cargo.setFinalState(cargoDto.getFinalState());
-            cargo.setFinalAddress(cargoDto.getFinalAddress());
-            cargoRepository.save(cargo);
-            return cargoDto(cargo);
+            if (totalOrderWeight < 22) {
+                cargo.setCargoName(cargoDto.getCargoName());
+                cargo.setWeight(cargoDto.getWeight());
+                cargo.setStartCity(cargoDto.getStartCity());
+                cargo.setStartState(cargoDto.getStartState());
+                cargo.setStartAddress(cargoDto.getStartAddress());
+                cargo.setFinalCity(cargoDto.getFinalCity());
+                cargo.setFinalState(cargoDto.getFinalState());
+                cargo.setFinalAddress(cargoDto.getFinalAddress());
+                // Update order total weight as well:
+                order.setWeight(totalOrderWeight);
+                return cargoDto(cargo);
+            } else {
+                throw new TooHeavyCargosException("It is impossible to update the cargo, because updated total weight " +
+                        "of the order is more than 22 tons");
+            }
         } else {
             throw new ImpossibleCargoUpdateException("It is impossible to update the cargo when order status is not " +
                     "equal to NEW or DECLINED_BY_DRIVERS");
         }
     }
+
 
     @Override
     public CargoDto cargoUpdateByDriver(Integer cargoId, UpdateCargoByDriverDto cargoDto) {

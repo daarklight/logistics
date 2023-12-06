@@ -315,4 +315,50 @@ public class GlobalErrorHandler {
                                 .dateAndTime(LocalDateTime.now())
                                 .build());
     }
+
+    @ExceptionHandler(BusyDriverException.class)
+    public ResponseEntity<ErrorRepresentation> handleBusyDriverException(
+            BusyDriverException exception) {
+        String message = "It is impossible to assign busy driver. Please search another one driver";
+        log.error(message);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(
+                        ErrorRepresentation.builder()
+                                .error("error.business.11")
+                                .message(message)
+                                .dateAndTime(LocalDateTime.now())
+                                .build());
+    }
+
+    @ExceptionHandler(BusyTruckException.class)
+    public ResponseEntity<ErrorRepresentation> handleBusyTruckException(
+            BusyTruckException exception) {
+        String message = "It is impossible to assign busy truck. Please search another one truck";
+        log.error(message);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(
+                        ErrorRepresentation.builder()
+                                .error("error.business.12")
+                                .message(message)
+                                .dateAndTime(LocalDateTime.now())
+                                .build());
+    }
+
+    @ExceptionHandler(NotEnoughDriverHoursException.class)
+    public ResponseEntity<ErrorRepresentation> handleNotEnoughDriverHoursException(
+            NotEnoughDriverHoursException exception) {
+        String message = "Driver does not have enough working hours in this month. Please choose two drivers or " +
+                "choose one driver with less working hours. You also can try to postpone the order if it is possible";
+        log.error(message);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(
+                        ErrorRepresentation.builder()
+                                .error("error.business.13")
+                                .message(message)
+                                .dateAndTime(LocalDateTime.now())
+                                .build());
+    }
 }

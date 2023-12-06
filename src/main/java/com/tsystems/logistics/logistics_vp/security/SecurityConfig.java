@@ -83,8 +83,9 @@ public class SecurityConfig {
                 .addFilter(userAuthenticationFilter)
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers("/authenticationInfo/login").permitAll()
-                                .requestMatchers("/drivers").hasAuthority("ROLE_LOGISTICIAN").anyRequest().authenticated()
+                                .requestMatchers("/**").permitAll()
+                                //.requestMatchers("/authenticationInfo/login").permitAll()
+                                //.requestMatchers("/drivers").hasAuthority("ROLE_LOGISTICIAN").anyRequest().authenticated()
                 )
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);

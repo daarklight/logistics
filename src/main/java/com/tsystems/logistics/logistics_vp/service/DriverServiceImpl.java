@@ -1,14 +1,12 @@
 package com.tsystems.logistics.logistics_vp.service;
 
 import com.tsystems.logistics.logistics_vp.code.model.*;
-import com.tsystems.logistics.logistics_vp.entity.AuthenticationInfo;
-import com.tsystems.logistics.logistics_vp.entity.Driver;
-import com.tsystems.logistics.logistics_vp.entity.Order;
-import com.tsystems.logistics.logistics_vp.entity.Truck;
+import com.tsystems.logistics.logistics_vp.entity.*;
 import com.tsystems.logistics.logistics_vp.enums.Busy;
 import com.tsystems.logistics.logistics_vp.enums.DriverStatus;
 import com.tsystems.logistics.logistics_vp.enums.OrderAcceptance;
 import com.tsystems.logistics.logistics_vp.enums.OrderStatus;
+import com.tsystems.logistics.logistics_vp.exceptions.custom.BusyDriverException;
 import com.tsystems.logistics.logistics_vp.exceptions.custom.NoProperDriversException;
 import com.tsystems.logistics.logistics_vp.exceptions.custom.NoSuchDriverException;
 import com.tsystems.logistics.logistics_vp.exceptions.custom.TooManyDriversException;
@@ -23,8 +21,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service
 @Transactional
@@ -62,8 +63,6 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public DriverDto driverUpdateByLogistician(Integer personalNumber, UpdateDriverByLogisticianDto driverDto) {
-        // TO CHECK AND CHANGE findByDriverId and find truck by driver's personal number
-        //Truck truck = truckRepository.findById(driverDto.getCurrentTruckNumber()).orElseThrow();
         Driver driver = driverRepository.findById(personalNumber).orElseThrow();
         driver.setName(driverDto.getName());
         driver.setSurname(driverDto.getSurname());
@@ -72,7 +71,6 @@ public class DriverServiceImpl implements DriverService {
         driver.setWorkExperience(driverDto.getWorkExperience());
         driver.setCurrentCity(driverDto.getCurrentCity());
         driver.setCurrentState(driverDto.getCurrentState());
-        //driver.setCurrentTruckNumber(truck);
         driverRepository.save(driver);
         return driverDto(driver);
     }
@@ -128,8 +126,14 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public List<DriverDto> driversFindAllForOrder(Integer orderId, String city, String state, Integer hours) {
+        Order order = orderRepository.findById(orderId).orElseThrow();
+        int totalOnRoadRideDurationInMinutes = order.getCargos().stream()
+                .mapToInt(elem -> elem.getRideDurationFromStartPoint()).sum();
+        int calculatedAcceptableHoursForTwoDrivers =
+                calculateAcceptableDriverHours(2, totalOnRoadRideDurationInMinutes);
         List<DriverDto> properDriversDtos = driverRepository
-                .findAllByCurrentCityAndCurrentStateAndWorkingHoursInCurrentMonthLessThan(city, state, hours).stream()
+                .findAllByCurrentCityAndCurrentStateAndWorkingHoursInCurrentMonthLessThan(city, state,
+                        calculatedAcceptableHoursForTwoDrivers).stream()
                 .map(driver -> driverDto(driver))
                 .filter(dto -> dto.getBusy().toString().equals("NO")).toList();
         if (properDriversDtos.size() > 0) {
@@ -185,15 +189,19 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public DriverDto driverUpdateCurrentOrder(Integer orderId, Integer personalNumber) {
         Order order = orderRepository.findById(orderId).orElseThrow();
-        if (order.getDrivers().size() < 2) {
-            Driver driver = driverRepository.findById(personalNumber).orElseThrow();
-            driver.setCurrentOrderId(order);
-            driver.setBusy(Busy.YES);
-            //order.setStatus(OrderStatus.EXPECT_DRIVERS_CONFIRMATION);
-            log.info(String.format("Driver %s %s was preliminary assigned for order# %s", driver.getName(), driver.getSurname(), orderId));
-            return driverDto(driver);
+        Driver driver = getDriverFromDb(personalNumber);
+        if (driver.getBusy().equals(Busy.NO)) {
+            if (order.getDrivers().size() < 2) {
+                driver.setCurrentOrderId(order);
+                driver.setBusy(Busy.YES);
+                log.info(String.format("Driver %s %s was preliminary assigned for order# %s",
+                        driver.getName(), driver.getSurname(), orderId));
+                return driverDto(driver);
+            } else {
+                throw new TooManyDriversException("It is impossible to put more than two drivers for one order");
+            }
         } else {
-            throw new TooManyDriversException("It is impossible to put more than two drivers for one order");
+            throw new BusyDriverException("It is impossible to assign busy driver");
         }
     }
 
@@ -201,6 +209,27 @@ public class DriverServiceImpl implements DriverService {
     public Driver getDriverFromDb(Integer personalNumber) {
         return driverRepository.findById(personalNumber).orElseThrow(() ->
                 new NoSuchDriverException("This driver does not exist in database"));
+    }
+
+    // This method calculates maximum spent hours that driver can have to ensure that he has enough hours to take the order
+    public int calculateAcceptableDriverHours(int numberOfDrivers, int onRoadRideMinutes) {
+        // 8 hours is approximate estimation of time that is necessary:
+        // - to move the driver from driver/truck location to customer location to take stuff;
+        // - to load and unload all cargos (for simplicity we consider that it does not depend on number of cargos)
+        int totalOrderHours = onRoadRideMinutes/60 + 8;
+
+        LocalDate today = LocalDate.now();
+        LocalDate endOfMonth = today.withDayOfMonth(today.lengthOfMonth());
+        long restDaysInThisMonth = DAYS.between(today, endOfMonth);
+        // standard driver work shift is taken as 8 hours
+        int totalMonthDriversHours = (int) restDaysInThisMonth*8*numberOfDrivers;
+        int acceptableHours = 0;
+        if (totalMonthDriversHours >= totalOrderHours) {
+            acceptableHours = 176 - totalOrderHours/numberOfDrivers;
+        } else {
+            acceptableHours = 176 - totalMonthDriversHours;
+        }
+        return acceptableHours;
     }
 
     private DriverDto driverDto(Driver driver) {

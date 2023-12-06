@@ -100,18 +100,6 @@ public class TruckServiceImpl implements TruckService {
         return truckDto(truck);
     }
 
-//    public TruckDto truckUpdateByLogisticianUi(String number, TruckDto truckDto) {
-//        Truck truck = truckRepository.findById(number).orElseThrow();
-//        truck.setModel(truckDto.getModel());
-//        truck.setCapacity(truckDto.getCapacity());
-//        truck.setTotalOperatingTime(truckDto.getTotalOperatingTime());
-//        truck.setTechnicalCondition(TechnicalCondition.valueOf(truckDto.getTechnicalCondition().toString()));
-//        truck.setCurrentCity(truckDto.getCurrentCity());
-//        truck.setCurrentState(truckDto.getCurrentState());
-//        truckRepository.save(truck);
-//        return truckDto(truck);
-//    }
-
     @Override
     public TruckDto truckUpdateByDriver(String number, UpdateTruckByDriverDto truckDto) {
         Truck truck = getTruckFromDb(number);

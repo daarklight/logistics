@@ -7,16 +7,14 @@ import com.tsystems.logistics.logistics_vp.entity.Order;
 import com.tsystems.logistics.logistics_vp.entity.Truck;
 import com.tsystems.logistics.logistics_vp.enums.Busy;
 import com.tsystems.logistics.logistics_vp.enums.OrderStatus;
-import com.tsystems.logistics.logistics_vp.exceptions.custom.ImpossibleCargoUpdateException;
-import com.tsystems.logistics.logistics_vp.exceptions.custom.ImpossibleOrderUpdateException;
-import com.tsystems.logistics.logistics_vp.exceptions.custom.NoSuchOrderException;
-import com.tsystems.logistics.logistics_vp.exceptions.custom.NonProperTruckCapacityException;
+import com.tsystems.logistics.logistics_vp.exceptions.custom.*;
 import com.tsystems.logistics.logistics_vp.mapper.OrderMapper;
 import com.tsystems.logistics.logistics_vp.repository.CargoRepository;
 import com.tsystems.logistics.logistics_vp.repository.DriverRepository;
 import com.tsystems.logistics.logistics_vp.repository.OrderRepository;
 import com.tsystems.logistics.logistics_vp.repository.TruckRepository;
 import com.tsystems.logistics.logistics_vp.service.interfaces.CargoService;
+import com.tsystems.logistics.logistics_vp.service.interfaces.DriverService;
 import com.tsystems.logistics.logistics_vp.service.interfaces.GoogleMapsDistanceService;
 import com.tsystems.logistics.logistics_vp.service.interfaces.OrderService;
 import jakarta.transaction.Transactional;
@@ -40,6 +38,8 @@ public class OrderServiceImpl implements OrderService {
     private final TruckRepository truckRepository;
     private final CargoService cargoService;
     private final GoogleMapsDistanceService mapsService;
+
+    private final DriverService driverService;
 
     @Override
     public List<OrderDto> ordersFindAll() {
@@ -139,13 +139,23 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto orderUpdateStatus(Integer orderId, String status) {
         Order order = getOrderFromDb(orderId);
-        order.setStatus(OrderStatus.valueOf(status));
-//        if(status.equals(OrderStatus.EXPECT_DRIVERS_CONFIRMATION)){
-//
-//        }
-        //orderRepository.save(order);
+        int numberOfAssignedDrivers = order.getDrivers().size();
+        if (status.equals(OrderStatus.EXPECT_DRIVERS_CONFIRMATION.toString()) && numberOfAssignedDrivers == 1) {
+            int totalOnRoadRideDurationInMinutes = order.getCargos().stream()
+                    .mapToInt(elem -> elem.getRideDurationFromStartPoint()).sum();
+            int calculatedAcceptableHoursForTwoDrivers =
+                    driverService.calculateAcceptableDriverHours(1, totalOnRoadRideDurationInMinutes);
+            if (order.getDrivers().get(0).getWorkingHoursInCurrentMonth() > calculatedAcceptableHoursForTwoDrivers) {
+                throw new NotEnoughDriverHoursException("Driver does not have enough working hours");
+            } else {
+                order.setStatus(OrderStatus.valueOf(status));
+            }
+        } else {
+            order.setStatus(OrderStatus.valueOf(status));
+        }
         return orderDto(order);
     }
+
 
     @Override
     public OrderDto orderUpdateStartDateTime(Integer orderId) {
@@ -167,12 +177,16 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto orderUpdateAssignedTruckNumber(Integer orderId, String truckNumber) {
         Order order = getOrderFromDb(orderId);
         Truck truck = truckRepository.findById(truckNumber).orElseThrow();
-        if (order.getWeight() <= truck.getCapacity()) {
-            order.setAssignedTruckNumber(truckNumber);
-            truck.setBusy(Busy.YES);
-            return orderDto(order);
+        if (truck.getBusy().equals(Busy.NO)) {
+            if (order.getWeight() <= truck.getCapacity()) {
+                order.setAssignedTruckNumber(truckNumber);
+                truck.setBusy(Busy.YES);
+                return orderDto(order);
+            } else {
+                throw new NonProperTruckCapacityException("The order is too heavy for this truck");
+            }
         } else {
-            throw new NonProperTruckCapacityException("The order is too heavy for this truck");
+            throw new BusyTruckException("It is impossible to assign busy truck");
         }
     }
 
@@ -187,6 +201,12 @@ public class OrderServiceImpl implements OrderService {
 //        orderRepository.findAll().stream().filter(elem -> elem.getCargos().)
 //
 //    }
+
+
+    // WHEN SEND ORDER FOR APPROVAL, IT IS REQUIRED TO CHECK DRIVER TIME ONCE AGAIN
+    // IF IT IS NOT ENOUGH, SHOW ERROR THAT FOR THIS CASE IT IS REQUIRED TO ASSIGN TWO DRIVERS OR CHOSE ONE DRIVER
+    // WITH MORE WORKING HOURS
+
 
     @Override
     public Order getOrderFromDb(Integer orderId) {
