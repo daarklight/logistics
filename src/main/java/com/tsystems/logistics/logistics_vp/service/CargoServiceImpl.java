@@ -8,14 +8,16 @@ import com.tsystems.logistics.logistics_vp.entity.Cargo;
 import com.tsystems.logistics.logistics_vp.entity.Driver;
 import com.tsystems.logistics.logistics_vp.entity.Order;
 import com.tsystems.logistics.logistics_vp.entity.Truck;
-import com.tsystems.logistics.logistics_vp.enums.*;
+import com.tsystems.logistics.logistics_vp.enums.Busy;
+import com.tsystems.logistics.logistics_vp.enums.Loaded;
+import com.tsystems.logistics.logistics_vp.enums.OrderStatus;
+import com.tsystems.logistics.logistics_vp.enums.Unloaded;
 import com.tsystems.logistics.logistics_vp.exceptions.custom.*;
 import com.tsystems.logistics.logistics_vp.mapper.CargoMapper;
 import com.tsystems.logistics.logistics_vp.repository.CargoRepository;
 import com.tsystems.logistics.logistics_vp.repository.OrderRepository;
 import com.tsystems.logistics.logistics_vp.service.interfaces.CargoService;
 import com.tsystems.logistics.logistics_vp.service.interfaces.GoogleMapsDistanceService;
-import com.tsystems.logistics.logistics_vp.service.interfaces.OrderService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -24,7 +26,6 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -260,6 +261,9 @@ public class CargoServiceImpl implements CargoService {
 
                 order.setStatus(OrderStatus.COMPLETED);
                 driversForOrder.stream().forEach(driver -> driver.setBusy(Busy.NO));
+                driversForOrder.stream().forEach(driver -> driver.setOrderAcceptance(null));
+                driversForOrder.stream().forEach(driver -> driver.setCurrentTruckNumber(null));
+                driversForOrder.stream().forEach(driver -> driver.setCurrentOrderId(null));
                 truckForOrder.setBusy(Busy.NO);
                 driversForOrder.stream().forEach(driver -> driver.setCurrentCity(cargoFinalCity));
                 driversForOrder.stream().forEach(driver -> driver.setCurrentState(cargoFinalState));
@@ -288,17 +292,21 @@ public class CargoServiceImpl implements CargoService {
             String startPoint = cargoDto.getStartAddress() + ", " + cargoDto.getStartCity() + ", " + cargoDto.getStartState();
             String endPoint = cargoDto.getFinalAddress() + ", " + cargoDto.getFinalCity() + ", " + cargoDto.getFinalState();
             List<Integer> rideAndDistance = mapsService.calculateRideDurationAndDistance(startPoint, endPoint);
-            int durationInMinutes = rideAndDistance.get(0) / 60;
-            int distanceInKm = rideAndDistance.get(1) / 1000;
-            resultResponse = "Duration, minutes: " + durationInMinutes + "; Distance, km: " + distanceInKm;
-            // Save in DB:
-            Cargo cargo = cargoRepository.findById(cargoId).orElseThrow();
-            cargo.setWaypointIndex(0);
-            cargo.setRideDistanceFromStartPoint(distanceInKm);
-            cargo.setRideDistanceFromPreviousPoint(distanceInKm);
-            cargo.setRideDurationFromStartPoint(durationInMinutes);
-            cargo.setRideDurationFromPreviousPoint(durationInMinutes);
-            cargoRepository.save(cargo);
+            if (rideAndDistance.get(0) != null) {
+                int durationInMinutes = rideAndDistance.get(0) / 60;
+                int distanceInKm = rideAndDistance.get(1) / 1000;
+                resultResponse = "Duration, minutes: " + durationInMinutes + "; Distance, km: " + distanceInKm;
+                // Save in DB:
+                Cargo cargo = cargoRepository.findById(cargoId).orElseThrow();
+                cargo.setWaypointIndex(0);
+                cargo.setRideDistanceFromStartPoint(distanceInKm);
+                cargo.setRideDistanceFromPreviousPoint(distanceInKm);
+                cargo.setRideDurationFromStartPoint(durationInMinutes);
+                cargo.setRideDurationFromPreviousPoint(durationInMinutes);
+                cargoRepository.save(cargo);
+            } else {
+                throw new GoogleMapsIncorrectDataException("Incorrect input data for Google Maps Service");
+            }
         } else if (allCargoDtos.size() == 2) {
             CargoDto firstCargoDto = allCargoDtos.get(0);
             CargoDto secondCargoDto = allCargoDtos.get(1);
@@ -311,43 +319,47 @@ public class CargoServiceImpl implements CargoService {
             String secondEndPoint = secondCargoDto.getFinalAddress() + ", " + secondCargoDto.getFinalCity() + ", " +
                     secondCargoDto.getFinalState();
             List<List<Integer>> rideAndDistance = mapsService.getRouteMatrixResults(startPoint, firstEndPoint, secondEndPoint);
-            int firstWaypointIndex = rideAndDistance.get(0).get(0);
-            int secondWaypointIndex = rideAndDistance.get(0).get(1);
-            int firstDistanceInKmFromStartPoint = rideAndDistance.get(1).get(0) / 1000;
-            int secondDistanceInKmFromStartPoint = rideAndDistance.get(1).get(1) / 1000;
-            int firstDurationInMinutesFromStartPoint = rideAndDistance.get(2).get(0) / 60;
-            int secondDurationInMinutesFromStartPoint = rideAndDistance.get(2).get(1) / 60;
-            resultResponse = "For first cargo: " + "Waypoint index: " + firstWaypointIndex + "; Duration, minutes: " +
-                    firstDurationInMinutesFromStartPoint + "; Distance, km: " + firstDistanceInKmFromStartPoint + "\n" +
-                    "For second cargo: " + "Waypoint index: " + secondWaypointIndex + "; Duration, minutes: " +
-                    secondDurationInMinutesFromStartPoint + "; Distance, km: " + secondDistanceInKmFromStartPoint;
-            int rideDistanceFromPreviousPointForFirstCargo = (firstWaypointIndex == 0)
-                    ? firstDistanceInKmFromStartPoint : Math.abs(secondDistanceInKmFromStartPoint - firstDistanceInKmFromStartPoint);
-            int rideDurationFromPreviousPointForFirstCargo = (firstWaypointIndex == 0)
-                    ? firstDurationInMinutesFromStartPoint : Math.abs(secondDurationInMinutesFromStartPoint -
-                    firstDurationInMinutesFromStartPoint);
-            int rideDistanceFromPreviousPointForSecondCargo = (secondWaypointIndex == 0)
-                    ? secondDistanceInKmFromStartPoint : Math.abs(secondDistanceInKmFromStartPoint - firstDistanceInKmFromStartPoint);
-            int rideDurationFromPreviousPointForSecondCargo = (secondWaypointIndex == 0)
-                    ? secondDurationInMinutesFromStartPoint : Math.abs(secondDurationInMinutesFromStartPoint -
-                    firstDurationInMinutesFromStartPoint);
-            // Save in DB:
-            Cargo firstCargo = cargoRepository.findById(firstCargoId).orElseThrow();
-            firstCargo.setWaypointIndex(firstWaypointIndex);
-            firstCargo.setRideDistanceFromStartPoint(firstDistanceInKmFromStartPoint);
-            firstCargo.setRideDistanceFromPreviousPoint(rideDistanceFromPreviousPointForFirstCargo);
-            firstCargo.setRideDurationFromStartPoint(firstDurationInMinutesFromStartPoint);
-            firstCargo.setRideDurationFromPreviousPoint(rideDurationFromPreviousPointForFirstCargo);
-            cargoRepository.save(firstCargo);
-            Cargo secondCargo = cargoRepository.findById(secondCargoId).orElseThrow();
-            secondCargo.setWaypointIndex(secondWaypointIndex);
-            secondCargo.setRideDistanceFromStartPoint(secondDistanceInKmFromStartPoint);
-            secondCargo.setRideDistanceFromPreviousPoint(rideDistanceFromPreviousPointForSecondCargo);
-            secondCargo.setRideDurationFromStartPoint(secondDurationInMinutesFromStartPoint);
-            secondCargo.setRideDurationFromPreviousPoint(rideDurationFromPreviousPointForSecondCargo);
-            cargoRepository.save(secondCargo);
+            if (rideAndDistance.get(0).get(0) != null) {
+                int firstWaypointIndex = rideAndDistance.get(0).get(0);
+                int secondWaypointIndex = rideAndDistance.get(0).get(1);
+                int firstDistanceInKmFromStartPoint = rideAndDistance.get(1).get(0) / 1000;
+                int secondDistanceInKmFromStartPoint = rideAndDistance.get(1).get(1) / 1000;
+                int firstDurationInMinutesFromStartPoint = rideAndDistance.get(2).get(0) / 60;
+                int secondDurationInMinutesFromStartPoint = rideAndDistance.get(2).get(1) / 60;
+                resultResponse = "For first cargo: " + "Waypoint index: " + firstWaypointIndex + "; Duration, minutes: " +
+                        firstDurationInMinutesFromStartPoint + "; Distance, km: " + firstDistanceInKmFromStartPoint + "\n" +
+                        "For second cargo: " + "Waypoint index: " + secondWaypointIndex + "; Duration, minutes: " +
+                        secondDurationInMinutesFromStartPoint + "; Distance, km: " + secondDistanceInKmFromStartPoint;
+                int rideDistanceFromPreviousPointForFirstCargo = (firstWaypointIndex == 0)
+                        ? firstDistanceInKmFromStartPoint : Math.abs(secondDistanceInKmFromStartPoint - firstDistanceInKmFromStartPoint);
+                int rideDurationFromPreviousPointForFirstCargo = (firstWaypointIndex == 0)
+                        ? firstDurationInMinutesFromStartPoint : Math.abs(secondDurationInMinutesFromStartPoint -
+                        firstDurationInMinutesFromStartPoint);
+                int rideDistanceFromPreviousPointForSecondCargo = (secondWaypointIndex == 0)
+                        ? secondDistanceInKmFromStartPoint : Math.abs(secondDistanceInKmFromStartPoint - firstDistanceInKmFromStartPoint);
+                int rideDurationFromPreviousPointForSecondCargo = (secondWaypointIndex == 0)
+                        ? secondDurationInMinutesFromStartPoint : Math.abs(secondDurationInMinutesFromStartPoint -
+                        firstDurationInMinutesFromStartPoint);
+                // Save in DB:
+                Cargo firstCargo = cargoRepository.findById(firstCargoId).orElseThrow();
+                firstCargo.setWaypointIndex(firstWaypointIndex);
+                firstCargo.setRideDistanceFromStartPoint(firstDistanceInKmFromStartPoint);
+                firstCargo.setRideDistanceFromPreviousPoint(rideDistanceFromPreviousPointForFirstCargo);
+                firstCargo.setRideDurationFromStartPoint(firstDurationInMinutesFromStartPoint);
+                firstCargo.setRideDurationFromPreviousPoint(rideDurationFromPreviousPointForFirstCargo);
+                cargoRepository.save(firstCargo);
+                Cargo secondCargo = cargoRepository.findById(secondCargoId).orElseThrow();
+                secondCargo.setWaypointIndex(secondWaypointIndex);
+                secondCargo.setRideDistanceFromStartPoint(secondDistanceInKmFromStartPoint);
+                secondCargo.setRideDistanceFromPreviousPoint(rideDistanceFromPreviousPointForSecondCargo);
+                secondCargo.setRideDurationFromStartPoint(secondDurationInMinutesFromStartPoint);
+                secondCargo.setRideDurationFromPreviousPoint(rideDurationFromPreviousPointForSecondCargo);
+                cargoRepository.save(secondCargo);
+            } else {
+                throw new GoogleMapsIncorrectDataException("Incorrect input data for Google Maps Service");
+            }
         }
-        log.info("Results of calculations: " + resultResponse);
+        log.info("Results of Google Maps Service calculations: " + resultResponse);
         return resultResponse;
     }
 

@@ -361,4 +361,35 @@ public class GlobalErrorHandler {
                                 .dateAndTime(LocalDateTime.now())
                                 .build());
     }
+
+    @ExceptionHandler(GoogleMapsIncorrectDataException.class)
+    public ResponseEntity<ErrorRepresentation> handleGoogleMapsIncorrectDataException(
+            GoogleMapsIncorrectDataException exception) {
+        String message = "Problems with Google Maps Service. It seems that city/state/address can be incorrect. " +
+                "Please check if there are any typos";
+        log.error(message);
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(
+                        ErrorRepresentation.builder()
+                                .error("error.business.14")
+                                .message(message)
+                                .dateAndTime(LocalDateTime.now())
+                                .build());
+    }
+
+    @ExceptionHandler(NoAssignedTruckException.class)
+    public ResponseEntity<ErrorRepresentation> handleNoAssignedTruckException(
+            NoAssignedTruckException exception) {
+        String message = "It is impossible to assign driver before truck assign. Please firstly assign truck";
+        log.error(message);
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(
+                        ErrorRepresentation.builder()
+                                .error("error.business.15")
+                                .message(message)
+                                .dateAndTime(LocalDateTime.now())
+                                .build());
+    }
 }

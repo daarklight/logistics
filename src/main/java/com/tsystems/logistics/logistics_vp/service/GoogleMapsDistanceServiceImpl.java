@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.api.gax.rpc.ServerStream;
 import com.google.api.gax.rpc.ServerStreamingCallable;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import com.google.maps.DirectionsApi;
 import com.google.maps.DistanceMatrixApiRequest;
 import com.google.maps.GeoApiContext;
@@ -17,6 +14,7 @@ import com.google.maps.model.DistanceMatrix;
 import com.google.maps.model.TravelMode;
 import com.google.maps.model.Unit;
 import com.google.maps.routing.v2.*;
+import com.tsystems.logistics.logistics_vp.exceptions.custom.GoogleMapsIncorrectDataException;
 import com.tsystems.logistics.logistics_vp.exceptions.custom.GoogleMapsServiceException;
 import com.tsystems.logistics.logistics_vp.service.interfaces.GoogleMapsDistanceService;
 import com.tsystems.logistics.logistics_vp.service.pojo.DistanceMatrixPojo;
@@ -66,7 +64,7 @@ public class GoogleMapsDistanceServiceImpl implements GoogleMapsDistanceService 
                     Gson gson = new GsonBuilder().setPrettyPrinting().create();
                     String resultJsonResponseAsString = gson.toJson(result);
 
-                    JsonObject durationResult = JsonParser.parseString(resultJsonResponseAsString)
+                    JsonObject statusObject = JsonParser.parseString(resultJsonResponseAsString)
                             .getAsJsonObject()
                             .get("rows")
                             .getAsJsonArray()
@@ -75,26 +73,42 @@ public class GoogleMapsDistanceServiceImpl implements GoogleMapsDistanceService 
                             .get("elements")
                             .getAsJsonArray()
                             .get(0)
-                            .getAsJsonObject()
-                            .get("duration")
                             .getAsJsonObject();
-                    rideDurationInSeconds[0] = Integer.parseInt(durationResult.get("inSeconds").toString());
+                    if (statusObject.get("status").getAsString().equals("NOT_FOUND")) {
+                        throw new GoogleMapsIncorrectDataException("Incorrect input data for Google Maps Service");
+                    } else {
 
-                    JsonObject distanceResult = JsonParser.parseString(resultJsonResponseAsString)
-                            .getAsJsonObject()
-                            .get("rows")
-                            .getAsJsonArray()
-                            .get(0)
-                            .getAsJsonObject()
-                            .get("elements")
-                            .getAsJsonArray()
-                            .get(0)
-                            .getAsJsonObject()
-                            .get("distance")
-                            .getAsJsonObject();
-                    rideDistanceInMeters[0] = Integer.parseInt(distanceResult.get("inMeters").toString());
+                        JsonObject durationResult = JsonParser.parseString(resultJsonResponseAsString)
+                                .getAsJsonObject()
+                                .get("rows")
+                                .getAsJsonArray()
+                                .get(0)
+                                .getAsJsonObject()
+                                .get("elements")
+                                .getAsJsonArray()
+                                .get(0)
+                                .getAsJsonObject()
+                                .get("duration")
+                                .getAsJsonObject();
 
-                    latch.countDown();
+                        rideDurationInSeconds[0] = Integer.parseInt(durationResult.get("inSeconds").toString());
+
+                        JsonObject distanceResult = JsonParser.parseString(resultJsonResponseAsString)
+                                .getAsJsonObject()
+                                .get("rows")
+                                .getAsJsonArray()
+                                .get(0)
+                                .getAsJsonObject()
+                                .get("elements")
+                                .getAsJsonArray()
+                                .get(0)
+                                .getAsJsonObject()
+                                .get("distance")
+                                .getAsJsonObject();
+                        rideDistanceInMeters[0] = Integer.parseInt(distanceResult.get("inMeters").toString());
+
+                        latch.countDown();
+                    }
                 }
 
                 @Override

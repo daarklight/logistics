@@ -6,10 +6,7 @@ import com.tsystems.logistics.logistics_vp.enums.Busy;
 import com.tsystems.logistics.logistics_vp.enums.DriverStatus;
 import com.tsystems.logistics.logistics_vp.enums.OrderAcceptance;
 import com.tsystems.logistics.logistics_vp.enums.OrderStatus;
-import com.tsystems.logistics.logistics_vp.exceptions.custom.BusyDriverException;
-import com.tsystems.logistics.logistics_vp.exceptions.custom.NoProperDriversException;
-import com.tsystems.logistics.logistics_vp.exceptions.custom.NoSuchDriverException;
-import com.tsystems.logistics.logistics_vp.exceptions.custom.TooManyDriversException;
+import com.tsystems.logistics.logistics_vp.exceptions.custom.*;
 import com.tsystems.logistics.logistics_vp.mapper.DriverMapper;
 import com.tsystems.logistics.logistics_vp.repository.AuthenticationInfoRepository;
 import com.tsystems.logistics.logistics_vp.repository.DriverRepository;
@@ -19,6 +16,8 @@ import com.tsystems.logistics.logistics_vp.service.interfaces.DriverService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.codec.binary.StringUtils;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -147,21 +146,34 @@ public class DriverServiceImpl implements DriverService {
     public DriverDto driverOrderAcceptance(Integer personalNumber, OrderAcceptance orderAcceptance) {
         Driver driver = getDriverFromDb(personalNumber);
         driver.setOrderAcceptance(OrderAcceptance.valueOf(orderAcceptance.toString()));
+        log.info(String.format("Driver %s %s confirmed order# %s",
+                driver.getName(), driver.getSurname(), driver.getCurrentOrderId().getOrderId()));
+        Order order = driver.getCurrentOrderId();
         int orderId = driver.getCurrentOrderId().getOrderId();
-        if (orderAcceptance.equals(OrderAcceptance.YES)) {
-            // ADD LOGIC THAT FOR CASE OF CODRIVERS => ORDER STATUS IS CONFIRMED ONLY WHEN BOTH ACCEPT THE ORDER
-            // ALSO ADD LOGIC WHEN TRUCK BECOMES BUSY
-
-            driver.getCurrentOrderId().setStatus(OrderStatus.CONFIRMED);
-            //driver.setBusy(Busy.YES);
-            log.info(String.format("Driver %s %s confirmed order# %s",
-                    driver.getName(), driver.getSurname(), driver.getCurrentOrderId().getOrderId()));
+        int numberOfDriversWithoutOrderAcceptance = driverRepository.findAllByCurrentOrderId(order).stream()
+                .map(elem -> elem.getOrderAcceptance() != null ? elem.getOrderAcceptance().toString() : null)  // getOrderAcceptanceToAvoidNPE
+                .filter(elem -> !StringUtils.equals(elem, "YES"))
+                .collect(Collectors.toList())
+                .size();
+        log.info("Approve from other drivers is waiting as well");
+        if (numberOfDriversWithoutOrderAcceptance == 0) {
+            if (orderAcceptance.equals(OrderAcceptance.YES)) {
+                driver.getCurrentOrderId().setStatus(OrderStatus.CONFIRMED);
+            } else {
+                driver.getCurrentOrderId().setStatus(OrderStatus.DECLINED_BY_DRIVERS);
+                driver.setCurrentOrderId(null);
+                driver.setOrderAcceptance(null);
+                log.info(String.format("Driver %s %s declined order# %s",
+                        driver.getName(), driver.getSurname(), orderId));
+            }
         } else {
-            driver.getCurrentOrderId().setStatus(OrderStatus.DECLINED_BY_DRIVERS);
-            driver.setCurrentOrderId(null);
-            driver.setOrderAcceptance(null);
-            log.info(String.format("Driver %s %s declined order# %s",
-                    driver.getName(), driver.getSurname(), orderId));
+            if (orderAcceptance.equals(OrderAcceptance.NO)) {
+                driver.getCurrentOrderId().setStatus(OrderStatus.DECLINED_BY_DRIVERS);
+                driver.setCurrentOrderId(null);
+                driver.setOrderAcceptance(null);
+                log.info(String.format("Driver %s %s declined order# %s",
+                        driver.getName(), driver.getSurname(), orderId));
+            }
         }
         //driverRepository.save(driver);
         return driverDto(driver);
@@ -186,22 +198,51 @@ public class DriverServiceImpl implements DriverService {
         return driverDto;
     }
 
+//    @Override
+//    public DriverDto driverUpdateCurrentOrder(Integer orderId, Integer personalNumber) {
+//        Order order = orderRepository.findById(orderId).orElseThrow();
+//        Truck truck = truckRepository.findById(order.getAssignedTruckNumber()).orElseThrow(() ->
+//                new NoSuchTruckException("This truck does not exist in database"));
+//        Driver driver = getDriverFromDb(personalNumber);
+//        if (driver.getBusy().equals(Busy.NO)) {
+//            if (order.getDrivers().size() < 2) {
+//                driver.setCurrentOrderId(order);
+//                driver.setBusy(Busy.YES);
+//                driver.setCurrentTruckNumber(truck);
+//                log.info(String.format("Driver %s %s was preliminary assigned for order# %s",
+//                        driver.getName(), driver.getSurname(), orderId));
+//                return driverDto(driver);
+//            } else {
+//                throw new TooManyDriversException("It is impossible to put more than two drivers for one order");
+//            }
+//        } else {
+//            throw new BusyDriverException("It is impossible to assign busy driver");
+//        }
+//    }
+
     @Override
     public DriverDto driverUpdateCurrentOrder(Integer orderId, Integer personalNumber) {
         Order order = orderRepository.findById(orderId).orElseThrow();
-        Driver driver = getDriverFromDb(personalNumber);
-        if (driver.getBusy().equals(Busy.NO)) {
-            if (order.getDrivers().size() < 2) {
-                driver.setCurrentOrderId(order);
-                driver.setBusy(Busy.YES);
-                log.info(String.format("Driver %s %s was preliminary assigned for order# %s",
-                        driver.getName(), driver.getSurname(), orderId));
-                return driverDto(driver);
+        try {
+            Truck truck = truckRepository.findById(order.getAssignedTruckNumber()).orElseThrow(() ->
+                    new NoSuchTruckException("This truck does not exist in database"));
+            Driver driver = getDriverFromDb(personalNumber);
+            if (driver.getBusy().equals(Busy.NO)) {
+                if (order.getDrivers().size() < 2) {
+                    driver.setCurrentOrderId(order);
+                    driver.setBusy(Busy.YES);
+                    driver.setCurrentTruckNumber(truck);
+                    log.info(String.format("Driver %s %s was preliminary assigned for order# %s",
+                            driver.getName(), driver.getSurname(), orderId));
+                    return driverDto(driver);
+                } else {
+                    throw new TooManyDriversException("It is impossible to put more than two drivers for one order");
+                }
             } else {
-                throw new TooManyDriversException("It is impossible to put more than two drivers for one order");
+                throw new BusyDriverException("It is impossible to assign busy driver");
             }
-        } else {
-            throw new BusyDriverException("It is impossible to assign busy driver");
+        } catch (InvalidDataAccessApiUsageException e) {
+            throw new NoAssignedTruckException("It is impossible to assign truck before truck assign");
         }
     }
 
@@ -216,16 +257,16 @@ public class DriverServiceImpl implements DriverService {
         // 8 hours is approximate estimation of time that is necessary:
         // - to move the driver from driver/truck location to customer location to take stuff;
         // - to load and unload all cargos (for simplicity we consider that it does not depend on number of cargos)
-        int totalOrderHours = onRoadRideMinutes/60 + 8;
+        int totalOrderHours = onRoadRideMinutes / 60 + 8;
 
         LocalDate today = LocalDate.now();
         LocalDate endOfMonth = today.withDayOfMonth(today.lengthOfMonth());
         long restDaysInThisMonth = DAYS.between(today, endOfMonth);
         // standard driver work shift is taken as 8 hours
-        int totalMonthDriversHours = (int) restDaysInThisMonth*8*numberOfDrivers;
+        int totalMonthDriversHours = (int) restDaysInThisMonth * 8 * numberOfDrivers;
         int acceptableHours = 0;
         if (totalMonthDriversHours >= totalOrderHours) {
-            acceptableHours = 176 - totalOrderHours/numberOfDrivers;
+            acceptableHours = 176 - totalOrderHours / numberOfDrivers;
         } else {
             acceptableHours = 176 - totalMonthDriversHours;
         }

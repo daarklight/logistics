@@ -32,13 +32,9 @@ import java.util.List;
 @Log4j2
 public class OrderServiceImpl implements OrderService {
 
-    private final CargoRepository cargoRepository;
     private final DriverRepository driverRepository;
     private final OrderRepository orderRepository;
     private final TruckRepository truckRepository;
-    private final CargoService cargoService;
-    private final GoogleMapsDistanceService mapsService;
-
     private final DriverService driverService;
 
     @Override
@@ -66,8 +62,6 @@ public class OrderServiceImpl implements OrderService {
         if (orderStatus == OrderStatus.NEW || orderStatus == OrderStatus.DECLINED_BY_DRIVERS) {
             order.setOrderCustomerId(orderDto.getOrderCustomerId());
             order.setCategory(orderDto.getCategory());
-            //order.setWeight(orderDto.getWeight());
-            //order.setStatus(OrderStatus.valueOf(orderDto.getStatus().toString()));
             order.setLimitDateTime(orderDto.getLimitDateTime());
             orderRepository.save(order);
             return orderDto(order);
@@ -201,12 +195,6 @@ public class OrderServiceImpl implements OrderService {
 //        orderRepository.findAll().stream().filter(elem -> elem.getCargos().)
 //
 //    }
-
-
-    // WHEN SEND ORDER FOR APPROVAL, IT IS REQUIRED TO CHECK DRIVER TIME ONCE AGAIN
-    // IF IT IS NOT ENOUGH, SHOW ERROR THAT FOR THIS CASE IT IS REQUIRED TO ASSIGN TWO DRIVERS OR CHOSE ONE DRIVER
-    // WITH MORE WORKING HOURS
-
 
     @Override
     public Order getOrderFromDb(Integer orderId) {
