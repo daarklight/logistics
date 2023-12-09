@@ -198,8 +198,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order getOrderFromDb(Integer orderId) {
+//        orderRepository.findById(orderId).orElseThrow().getDrivers().size();
+//        orderRepository.findById(orderId).orElseThrow().getCargos().size();
+
         return orderRepository.findById(orderId).orElseThrow(() ->
                 new NoSuchOrderException("This order does not exist in database"));
+
     }
 
     private OrderDto orderDto(Order order) {
