@@ -9,7 +9,7 @@ import com.tsystems.logistics.logistics_vp.repository.AuthenticationInfoReposito
 import com.tsystems.logistics.logistics_vp.service.interfaces.AuthenticationInfoService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +33,8 @@ public class AuthenticationInfoServiceImpl implements AuthenticationInfoService 
                 .id(authenticationInfoDto.getId())
                 .role(Role.valueOf(authenticationInfoDto.getRole().toString()))
                 .username(authenticationInfoDto.getUsername())
-                .password(new BCryptPasswordEncoder().encode(authenticationInfoDto.getPassword()))
+                //.password(new BCryptPasswordEncoder().encode(authenticationInfoDto.getPassword()))
+                .password(authenticationInfoDto.getPassword())
                 .build();
         authenticationInfoRepository.save(authenticationInfo);
         return authenticationInfoDto(authenticationInfo);
