@@ -3415,6 +3415,12 @@ components:
         driverComment:
           type: string
           example: I'm not going to drive with Sam
+        startShiftDateTime:
+          type: string
+          format: date-time
+        endShiftDateTime:
+          type: string
+          format: date-time
 
 
 

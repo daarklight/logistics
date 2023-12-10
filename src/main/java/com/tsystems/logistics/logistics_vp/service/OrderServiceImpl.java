@@ -1,7 +1,9 @@
 package com.tsystems.logistics.logistics_vp.service;
 
-import com.tsystems.logistics.logistics_vp.code.model.*;
-import com.tsystems.logistics.logistics_vp.entity.Cargo;
+import com.tsystems.logistics.logistics_vp.code.model.CreateOrderDto;
+import com.tsystems.logistics.logistics_vp.code.model.OrderDto;
+import com.tsystems.logistics.logistics_vp.code.model.UpdateOrderDriverCommentDto;
+import com.tsystems.logistics.logistics_vp.code.model.UpdateOrderDto;
 import com.tsystems.logistics.logistics_vp.entity.Driver;
 import com.tsystems.logistics.logistics_vp.entity.Order;
 import com.tsystems.logistics.logistics_vp.entity.Truck;
@@ -9,20 +11,16 @@ import com.tsystems.logistics.logistics_vp.enums.Busy;
 import com.tsystems.logistics.logistics_vp.enums.OrderStatus;
 import com.tsystems.logistics.logistics_vp.exceptions.custom.*;
 import com.tsystems.logistics.logistics_vp.mapper.OrderMapper;
-import com.tsystems.logistics.logistics_vp.repository.CargoRepository;
 import com.tsystems.logistics.logistics_vp.repository.DriverRepository;
 import com.tsystems.logistics.logistics_vp.repository.OrderRepository;
 import com.tsystems.logistics.logistics_vp.repository.TruckRepository;
-import com.tsystems.logistics.logistics_vp.service.interfaces.CargoService;
 import com.tsystems.logistics.logistics_vp.service.interfaces.DriverService;
-import com.tsystems.logistics.logistics_vp.service.interfaces.GoogleMapsDistanceService;
 import com.tsystems.logistics.logistics_vp.service.interfaces.OrderService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 

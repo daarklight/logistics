@@ -1,7 +1,6 @@
 package com.tsystems.logistics.logistics_vp.service;
 
 import com.tsystems.logistics.logistics_vp.code.model.AuthenticationInfoDto;
-//import com.tsystems.logistics.logistics_vp.code.model.AuthenticationInfoToSendDto;
 import com.tsystems.logistics.logistics_vp.entity.AuthenticationInfo;
 import com.tsystems.logistics.logistics_vp.enums.Role;
 import com.tsystems.logistics.logistics_vp.exceptions.custom.NoSuchAuthenticationInfoException;
@@ -10,6 +9,7 @@ import com.tsystems.logistics.logistics_vp.repository.AuthenticationInfoReposito
 import com.tsystems.logistics.logistics_vp.service.interfaces.AuthenticationInfoService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +33,7 @@ public class AuthenticationInfoServiceImpl implements AuthenticationInfoService 
                 .id(authenticationInfoDto.getId())
                 .role(Role.valueOf(authenticationInfoDto.getRole().toString()))
                 .username(authenticationInfoDto.getUsername())
-                .password(authenticationInfoDto.getPassword())
+                .password(new BCryptPasswordEncoder().encode(authenticationInfoDto.getPassword()))
                 .build();
         authenticationInfoRepository.save(authenticationInfo);
         return authenticationInfoDto(authenticationInfo);

@@ -1,14 +1,11 @@
 package com.tsystems.logistics.logistics_vp.service;
 
-import com.tsystems.logistics.logistics_vp.code.model.AuthenticationInfoDto;
 import com.tsystems.logistics.logistics_vp.code.model.CreateCustomerDto;
 import com.tsystems.logistics.logistics_vp.code.model.CustomerDto;
 import com.tsystems.logistics.logistics_vp.code.model.UpdateCustomerDto;
 import com.tsystems.logistics.logistics_vp.entity.AuthenticationInfo;
 import com.tsystems.logistics.logistics_vp.entity.Customer;
-import com.tsystems.logistics.logistics_vp.entity.Driver;
 import com.tsystems.logistics.logistics_vp.exceptions.custom.NoSuchCustomerException;
-import com.tsystems.logistics.logistics_vp.exceptions.custom.NoSuchDriverException;
 import com.tsystems.logistics.logistics_vp.mapper.CustomerMapper;
 import com.tsystems.logistics.logistics_vp.repository.AuthenticationInfoRepository;
 import com.tsystems.logistics.logistics_vp.repository.CustomerRepository;
@@ -87,7 +84,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer getCustomerFromDb(Integer customerId){
+    public Customer getCustomerFromDb(Integer customerId) {
         return customerRepository.findById(customerId).orElseThrow(() ->
                 new NoSuchCustomerException("This customer does not exist in database"));
     }

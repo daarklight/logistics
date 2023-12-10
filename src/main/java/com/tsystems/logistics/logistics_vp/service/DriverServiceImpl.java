@@ -21,6 +21,8 @@ import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -77,8 +79,26 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public DriverDto driverUpdateStatusByDriver(Integer personalNumber, UpdateDriverStatusByDriverDto driverDto) {
         Driver driver = getDriverFromDb(personalNumber);
-        driver.setStatus(DriverStatus.valueOf(driverDto.getStatus().toString()));
-        driverRepository.save(driver);
+        LocalDateTime startShiftTime = driver.getStartShiftDateTime();
+        driverDto.getStatus();
+
+        if (driverDto.getStatus().equals(UpdateDriverStatusByDriverDto.StatusEnum.DRIVING)) {
+            driver.setStatus(DriverStatus.valueOf(driverDto.getStatus().toString()));
+            driver.setStartShiftDateTime(LocalDateTime.now());
+        } else { // If set status to REST
+            driver.setStatus(DriverStatus.valueOf(driverDto.getStatus().toString()));
+            LocalDateTime endShiftTime = LocalDateTime.now();
+            driver.setEndShiftDateTime(LocalDateTime.now());
+            int hoursDifference = (int)Math.abs(ChronoUnit.HOURS.between(startShiftTime, endShiftTime));
+            driver.setWorkingHoursInCurrentMonth(driver.getWorkingHoursInCurrentMonth() + hoursDifference);
+        }
+        //driverRepository.save(driver);
+
+
+        // ADD LOGIC !!!!!
+        // ADD LOGIC !!!!!
+        // ADD LOGIC !!!!!
+
         return driverDto(driver);
     }
 

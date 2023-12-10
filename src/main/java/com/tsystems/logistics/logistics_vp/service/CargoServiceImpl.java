@@ -266,6 +266,7 @@ public class CargoServiceImpl implements CargoService {
                 driversForOrder.stream().forEach(driver -> driver.setOrderAcceptance(null));
                 driversForOrder.stream().forEach(driver -> driver.setCurrentTruckNumber(null));
                 driversForOrder.stream().forEach(driver -> driver.setCurrentOrderId(null));
+                driversForOrder.stream().forEach(driver -> driver.setDriverComment(null));
                 truckForOrder.setBusy(Busy.NO);
                 driversForOrder.stream().forEach(driver -> driver.setCurrentCity(cargoFinalCity));
                 driversForOrder.stream().forEach(driver -> driver.setCurrentState(cargoFinalState));
