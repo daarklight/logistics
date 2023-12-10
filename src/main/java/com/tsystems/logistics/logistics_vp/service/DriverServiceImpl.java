@@ -232,6 +232,11 @@ public class DriverServiceImpl implements DriverService {
                     driver.setCurrentOrderId(order);
                     driver.setBusy(Busy.YES);
                     driver.setCurrentTruckNumber(truck);
+                    if (order.getDrivers().size() == 1) {
+                        order.setNumberOfAssignedDrivers(2);
+                    } else {
+                        order.setNumberOfAssignedDrivers(1);
+                    }
                     log.info(String.format("Driver %s %s was preliminary assigned for order# %s",
                             driver.getName(), driver.getSurname(), orderId));
                     return driverDto(driver);
@@ -271,6 +276,25 @@ public class DriverServiceImpl implements DriverService {
             acceptableHours = 176 - totalMonthDriversHours;
         }
         return acceptableHours;
+    }
+
+    @Override
+    public DriverDto driverUpdateComment(Integer personalNumber, UpdateOrderDriverCommentDto driverDto) {
+        Driver driver = getDriverFromDb(personalNumber);
+        driver.setDriverComment(driverDto.getDriverComment());
+        return driverDto(driver);
+    }
+
+    @Override
+    public DriverDto driverUnassignOrder(Integer orderId, Integer personalNumber) {
+        Driver driver = getDriverFromDb(personalNumber);
+        Order order = driver.getCurrentOrderId();
+        driver.setCurrentOrderId(null);
+        driver.setBusy(Busy.NO);
+        driver.setCurrentOrderId(null);
+        driver.setCurrentTruckNumber(null);
+        order.setNumberOfAssignedDrivers(order.getNumberOfAssignedDrivers() - 1);
+        return driverDto(driver);
     }
 
     private DriverDto driverDto(Driver driver) {

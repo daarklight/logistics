@@ -66,12 +66,14 @@ public class CargoServiceImpl implements CargoService {
             if (totalWeightOfAllCargosForOrder < 22) {
                 if (order.getCargos().size() == 0) {
                     cargoRepository.save(cargo);
+                    order.setNumberOfCargos(1);
                     order.setWeight(cargo.getWeight());
                     calculateAndUpdateRide(order.getOrderId());
                 } else if (order.getCargos().size() == 1 && order.getCargos().get(0).getStartAddress().equals(cargo.getStartAddress())
                         && order.getCargos().get(0).getStartCity().equals(cargo.getStartCity())
                         && order.getCargos().get(0).getStartState().equals(cargo.getStartState())) {
                     cargoRepository.save(cargo);
+                    order.setNumberOfCargos(2);
                     order.setWeight(totalWeightOfAllCargosForOrder);
                     calculateAndUpdateRide(order.getOrderId());
                 } else {

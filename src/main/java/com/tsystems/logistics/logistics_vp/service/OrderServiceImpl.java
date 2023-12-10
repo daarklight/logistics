@@ -46,10 +46,12 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto orderCreate(CreateOrderDto orderDto) {
         Order order = Order.builder()
                 .orderCustomerId(orderDto.getOrderCustomerId())
+                .numberOfCargos(0)
                 .category(orderDto.getCategory())
                 .weight(0)
                 .status(OrderStatus.NEW)
                 .limitDateTime(orderDto.getLimitDateTime())
+                .numberOfAssignedDrivers(0)
                 .build();
         orderRepository.save(order);
         return orderDto(order);
@@ -161,11 +163,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto orderUpdateDriverComment(Integer orderId, UpdateOrderDriverCommentDto orderDto) {
-        Order order = getOrderFromDb(orderId);
-        order.setDriverComment(orderDto.getDriverComment());
-        orderRepository.save(order);
-        return orderDto(order);
+        return null;
     }
+
+//    @Override
+//    public OrderDto orderUpdateDriverComment(Integer orderId, UpdateOrderDriverCommentDto orderDto) {
+//        Order order = getOrderFromDb(orderId);
+//        order.setDriverComment(orderDto.getDriverComment());
+//        orderRepository.save(order);
+//        return orderDto(order);
+//    }
 
     @Override
     public OrderDto orderUpdateAssignedTruckNumber(Integer orderId, String truckNumber) {
@@ -204,6 +211,15 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findById(orderId).orElseThrow(() ->
                 new NoSuchOrderException("This order does not exist in database"));
 
+    }
+
+    @Override
+    public OrderDto orderUnassignTruck(Integer orderId) {
+        Order order = getOrderFromDb(orderId);
+        Truck truck = truckRepository.findById(order.getAssignedTruckNumber()).orElseThrow();
+        order.setAssignedTruckNumber(null);
+        truck.setBusy(Busy.NO);
+        return orderDto(order);
     }
 
     private OrderDto orderDto(Order order) {

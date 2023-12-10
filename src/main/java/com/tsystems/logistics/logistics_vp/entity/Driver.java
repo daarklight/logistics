@@ -8,6 +8,8 @@ import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "drivers", schema = "logistics")
 @SQLDelete(sql = "UPDATE logistics.drivers SET deleted = true WHERE personal_number=?")
@@ -34,6 +36,9 @@ public class Driver {
     //current_truck_number VARCHAR(7),
     //current_order_id INT,
     //order_acceptance ENUM('YES','NO'),
+    //driver_comment VARCHAR(120),
+    //start_shift_date_time DATETIME,
+    //end_shift_date_time DATETIME,
     //deleted BIT(1) NOT NULL DEFAULT 0,
     //CONSTRAINT chk_working_hours CHECK (working_hours_in_current_month BETWEEN 0 AND 176),
     //PRIMARY KEY personal_number_pk (personal_number),
@@ -95,4 +100,13 @@ public class Driver {
     @Enumerated(EnumType.STRING)
     @Column(name = "order_acceptance", columnDefinition = "ENUM('YES','NO')")
     private OrderAcceptance orderAcceptance;
+
+    @Column(name = "driver_comment", length = 120)
+    private String driverComment;
+
+    @Column(name = "start_shift_date_time")
+    private LocalDateTime startShiftDateTime;
+
+    @Column(name = "end_shift_date_time")
+    private LocalDateTime endShiftDateTime;
 }

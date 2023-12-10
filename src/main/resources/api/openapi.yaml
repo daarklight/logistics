@@ -1035,6 +1035,89 @@ paths:
           description: Internal Server Error
 
 
+  /drivers/unassignOrder/{orderId}/{personalNumber}:
+    patch:
+      tags:
+        - Driver
+      summary: Update assigned Order for Driver
+      operationId: driverUnassignOrder
+      parameters:
+        - name: orderId
+          in: path
+          description: "Order id"
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 12001
+        - name: personalNumber
+          in: path
+          description: "Driver's personal number"
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 153001
+      responses:
+        200:
+          description: Driver was updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        404:
+          description: This personal number for driver was not found
+        403:
+          description: "Forbidden: User does not have permissions"
+        500:
+          description: Internal Server Error
+
+
+
+  /drivers/driverComment/{personalNumber}:
+    patch:
+      tags:
+        - Driver
+      summary: Update driver comment for Order
+      operationId: driverUpdateOrderComment
+      parameters:
+        - name: personalNumber
+          in: path
+          description: "Driver's personal number"
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 153001
+      requestBody:
+        description: Order object that needs to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrderDriverComment'
+      responses:
+        200:
+          description: Driver comment for Order was updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: This orderId was not found
+        500:
+          description: Internal Server Error
+
 
 
   /customers:
@@ -1988,45 +2071,6 @@ paths:
         500:
           description: Internal Server Error
 
-  /orders/driverComment/{orderId}:
-    patch:
-      tags:
-        - Order
-      summary: Update driver comment for Order
-      operationId: orderUpdateDriverComment
-      parameters:
-        - name: orderId
-          in: path
-          description: "Order id"
-          required: true
-          schema:
-            type: integer
-            format: int32
-            example: 12001
-      requestBody:
-        description: Order object that needs to be updated
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateOrderDriverComment'
-      responses:
-        200:
-          description: Driver comment for Order was updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Order'
-        400:
-          description: Bad request
-        401:
-          description: "Unauthorized: Invalid credentials"
-        403:
-          description: "Forbidden: User does not have permissions"
-        404:
-          description: This orderId was not found
-        500:
-          description: Internal Server Error
 
   /orders/setStartDateTime/{orderId}:
     patch:
@@ -2083,6 +2127,39 @@ paths:
           schema:
             type: string
             example: ABC1234
+      responses:
+        200:
+          description: Assigned truck number for Order was updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        400:
+          description: Bad request
+        401:
+          description: "Unauthorized: Invalid credentials"
+        403:
+          description: "Forbidden: User does not have permissions"
+        404:
+          description: This orderId was not found
+        500:
+          description: Internal Server Error
+
+  /orders/unassignTruck/{orderId}:
+    patch:
+      tags:
+        - Order
+      summary: Update assigned truck number for Order
+      operationId: orderUnassignTruck
+      parameters:
+        - name: orderId
+          in: path
+          description: "Order id"
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 12001
       responses:
         200:
           description: Assigned truck number for Order was updated successfully
@@ -3276,15 +3353,6 @@ components:
           enum: [REST, DRIVING]
           default: REST
 
-    UpdateDriverCurrentOrder:
-      description: Object representing current Order updating for Driver
-      type: object
-      properties:
-        currentOrderId:
-          type: integer
-          format: int32
-          example: 12001
-
     Driver:
       description: Object representing Driver
       type: object
@@ -3344,6 +3412,9 @@ components:
           description: Order acceptance
           type: string
           enum: ["YES","NO"]
+        driverComment:
+          type: string
+          example: I'm not going to drive with Sam
 
 
 
@@ -3495,15 +3566,6 @@ components:
           type: string
           example: "I'm not going to drive with Sam"
 
-    UpdateOrderAssignedTruckNumber:
-      description: Object representing updating assigned truck number for Order
-      type: object
-      properties:
-        assignedTruckNumber:
-          description: Assigned truck number
-          type: string
-          example: "ABC1234"
-
     UpdateOrderStatus:
       description: Object representing Order updating
       type: object
@@ -3521,6 +3583,10 @@ components:
           type: integer
           format: int32
           example: 12001
+        numberOfCargos:
+          type: integer
+          format: int32
+          example: 0
         orderCustomerId:
           type: integer
           format: int32
@@ -3546,10 +3612,10 @@ components:
         assignedTruckNumber:
           type: string
           example: ABC1234
-        driverComment:
-          type: string
-          example: I'm not going to drive with Sam
-
+        numberOfAssignedDrivers:
+          type: integer
+          format: int32
+          example: 0
 
 
     CreateCargo:

@@ -167,4 +167,23 @@ public class DriverController implements DriversApi {
                 .status(HttpStatus.OK)
                 .body(resultDriverDto);
     }
+
+    @Override
+    public ResponseEntity<DriverDto> driverUpdateOrderComment(
+            Integer personalNumber, UpdateOrderDriverCommentDto updateDriverDto) {
+        log.info("Start to update driver's comment for order");
+        DriverDto resultDriverDto = driverService.driverUpdateComment(personalNumber, updateDriverDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(resultDriverDto);
+    }
+
+    @Override
+    public ResponseEntity<DriverDto> driverUnassignOrder(Integer orderId, Integer personalNumber) {
+        log.info("Start to unassign driver for order");
+        DriverDto resultDriverDto = driverService.driverUnassignOrder(orderId, personalNumber);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(resultDriverDto);
+    }
 }

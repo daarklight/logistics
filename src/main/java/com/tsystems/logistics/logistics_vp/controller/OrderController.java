@@ -140,14 +140,14 @@ public class OrderController implements OrdersApi {
                 .body(resultOrderDto);
     }
 
-    @Override
-    public ResponseEntity<OrderDto> orderUpdateDriverComment(Integer orderId, UpdateOrderDriverCommentDto updateOrderDriverCommentDto) {
-        log.info("Start to update driver's comment");
-        OrderDto resultOrderDto = orderService.orderUpdateDriverComment(orderId, updateOrderDriverCommentDto);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(resultOrderDto);
-    }
+//    @Override
+//    public ResponseEntity<OrderDto> orderUpdateDriverComment(Integer orderId, UpdateOrderDriverCommentDto updateOrderDriverCommentDto) {
+//        log.info("Start to update driver's comment");
+//        OrderDto resultOrderDto = orderService.orderUpdateDriverComment(orderId, updateOrderDriverCommentDto);
+//        return ResponseEntity
+//                .status(HttpStatus.OK)
+//                .body(resultOrderDto);
+//    }
 
     @Override
     public ResponseEntity<OrderDto> orderUpdateStartDateTime(Integer orderId) {
@@ -167,15 +167,6 @@ public class OrderController implements OrdersApi {
                 .body(resultOrderDto);
     }
 
-//    @Override
-//    public ResponseEntity<OrderDto> orderUpdateStatus(Integer orderId, UpdateOrderStatusDto updateOrderStatusDto) {
-//        log.info("Start to update order status");
-//        OrderDto resultOrderDto = orderService.orderUpdateStatus(orderId, updateOrderStatusDto);
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(resultOrderDto);
-//    }
-
     @Override
     public ResponseEntity<List<OrderDto>> ordersFindAll() {
         log.info("Start to find all orders");
@@ -194,16 +185,12 @@ public class OrderController implements OrdersApi {
                 .body(resultOrderDto);
     }
 
-//    @Override
-//    public ResponseEntity<String> orderCalculateRide(Integer orderId) {
-//        log.info("Start to calculate and update ride for cargos of defined orders");
-//        try {
-//            orderService.calculateAndUpdateRide(orderId);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return null;
-//    }
+    @Override
+    public ResponseEntity<OrderDto> orderUnassignTruck(Integer orderId) {
+        log.info("Start to unassign truck");
+        OrderDto resultOrderDto = orderService.orderUnassignTruck(orderId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(resultOrderDto);
+    }
 }

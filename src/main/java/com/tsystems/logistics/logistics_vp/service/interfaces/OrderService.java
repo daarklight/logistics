@@ -29,4 +29,5 @@ public interface OrderService {
     OrderDto orderUpdateAssignedTruckNumber(Integer orderId, String truckNumber);
     OrderDto orderFindByDriver(Integer personalNumber);
     Order getOrderFromDb(Integer orderId);
+    OrderDto orderUnassignTruck(Integer orderId);
 }

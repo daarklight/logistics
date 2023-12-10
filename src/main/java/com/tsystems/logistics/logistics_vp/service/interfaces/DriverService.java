@@ -26,4 +26,6 @@ public interface DriverService {
     DriverDto driverUpdateCurrentOrder(Integer currentOrderId, Integer personalNumber);
     Driver getDriverFromDb(Integer personalNumber);
     int calculateAcceptableDriverHours(int numberOfDrivers, int onRoadRideMinutes);
+    DriverDto driverUpdateComment(Integer personalNumber, UpdateOrderDriverCommentDto updateOrderDriverCommentDto);
+    DriverDto driverUnassignOrder(Integer orderId, Integer personalNumber);
 }
