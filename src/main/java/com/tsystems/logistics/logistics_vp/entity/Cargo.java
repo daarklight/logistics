@@ -19,40 +19,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class Cargo {
-    //CREATE TABLE logistics.cargos (
-    //cargo_id INT NOT NULL AUTO_INCREMENT,
-    //order_for_cargo_id INT,
-    //cargo_name VARCHAR(40) NOT NULL,
-    //weight DECIMAL(3,1) NOT NULL,
-    //start_city VARCHAR(30) NOT NULL,
-    //start_state VARCHAR(49) NOT NULL,
-    //start_address VARCHAR(50) NOT NULL,
-    //loaded ENUM('YES','NO') DEFAULT 'NO',
-    //final_city VARCHAR(30) NOT NULL,
-    //final_state VARCHAR(49) NOT NULL,
-    //final_address VARCHAR(50) NOT NULL,
-    //unloaded ENUM('YES','NO') DEFAULT 'NO',
-    //waypoint_index INT,
-    //ride_distance_from_start_point INT,
-    //ride_duration_from_start_point INT,
-    //ride_distance_from_previous_point INT,
-    //ride_duration_from_previous_point INT,
-    //expected_completion_date_time DATETIME,
-    //real_completion_date_time DATETIME,
-    //deleted BIT(1) NOT NULL DEFAULT 0,
-    //PRIMARY KEY cargo_id_pk (cargo_id),
-    //FOREIGN KEY order_id_fk (order_for_cargo_id) REFERENCES logistics.orders(order_id)
-    //)
-    //AUTO_INCREMENT = 1001;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cargo_id")
     private int cargoId;
 
-//    @Column(name = "order_for_cargo_id")
-//    private int orderForCargoId;
-    // Do we need in @ManyToOne cascade = CascadeType.REFRESH, fetch = FetchType.EAGER ???
     @ManyToOne
     @JoinColumn(name = "order_for_cargo_id", referencedColumnName = "order_id")
     private Order orderForCargoId;

@@ -25,7 +25,6 @@ public interface OrderService {
     List<OrderDto> ordersFindLaterThanLimitDateTime(LocalDateTime limitDateTime);
     OrderDto orderUpdateStatus(Integer orderId, String status);
     OrderDto orderUpdateStartDateTime(Integer orderId);
-    OrderDto orderUpdateDriverComment(Integer orderId, UpdateOrderDriverCommentDto orderDto);
     OrderDto orderUpdateAssignedTruckNumber(Integer orderId, String truckNumber);
     OrderDto orderFindByDriver(Integer personalNumber);
     Order getOrderFromDb(Integer orderId);

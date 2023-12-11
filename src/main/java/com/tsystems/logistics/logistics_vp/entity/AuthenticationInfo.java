@@ -16,16 +16,6 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor
 @Builder
 public class AuthenticationInfo {
-    //CREATE TABLE logistics.authentication_info (
-    //id INT,
-    //username VARCHAR(30) NOT NULL,
-    //password VARCHAR(90) NOT NULL,
-    //role ENUM('ROLE_ADMIN','ROLE_LOGISTICIAN','ROLE_DRIVER','ROLE_CUSTOMER') DEFAULT 'ROLE_LOGISTICIAN' NOT NULL,
-    //deleted BIT(1) NOT NULL DEFAULT 0,
-    //PRIMARY KEY id_pk (id),
-    //UNIQUE KEY username_uk (username)
-    //);
-
     @Id
     @Column(name = "id")
     private int id;
@@ -35,7 +25,6 @@ public class AuthenticationInfo {
 
     @Column(name = "password", length = 40, nullable = false)
     private String password;
-
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", columnDefinition = "ENUM('ROLE_ADMIN','ROLE_LOGISTICIAN','ROLE_DRIVER','ROLE_CUSTOMER') DEFAULT 'ROLE_LOGISTICIAN'")

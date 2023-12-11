@@ -89,16 +89,9 @@ public class DriverServiceImpl implements DriverService {
             driver.setStatus(DriverStatus.valueOf(driverDto.getStatus().toString()));
             LocalDateTime endShiftTime = LocalDateTime.now();
             driver.setEndShiftDateTime(LocalDateTime.now());
-            int hoursDifference = (int)Math.abs(ChronoUnit.HOURS.between(startShiftTime, endShiftTime));
+            int hoursDifference = (int) Math.abs(ChronoUnit.HOURS.between(startShiftTime, endShiftTime));
             driver.setWorkingHoursInCurrentMonth(driver.getWorkingHoursInCurrentMonth() + hoursDifference);
         }
-        //driverRepository.save(driver);
-
-
-        // ADD LOGIC !!!!!
-        // ADD LOGIC !!!!!
-        // ADD LOGIC !!!!!
-
         return driverDto(driver);
     }
 
@@ -165,10 +158,17 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public DriverDto driverOrderAcceptance(Integer personalNumber, OrderAcceptance orderAcceptance) {
         Driver driver = getDriverFromDb(personalNumber);
+        Driver codriver = null;
         driver.setOrderAcceptance(OrderAcceptance.valueOf(orderAcceptance.toString()));
         log.info(String.format("Driver %s %s confirmed order# %s",
                 driver.getName(), driver.getSurname(), driver.getCurrentOrderId().getOrderId()));
         Order order = driver.getCurrentOrderId();
+        List<Driver> allDrivers = driverRepository.findAllByCurrentOrderId(order);
+        int numberOfDriversForOrder = allDrivers.size();
+        if (numberOfDriversForOrder == 2) {
+            codriver = allDrivers.stream().filter(elem -> elem.getPersonalNumber() != personalNumber)
+                    .collect(Collectors.toList()).get(0);
+        }
         int orderId = driver.getCurrentOrderId().getOrderId();
         int numberOfDriversWithoutOrderAcceptance = driverRepository.findAllByCurrentOrderId(order).stream()
                 .map(elem -> elem.getOrderAcceptance() != null ? elem.getOrderAcceptance().toString() : null)  // getOrderAcceptanceToAvoidNPE
@@ -183,19 +183,37 @@ public class DriverServiceImpl implements DriverService {
                 driver.getCurrentOrderId().setStatus(OrderStatus.DECLINED_BY_DRIVERS);
                 driver.setCurrentOrderId(null);
                 driver.setOrderAcceptance(null);
+                driver.setBusy(Busy.NO);
+                driver.setCurrentTruckNumber(null);
+                order.setNumberOfAssignedDrivers(0);
                 log.info(String.format("Driver %s %s declined order# %s",
                         driver.getName(), driver.getSurname(), orderId));
+                if (numberOfDriversForOrder == 2) {
+                    codriver.setCurrentOrderId(null);
+                    codriver.setBusy(Busy.NO);
+                    codriver.setCurrentTruckNumber(null);
+                    codriver.setOrderAcceptance(null);
+                }
             }
         } else {
             if (orderAcceptance.equals(OrderAcceptance.NO)) {
                 driver.getCurrentOrderId().setStatus(OrderStatus.DECLINED_BY_DRIVERS);
                 driver.setCurrentOrderId(null);
                 driver.setOrderAcceptance(null);
+                driver.setBusy(Busy.NO);
+                driver.setCurrentTruckNumber(null);
+                order.setNumberOfAssignedDrivers(0);
                 log.info(String.format("Driver %s %s declined order# %s",
                         driver.getName(), driver.getSurname(), orderId));
+
+                if (numberOfDriversForOrder == 2) {
+                    codriver.setCurrentOrderId(null);
+                    codriver.setBusy(Busy.NO);
+                    codriver.setCurrentTruckNumber(null);
+                    codriver.setOrderAcceptance(null);
+                }
             }
         }
-        //driverRepository.save(driver);
         return driverDto(driver);
     }
 
@@ -212,33 +230,11 @@ public class DriverServiceImpl implements DriverService {
         List<DriverDto> allDriversForOrder = driversFindAllByCurrentOrderId(currentOrderId);
         DriverDto driverDto = new DriverDto();
         if (allDriversForOrder.size() == 2) {
-            driverDto = allDriversForOrder.stream().filter(elem -> !elem.getPersonalNumber().equals(personalNumber))
+            driverDto = allDriversForOrder.stream().filter(elem -> elem.getPersonalNumber() != personalNumber)
                     .collect(Collectors.toList()).get(0);
         }
         return driverDto;
     }
-
-//    @Override
-//    public DriverDto driverUpdateCurrentOrder(Integer orderId, Integer personalNumber) {
-//        Order order = orderRepository.findById(orderId).orElseThrow();
-//        Truck truck = truckRepository.findById(order.getAssignedTruckNumber()).orElseThrow(() ->
-//                new NoSuchTruckException("This truck does not exist in database"));
-//        Driver driver = getDriverFromDb(personalNumber);
-//        if (driver.getBusy().equals(Busy.NO)) {
-//            if (order.getDrivers().size() < 2) {
-//                driver.setCurrentOrderId(order);
-//                driver.setBusy(Busy.YES);
-//                driver.setCurrentTruckNumber(truck);
-//                log.info(String.format("Driver %s %s was preliminary assigned for order# %s",
-//                        driver.getName(), driver.getSurname(), orderId));
-//                return driverDto(driver);
-//            } else {
-//                throw new TooManyDriversException("It is impossible to put more than two drivers for one order");
-//            }
-//        } else {
-//            throw new BusyDriverException("It is impossible to assign busy driver");
-//        }
-//    }
 
     @Override
     public DriverDto driverUpdateCurrentOrder(Integer orderId, Integer personalNumber) {

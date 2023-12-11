@@ -20,34 +20,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class Driver {
-    //CREATE TABLE logistics.drivers (
-    //personal_number INT NOT NULL AUTO_INCREMENT,
-    //driver_authentication_id INT NOT NULL UNIQUE,
-    //name VARCHAR(35) NOT NULL,
-    //surname VARCHAR(35) NOT NULL,
-    //phone VARCHAR(19) NOT NULL,
-    //email VARCHAR(70) NOT NULL,
-    //work_experience INT,
-    //working_hours_in_current_month INT,
-    //status ENUM('REST','DRIVING') DEFAULT 'REST',
-    //busy ENUM('YES','NO') DEFAULT 'NO',
-    //current_city VARCHAR(30) NOT NULL,
-    //current_state VARCHAR(49) NOT NULL,
-    //current_truck_number VARCHAR(7),
-    //current_order_id INT,
-    //order_acceptance ENUM('YES','NO'),
-    //driver_comment VARCHAR(120),
-    //start_shift_date_time DATETIME,
-    //end_shift_date_time DATETIME,
-    //deleted BIT(1) NOT NULL DEFAULT 0,
-    //CONSTRAINT chk_working_hours CHECK (working_hours_in_current_month BETWEEN 0 AND 176),
-    //PRIMARY KEY personal_number_pk (personal_number),
-    //FOREIGN KEY authentication_driver_fk (driver_authentication_id) REFERENCES logistics.authentication_info(id),
-    //FOREIGN KEY current_truck_number_fk (current_truck_number) REFERENCES logistics.trucks(number),
-    //FOREIGN KEY current_order_id_fk (current_order_id) REFERENCES logistics.orders(order_id)
-    //)
-    //AUTO_INCREMENT = 153001;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "personal_number")

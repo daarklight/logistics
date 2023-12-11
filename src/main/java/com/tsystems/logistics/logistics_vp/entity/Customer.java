@@ -16,25 +16,10 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor
 @Builder
 public class Customer {
-    //CREATE TABLE logistics.customers (
-    //customer_id INT NOT NULL AUTO_INCREMENT,
-    //customer_authentication_id INT NOT NULL UNIQUE,
-    //customer_name VARCHAR(50) NOT NULL,
-    //phone VARCHAR(19) NOT NULL,
-    //email VARCHAR(70) NOT NULL,
-    //deleted BIT(1) NOT NULL DEFAULT 0,
-    //PRIMARY KEY customer_id_pk (customer_id),
-    //FOREIGN KEY authentication_customer_fk (customer_authentication_id) REFERENCES logistics.authentication_info(id)
-    //)
-    //AUTO_INCREMENT = 5001;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "customer_id")
     private int customerId;
-
-//    @Column(name = "customer_authentication_id")
-//    private int customerAuthenticationId;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "customer_authentication_id", referencedColumnName = "id")

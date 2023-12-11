@@ -64,11 +64,6 @@ public class AuthenticationInfoServiceImpl implements AuthenticationInfoService 
         return authenticationInfoDto(authenticationInfo);
     }
 
-//    @Override
-//    public String authenticationInfoSend(AuthenticationInfoToSendDto authenticationInfoToSendDto) {
-//        return authenticationInfoToSendDto.getUsername();
-//    }
-
     @Override
     public AuthenticationInfo getAuthenticationInfoFromDb(Integer id) {
         return authenticationInfoRepository.findById(id).orElseThrow(() ->

@@ -140,15 +140,6 @@ public class OrderController implements OrdersApi {
                 .body(resultOrderDto);
     }
 
-//    @Override
-//    public ResponseEntity<OrderDto> orderUpdateDriverComment(Integer orderId, UpdateOrderDriverCommentDto updateOrderDriverCommentDto) {
-//        log.info("Start to update driver's comment");
-//        OrderDto resultOrderDto = orderService.orderUpdateDriverComment(orderId, updateOrderDriverCommentDto);
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(resultOrderDto);
-//    }
-
     @Override
     public ResponseEntity<OrderDto> orderUpdateStartDateTime(Integer orderId) {
         log.info("Start to update start date and time for order");

@@ -306,6 +306,9 @@ public class CargoServiceImpl implements CargoService {
                 cargo.setRideDistanceFromPreviousPoint(distanceInKm);
                 cargo.setRideDurationFromStartPoint(durationInMinutes);
                 cargo.setRideDurationFromPreviousPoint(durationInMinutes);
+                // We approximately suppose that we need 6 additional hours for order with 1 cargo:
+                // time for order confirmation by driver, time to arrive to customer, time to load/unload
+                cargo.setExpectedCompletionDateTime(LocalDateTime.now().plusMinutes(durationInMinutes).plusHours(6));
                 cargoRepository.save(cargo);
             } else {
                 throw new GoogleMapsIncorrectDataException("Incorrect input data for Google Maps Service");
@@ -350,6 +353,8 @@ public class CargoServiceImpl implements CargoService {
                 firstCargo.setRideDistanceFromPreviousPoint(rideDistanceFromPreviousPointForFirstCargo);
                 firstCargo.setRideDurationFromStartPoint(firstDurationInMinutesFromStartPoint);
                 firstCargo.setRideDurationFromPreviousPoint(rideDurationFromPreviousPointForFirstCargo);
+                firstCargo.setExpectedCompletionDateTime(LocalDateTime.now()
+                        .plusMinutes(firstDurationInMinutesFromStartPoint).plusHours(6));
                 cargoRepository.save(firstCargo);
                 Cargo secondCargo = cargoRepository.findById(secondCargoId).orElseThrow();
                 secondCargo.setWaypointIndex(secondWaypointIndex);
@@ -357,6 +362,8 @@ public class CargoServiceImpl implements CargoService {
                 secondCargo.setRideDistanceFromPreviousPoint(rideDistanceFromPreviousPointForSecondCargo);
                 secondCargo.setRideDurationFromStartPoint(secondDurationInMinutesFromStartPoint);
                 secondCargo.setRideDurationFromPreviousPoint(rideDurationFromPreviousPointForSecondCargo);
+                secondCargo.setExpectedCompletionDateTime(LocalDateTime.now()
+                        .plusMinutes(secondDurationInMinutesFromStartPoint).plusHours(6));
                 cargoRepository.save(secondCargo);
             } else {
                 throw new GoogleMapsIncorrectDataException("Incorrect input data for Google Maps Service");

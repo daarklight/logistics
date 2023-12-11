@@ -1,7 +1,6 @@
 package com.tsystems.logistics.logistics_vp.validator;
 
 import com.tsystems.logistics.logistics_vp.code.model.CreateCustomerDto;
-import com.tsystems.logistics.logistics_vp.code.model.CustomerDto;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;

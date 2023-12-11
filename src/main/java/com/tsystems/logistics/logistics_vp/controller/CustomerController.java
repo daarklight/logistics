@@ -1,7 +1,6 @@
 package com.tsystems.logistics.logistics_vp.controller;
 
 import com.tsystems.logistics.logistics_vp.code.api.CustomersApi;
-import com.tsystems.logistics.logistics_vp.code.model.AuthenticationInfoDto;
 import com.tsystems.logistics.logistics_vp.code.model.CreateCustomerDto;
 import com.tsystems.logistics.logistics_vp.code.model.CustomerDto;
 import com.tsystems.logistics.logistics_vp.code.model.UpdateCustomerDto;

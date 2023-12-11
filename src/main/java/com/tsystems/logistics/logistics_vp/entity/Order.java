@@ -19,25 +19,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class Order {
-    //CREATE TABLE logistics.orders (
-    //order_id INT NOT NULL AUTO_INCREMENT,
-    //order_customer_id INT,
-    //cargos_number INT,
-    //category VARCHAR(40) NOT NULL,
-    //weight DECIMAL(3,1) NOT NULL,
-    //status ENUM('NEW','EXPECT_DRIVERS_CONFIRMATION','CONFIRMED','DECLINED_BY_DRIVERS','ON_ROAD','COMPLETED') DEFAULT 'NEW',
-    //start_date_time DATETIME,
-    //limit_date_time DATETIME NOT NULL,
-    //assigned_truck_number VARCHAR(7),
-    //drivers_number INT,
-    //deleted BIT(1) NOT NULL DEFAULT 0,
-    //PRIMARY KEY order_id_pk (order_id),
-    //FOREIGN KEY truck_number_fk (assigned_truck_number) REFERENCES logistics.trucks(number),
-    //FOREIGN KEY order_customer_id_fk (order_customer_id) REFERENCES logistics.customers(customer_id)
-    //)
-    //AUTO_INCREMENT = 12001;
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
@@ -72,14 +53,9 @@ public class Order {
     @Column(name = "drivers_number")
     private int numberOfAssignedDrivers;
 
-//    @Column(name = "driver_comment", length = 120)
-//    private String driverComment;
-
-    // Do we need fetch = FetchType.LAZY ???
     @OneToMany(mappedBy = "currentOrderId")
     private List<Driver> drivers;
 
-    // Do we need fetch = FetchType.LAZY ???
     @OneToMany(mappedBy = "orderForCargoId")
     private List<Cargo> cargos;
 }

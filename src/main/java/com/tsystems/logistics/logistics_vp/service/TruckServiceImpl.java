@@ -41,7 +41,8 @@ public class TruckServiceImpl implements TruckService {
 
     @Override
     public List<TruckDto> findAllForOrder(Integer orderId, String city, String state, Double capacity) {
-        List<TruckDto> properTrucksDtos = truckRepository.findAllByCurrentCityAndCurrentStateAndCapacityGreaterThanEqual(city, state, capacity)
+        List<TruckDto> properTrucksDtos = truckRepository
+                .findAllByCurrentCityAndCurrentStateAndCapacityGreaterThanEqual(city, state, capacity)
                 .stream().map(truck -> truckDto(truck)).filter(dto -> dto.getBusy().toString().equals("NO")).toList();
         if (properTrucksDtos.size() > 0) {
             return properTrucksDtos;

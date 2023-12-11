@@ -2,7 +2,6 @@ package com.tsystems.logistics.logistics_vp.service;
 
 import com.tsystems.logistics.logistics_vp.code.model.CreateOrderDto;
 import com.tsystems.logistics.logistics_vp.code.model.OrderDto;
-import com.tsystems.logistics.logistics_vp.code.model.UpdateOrderDriverCommentDto;
 import com.tsystems.logistics.logistics_vp.code.model.UpdateOrderDto;
 import com.tsystems.logistics.logistics_vp.entity.Driver;
 import com.tsystems.logistics.logistics_vp.entity.Order;
@@ -160,19 +159,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDto orderUpdateDriverComment(Integer orderId, UpdateOrderDriverCommentDto orderDto) {
-        return null;
-    }
-
-//    @Override
-//    public OrderDto orderUpdateDriverComment(Integer orderId, UpdateOrderDriverCommentDto orderDto) {
-//        Order order = getOrderFromDb(orderId);
-//        order.setDriverComment(orderDto.getDriverComment());
-//        orderRepository.save(order);
-//        return orderDto(order);
-//    }
-
-    @Override
     public OrderDto orderUpdateAssignedTruckNumber(Integer orderId, String truckNumber) {
         Order order = getOrderFromDb(orderId);
         Truck truck = truckRepository.findById(truckNumber).orElseThrow();
@@ -196,16 +182,8 @@ public class OrderServiceImpl implements OrderService {
         return orderDto(order);
     }
 
-//    private Order getOrderByCargoId(Integer cargoId){
-//        orderRepository.findAll().stream().filter(elem -> elem.getCargos().)
-//
-//    }
-
     @Override
     public Order getOrderFromDb(Integer orderId) {
-//        orderRepository.findById(orderId).orElseThrow().getDrivers().size();
-//        orderRepository.findById(orderId).orElseThrow().getCargos().size();
-
         return orderRepository.findById(orderId).orElseThrow(() ->
                 new NoSuchOrderException("This order does not exist in database"));
 

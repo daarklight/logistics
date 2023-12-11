@@ -24,19 +24,6 @@ import java.util.List;
 
 @Builder
 public class Truck {
-    //CREATE TABLE logistics.trucks (
-    //number VARCHAR(7) NOT NULL,
-    //model VARCHAR(30) NOT NULL,
-    //capacity DECIMAL(3,1) NOT NULL,
-    //total_operating_time INT,
-    //technical_condition ENUM('OK','NOK') DEFAULT 'OK',
-    //busy ENUM('YES','NO') DEFAULT 'NO',
-    //current_city VARCHAR(30) NOT NULL,
-    //current_state VARCHAR(49) NOT NULL,
-    //deleted BIT(1) NOT NULL DEFAULT 0,
-    //PRIMARY KEY number_pk (number)
-    //);
-
     @Id
     @Column(name = "number", length = 7, nullable = false)
     private String number;
@@ -68,7 +55,6 @@ public class Truck {
     @Column(name = "current_state", length = 49, nullable = false)
     private String currentState;
 
-    // Do we need fetch = FetchType.LAZY ???
     @OneToMany(mappedBy = "currentTruckNumber")
     private List<Driver> drivers;
 }

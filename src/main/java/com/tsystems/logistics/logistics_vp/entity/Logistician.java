@@ -15,17 +15,6 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor
 @Builder
 public class Logistician {
-    //CREATE TABLE logistics.logisticians (
-    //personal_number INT NOT NULL AUTO_INCREMENT,
-    //logistician_authentication_id INT NOT NULL UNIQUE,
-    //name VARCHAR(35) NOT NULL,
-    //surname VARCHAR(35) NOT NULL,
-    //deleted BIT(1) NOT NULL DEFAULT 0,
-    //PRIMARY KEY personal_number_pk (personal_number),
-    //FOREIGN KEY authentication_logistician_fk (logistician_authentication_id) REFERENCES logistics.authentication_info(id)
-    //)
-    //AUTO_INCREMENT = 1201;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "personal_number")

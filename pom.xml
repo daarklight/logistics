@@ -21,10 +21,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-
-
-
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -56,9 +52,6 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
-
-
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
@@ -70,11 +63,6 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>2.15.3</version>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>org.apache.tomcat.embed</groupId>-->
-<!--			<artifactId>tomcat-embed-jasper</artifactId>-->
-<!--			<scope>provided</scope>-->
-<!--		</dependency>-->
 		<dependency>
 			<groupId>org.openapitools</groupId>
 			<artifactId>jackson-databind-nullable</artifactId>
@@ -106,10 +94,6 @@
 			<version>0.2.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
 			<version>2.0.1.Final</version>
@@ -118,16 +102,6 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
 			<version>8.0.1.Final</version>
-		</dependency>
-		<dependency>
-			<groupId>org.webjars</groupId>
-			<artifactId>bootstrap</artifactId>
-			<version>5.3.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.webjars</groupId>
-			<artifactId>popper.js</artifactId>
-			<version>2.11.7</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.maps</groupId>
@@ -149,7 +123,6 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>2.16.0</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-yaml</artifactId>
@@ -160,12 +133,10 @@
 			<artifactId>javax.annotation-api</artifactId>
 			<version>1.3.2</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-log4j2</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
@@ -180,7 +151,6 @@
 			<artifactId>java-jwt</artifactId>
 			<version>4.4.0</version>
 		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -233,5 +203,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

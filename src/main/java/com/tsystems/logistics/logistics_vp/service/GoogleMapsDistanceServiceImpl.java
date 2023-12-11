@@ -128,8 +128,7 @@ public class GoogleMapsDistanceServiceImpl implements GoogleMapsDistanceService 
         }
     }
 
-    private List<String> routeMatrix(String firstOriginAddress, String firstFinalAddress, String secondFinalAddress)
-            throws IOException {
+    private List<String> routeMatrix(String firstOriginAddress, String firstFinalAddress, String secondFinalAddress) {
         try {
             List<String> routeMatrixResponseList = new ArrayList<>();
             RoutesSettings routesSettings = RoutesSettings
@@ -176,8 +175,7 @@ public class GoogleMapsDistanceServiceImpl implements GoogleMapsDistanceService 
 
     @Override
     public List<List<Integer>> getRouteMatrixResults(String firstOriginAddress, String firstFinalAddress,
-                                                     String secondFinalAddress)
-            throws IOException {
+                                                     String secondFinalAddress) {
         List<List<Integer>> routeMatrixResults = new ArrayList<>();
         List<String> routeMatrixResponseList = routeMatrix(firstOriginAddress, firstFinalAddress, secondFinalAddress);
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
