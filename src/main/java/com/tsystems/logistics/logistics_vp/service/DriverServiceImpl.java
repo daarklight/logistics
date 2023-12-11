@@ -80,13 +80,15 @@ public class DriverServiceImpl implements DriverService {
     public DriverDto driverUpdateStatusByDriver(Integer personalNumber, UpdateDriverStatusByDriverDto driverDto) {
         Driver driver = getDriverFromDb(personalNumber);
         LocalDateTime startShiftTime = driver.getStartShiftDateTime();
-        driverDto.getStatus();
+        UpdateDriverStatusByDriverDto.StatusEnum driverStatus = driverDto.getStatus();
 
-        if (driverDto.getStatus().equals(UpdateDriverStatusByDriverDto.StatusEnum.DRIVING)) {
-            driver.setStatus(DriverStatus.valueOf(driverDto.getStatus().toString()));
+        if (driverStatus.equals(UpdateDriverStatusByDriverDto.StatusEnum.DRIVING) && driver.getBusy().equals(Busy.YES)) {
+            driver.setStatus(DriverStatus.valueOf(driverStatus.toString()));
             driver.setStartShiftDateTime(LocalDateTime.now());
+        } else if (driverStatus.equals(UpdateDriverStatusByDriverDto.StatusEnum.DRIVING) && driver.getBusy().equals(Busy.NO)) {
+            throw new ImpossibleNonBusyDriverToStartDrivingException("It is impossible to start driving when driver is not busy");
         } else { // If set status to REST
-            driver.setStatus(DriverStatus.valueOf(driverDto.getStatus().toString()));
+            driver.setStatus(DriverStatus.valueOf(driverStatus.toString()));
             LocalDateTime endShiftTime = LocalDateTime.now();
             driver.setEndShiftDateTime(LocalDateTime.now());
             int hoursDifference = (int) Math.abs(ChronoUnit.HOURS.between(startShiftTime, endShiftTime));

@@ -162,7 +162,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto orderUpdateAssignedTruckNumber(Integer orderId, String truckNumber) {
         Order order = getOrderFromDb(orderId);
         Truck truck = truckRepository.findById(truckNumber).orElseThrow();
-        if (truck.getBusy().equals(Busy.NO)) {
+        if (truck.getBusy().equals(Busy.NO) && order.getAssignedTruckNumber() == null) {
             if (order.getWeight() <= truck.getCapacity()) {
                 order.setAssignedTruckNumber(truckNumber);
                 truck.setBusy(Busy.YES);
@@ -170,6 +170,9 @@ public class OrderServiceImpl implements OrderService {
             } else {
                 throw new NonProperTruckCapacityException("The order is too heavy for this truck");
             }
+        } else if (truck.getBusy().equals(Busy.NO) && order.getAssignedTruckNumber() != null) {
+            throw new ImpossibleAssignTruckWhenOtherTruckAssignedException("It is impossible to assign new truck " +
+                    "for order when current truck is not unassigned");
         } else {
             throw new BusyTruckException("It is impossible to assign busy truck");
         }

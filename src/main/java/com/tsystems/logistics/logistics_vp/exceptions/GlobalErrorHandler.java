@@ -437,4 +437,35 @@ public class GlobalErrorHandler {
                                 .dateAndTime(LocalDateTime.now())
                                 .build());
     }
+
+    @ExceptionHandler(ImpossibleNonBusyDriverToStartDrivingException.class)
+    public ResponseEntity<ErrorRepresentation> handleImpossibleNonBusyDriverToStartDrivingException(
+            ImpossibleNonBusyDriverToStartDrivingException exception) {
+        String message = "It is impossible to start driving when driver is not busy. " +
+                "Before changing status to DRIVING it is necessary to become busy and approve some order";
+        log.error(message);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(
+                        ErrorRepresentation.builder()
+                                .error("error.business.19")
+                                .message(message)
+                                .dateAndTime(LocalDateTime.now())
+                                .build());
+    }
+
+    @ExceptionHandler(ImpossibleAssignTruckWhenOtherTruckAssignedException.class)
+    public ResponseEntity<ErrorRepresentation> handleImpossibleAssignTruckWhenOtherTruckAssignedException(
+            ImpossibleAssignTruckWhenOtherTruckAssignedException exception) {
+        String message = "It is impossible to assign new truck for order when current truck is not unassigned";
+        log.error(message);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(
+                        ErrorRepresentation.builder()
+                                .error("error.business.20")
+                                .message(message)
+                                .dateAndTime(LocalDateTime.now())
+                                .build());
+    }
 }
