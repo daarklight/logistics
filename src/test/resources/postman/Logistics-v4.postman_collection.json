@@ -1,0 +1,2369 @@
+{
+	"info": {
+		"_postman_id": "8f566ad5-04f1-4a29-bb38-8db34dee092f",
+		"name": "Logistics",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16791375"
+	},
+	"item": [
+		{
+			"name": "AuthenticationInfo",
+			"item": [
+				{
+					"name": "Create cookies",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "user",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "dcd26767-d169-4301-9001-d145196b80b7",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AuthenticationInfo findAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/authenticationInfo",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"authenticationInfo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AuthenticationInfo findById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/authenticationInfo/153004",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"authenticationInfo",
+								"153004"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AuthenticationInfo update",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"login\": \"john_peterson\",\r\n  \"password\": \"smith333\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/authenticationInfo/1200",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"authenticationInfo",
+								"1200"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AuthenticationInfo findByLogin",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/authenticationInfo/login/john_smith",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"authenticationInfo",
+								"login",
+								"john_smith"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AuthenticationInfo create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 153206,\r\n  \"username\": \"paul_white6\",\r\n  \"password\": \"paul226\",\r\n  \"role\": \".....................\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/authenticationInfo",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"authenticationInfo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AuthenticationInfo login",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "dcd26767-d169-4301-9001-d145196b80b7",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "user",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"john_smith10\",\r\n  \"password\": \"smith111\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/authenticationInfo/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"authenticationInfo",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AuthenticationInfo delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/authenticationInfo/1200",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"authenticationInfo",
+								"1200"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cargo",
+			"item": [
+				{
+					"name": "Cargos findAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/cargos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cargos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cargos findById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/cargos/1029",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cargos",
+								"1029"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cargo create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"orderForCargoId\": 12001,\r\n  \"cargoName\": \"Super Cola2\",\r\n  \"weight\": 7.7,\r\n  \"startCity\": \"Pittsburgh2\",\r\n  \"startState\": \"Pennsylvania2\",\r\n  \"startAddress\": \"2129 Bedford Ave12\",\r\n  \"finalCity\": \"Columbus12\",\r\n  \"finalState\": \"Ohio12\",\r\n  \"finalAddress\": \"480 E Broad St\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/cargos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cargos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cargo delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/cargos/1021",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cargos",
+								"1021"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cargo updateByLogistician",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"cargoName\": \"Super 12 Cola\",\r\n  \"weight\": 8.6,\r\n  \"startCity\": \"Cleveland\",\r\n  \"startState\": \"Ohio\",\r\n  \"startAddress\": \"3159 W 11th St\",\r\n  \"finalCity\": \"Columbus Aa\",\r\n  \"finalState\": \"Ohio Aa\",\r\n  \"finalAddress\": \"480 E Broad St Aa\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/cargos/byLogistician/1017",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cargos",
+								"byLogistician",
+								"1017"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cargo updateByDriver",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"loaded\": \"YES\",\r\n  \"unloaded\": \"YES\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/cargos/byDriver/1003",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cargos",
+								"byDriver",
+								"1003"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cargos findByOrderForCargoId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/cargos/byOrder/12001",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cargos",
+								"byOrder",
+								"12001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cargos findByName",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/cargos/name/Tyres",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cargos",
+								"name",
+								"Tyres"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cargos findByStartCityState",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/cargos/startCityAndState?city=Miami&state=Florida",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cargos",
+								"startCityAndState"
+							],
+							"query": [
+								{
+									"key": "city",
+									"value": "Miami"
+								},
+								{
+									"key": "state",
+									"value": "Florida"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cargos findByStartCityStateAddress",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/cargos/startCityAndStateAndAddress?city=Miami&state=Florida&address=450%20NW%2037th%20Ave",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cargos",
+								"startCityAndStateAndAddress"
+							],
+							"query": [
+								{
+									"key": "city",
+									"value": "Miami"
+								},
+								{
+									"key": "state",
+									"value": "Florida"
+								},
+								{
+									"key": "address",
+									"value": "450%20NW%2037th%20Ave"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cargos findByNonLoaded",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/cargos/nonLoaded",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cargos",
+								"nonLoaded"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cargos findByLoaded",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/cargos/loaded",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cargos",
+								"loaded"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cargos findByFinalCityState",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/cargos/finalCityAndState?city=Memphis&state=Tennessee",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cargos",
+								"finalCityAndState"
+							],
+							"query": [
+								{
+									"key": "city",
+									"value": "Memphis"
+								},
+								{
+									"key": "state",
+									"value": "Tennessee"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cargos findByFinalCityStateAddress",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/cargos/finalCityAndStateAndAddress?city=Memphis&state=Tennessee&address=3050%20Central%20Ave",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cargos",
+								"finalCityAndStateAndAddress"
+							],
+							"query": [
+								{
+									"key": "city",
+									"value": "Memphis"
+								},
+								{
+									"key": "state",
+									"value": "Tennessee"
+								},
+								{
+									"key": "address",
+									"value": "3050%20Central%20Ave"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cargos findByNonUnloaded",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/cargos/nonUnloaded",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cargos",
+								"nonUnloaded"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cargos findByUnloaded",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/cargos/unloaded",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cargos",
+								"unloaded"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cargos findEarlierExpectedComplDataTime",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/cargos/earlier/expectedCompletionDateTime/2024-12-03T10%3A15%3A30Z",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cargos",
+								"earlier",
+								"expectedCompletionDateTime",
+								"2024-12-03T10%3A15%3A30Z"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cargos findLaterExpectedComplDataTime",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/cargos/later/expectedCompletionDateTime/2023-11-14T16%3A00%3A00Z",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cargos",
+								"later",
+								"expectedCompletionDateTime",
+								"2023-11-14T16%3A00%3A00Z"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cargos findEarlierRealComplDataTime",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/cargos/earlier/realCompletionDateTime/2023-11-15T16%3A00%3A00Z",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cargos",
+								"earlier",
+								"realCompletionDateTime",
+								"2023-11-15T16%3A00%3A00Z"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cargos findLaterRealComplDataTime",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/cargos/later/realCompletionDateTime/2023-11-12T16%3A30%3A00Z",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cargos",
+								"later",
+								"realCompletionDateTime",
+								"2023-11-12T16%3A30%3A00Z"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cargos loadingDone",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/cargos/loadingDone/1001",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cargos",
+								"loadingDone",
+								"1001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cargos unloadingDone",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/cargos/unloadingDone/1001",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cargos",
+								"unloadingDone",
+								"1001"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Customer",
+			"item": [
+				{
+					"name": "Customers findAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/customers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"customers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Customer create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"customerAuthenticationId\": 5050,\r\n  \"customerName\": \"Best Customer\",\r\n  \"phone\": \"+1 245 250 9876\",\r\n  \"email\": \"best_customer@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/customers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"customers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Customer update",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"customerName\": \"Best Customer New\",\r\n  \"phone\": \"+1 245 250 9885\",\r\n  \"email\": \"best_customernew@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/customers/5019",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"customers",
+								"5019"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Customer delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/customers/5019",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"customers",
+								"5019"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Customers findById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/customers/153003",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"customers",
+								"153003"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Customer findByPhone",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/customers/phone?phone=%2B1%20409%20431%208791",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"customers",
+								"phone"
+							],
+							"query": [
+								{
+									"key": "phone",
+									"value": "%2B1%20409%20431%208791"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Customer findByEmail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/customers/email?email=vladislavprokopenko1@gmail.com",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"customers",
+								"email"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "vladislavprokopenko1@gmail.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Customers findByUsername",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/customers/byUsername/nypd",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"customers",
+								"byUsername",
+								"nypd"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Driver",
+			"item": [
+				{
+					"name": "Drivers findAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/drivers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"drivers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Drivers findById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/drivers/153007",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"drivers",
+								"153007"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Driver create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"driverAuthenticationId\": 153002,\r\n  \"name\": \"John\",\r\n  \"surname\": \"Smith2345\",\r\n  \"phone\": \"+1 638 715 3004\",\r\n  \"email\": \"jonn_smith2345@gmail.com\",\r\n  \"workExperience\": 5,\r\n  \"workingHoursInCurrentMonth\": 10,\r\n  \"currentCity\": \"Chicago\",\r\n  \"currentState\": \"Illinois\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/drivers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"drivers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Driver delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/drivers/153002",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"drivers",
+								"153002"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Driver findByNameAndSurname",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/trucks/currentCityAndState?city=New+York&state=New+York",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"trucks",
+								"currentCityAndState"
+							],
+							"query": [
+								{
+									"key": "city",
+									"value": "New+York"
+								},
+								{
+									"key": "state",
+									"value": "New+York"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Driver findByCityAndState",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/drivers/currentCityAndState?city=New+York&state=New+York",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"drivers",
+								"currentCityAndState"
+							],
+							"query": [
+								{
+									"key": "city",
+									"value": "New+York"
+								},
+								{
+									"key": "state",
+									"value": "New+York"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Driver findByBusyStatus",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/drivers/busy/YES",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"drivers",
+								"busy",
+								"YES"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Drivers findByCurrentTruckNumber",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/drivers/currentTruckNumber/ANY3292",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"drivers",
+								"currentTruckNumber",
+								"ANY3292"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Drivers findByCurrentOrderId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/drivers/currentOrderId/12001",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"drivers",
+								"currentOrderId",
+								"12001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Drivers findForOrder",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/drivers/forOrder?city=New+York&state=New+York&hours=150&orderId=12001",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"drivers",
+								"forOrder"
+							],
+							"query": [
+								{
+									"key": "city",
+									"value": "New+York"
+								},
+								{
+									"key": "state",
+									"value": "New+York"
+								},
+								{
+									"key": "hours",
+									"value": "150"
+								},
+								{
+									"key": "orderId",
+									"value": "12001"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Driver updateByLogistician",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Andy\",\r\n  \"surname\": \"Smith2345\",\r\n  \"phone\": \"+1 638 715 3004\",\r\n  \"email\": \"jonn_smith2345@gmail.com\",\r\n  \"workExperience\": 5,\r\n  \"currentCity\": \"Chicago\",\r\n  \"currentState\": \"Illinois\",\r\n  \"currentTruckNumber\": \"ANY3292\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/drivers/byLogistician/153001",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"drivers",
+								"byLogistician",
+								"153001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Driver updateStatusByDriver",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"status\": \"DRIVING\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/drivers/statusByDriver/153001",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"drivers",
+								"statusByDriver",
+								"153001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Driver updateOrderAcceptance",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/drivers/orderAcceptance/153002/NO",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"drivers",
+								"orderAcceptance",
+								"153002",
+								"NO"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Drivers findByUsername",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/drivers/byUsername/mario_bird",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"drivers",
+								"byUsername",
+								"mario_bird"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Drivers find codriver",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/drivers/currentOrderId/12004/153025/codriver",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"drivers",
+								"currentOrderId",
+								"12004",
+								"153025",
+								"codriver"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Driver updateCurrentOrder",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"orderAcceptance\": \"YES\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/drivers/currentOrder/12014/153015",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"drivers",
+								"currentOrder",
+								"12014",
+								"153015"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Logistician",
+			"item": [
+				{
+					"name": "Logiticians findAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/logisticians",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"logisticians"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logistician create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"logisticianAuthenticationId\": 1212,\r\n  \"name\": \"Paul12\",\r\n  \"surname\": \"White12\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/logisticians",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"logisticians"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logistician update",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Paul1\",\r\n  \"surname\": \"White1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/logisticians/1201",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"logisticians",
+								"1201"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logistician delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/logisticians/1203",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"logisticians",
+								"1203"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logisticians findById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/logisticians/1202",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"logisticians",
+								"1202"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logistician findByNameAndSurname",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/logisticians/nameAndSurname?name=Ronald&surname=Watson",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"logisticians",
+								"nameAndSurname"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Ronald"
+								},
+								{
+									"key": "surname",
+									"value": "Watson"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logisticians findByUsername",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/logisticians/byUsername/anthony_gray",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"logisticians",
+								"byUsername",
+								"anthony_gray"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Order",
+			"item": [
+				{
+					"name": "Orders findAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Order findById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/orders/12005",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								"12005"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Order create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"orderCustomerId\": 5005,\r\n  \"category\": \"Papers\",\r\n  \"weight\": 10.2,\r\n  \"limitDateTime\": \"2023-11-03T21:10:15.251Z\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Order delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/orders/12021",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								"12021"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Order update",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"orderCustomerId\": 5003,\r\n  \"category\": \"Papers125\",\r\n  \"limitDateTime\": \"2023-11-01T20:15:59.212Z\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/orders/12008",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								"12008"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Orders findByCustomerId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/orders/byCustomer/5003",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								"byCustomer",
+								"5003"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Orders findByCategory",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/orders/category/Food",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								"category",
+								"Food"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Orders findByStatus",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/orders/status/NEW",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								"status",
+								"NEW"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Orders findByAssignedTruckNumber",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/orders/truckNumber/WUF1111",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								"truckNumber",
+								"WUF1111"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Orders findEarlierStartDataTime",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/orders/earlier/startDateTime/2023-11-14T16%3A00%3A00Z",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								"earlier",
+								"startDateTime",
+								"2023-11-14T16%3A00%3A00Z"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Orders findLaterStartDataTime",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/orders/later/startDateTime/2023-11-14T16%3A00%3A00Z",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								"later",
+								"startDateTime",
+								"2023-11-14T16%3A00%3A00Z"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Orders findEarlierLimitDataTime",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/orders/earlier/limitDateTime/2023-12-20T16%3A00%3A00Z",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								"earlier",
+								"limitDateTime",
+								"2023-12-20T16%3A00%3A00Z"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Orders findLaterLimitDataTime",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/orders/later/limitDateTime/2023-12-20T16%3A00%3A00Z",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								"later",
+								"limitDateTime",
+								"2023-12-20T16%3A00%3A00Z"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Order updateStatus",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"status\": \"ON_ROAD\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/orders/status/12012/ON_ROAD",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								"status",
+								"12012",
+								"ON_ROAD"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Order updateStartDateTime",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/orders/setStartDateTime/12005",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								"setStartDateTime",
+								"12005"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Order updateDriverComment",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"driverComment\": \"I'm not going to drive with Sam\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/orders/driverComment/12005",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								"driverComment",
+								"12005"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Order updateAssignedTruckNumber",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/orders/assignedTruckNumber/12022/ORE2567",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								"assignedTruckNumber",
+								"12022",
+								"ORE2567"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Orders findByDriver",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/orders/byDriver/153010",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								"byDriver",
+								"153010"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Orders calculateRide",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/orders/calculateRide/12003",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								"calculateRide",
+								"12003"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Truck",
+			"item": [
+				{
+					"name": "Truck findAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/trucks",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"trucks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Truck findByNumber",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/trucks/ANY3292",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"trucks",
+								"ANY3292"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Truck findByBusyStatus",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/trucks/busy/YES",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"trucks",
+								"busy",
+								"YES"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Truck findByTechnicalCondition",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/trucks/technicalCondition/NOK",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"trucks",
+								"technicalCondition",
+								"NOK"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Truck findByCityAndState",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/trucks/currentCityAndState?city=New+York&state=New+York",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"trucks",
+								"currentCityAndState"
+							],
+							"query": [
+								{
+									"key": "city",
+									"value": "New+York"
+								},
+								{
+									"key": "state",
+									"value": "New+York"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Truck findByCityAndState Copy",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/trucks/currentCityAndState?city=Houston&state=Texas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"trucks",
+								"currentCityAndState"
+							],
+							"query": [
+								{
+									"key": "city",
+									"value": "Houston"
+								},
+								{
+									"key": "state",
+									"value": "Texas"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Truck findForOrder",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/trucks/forOrder?city=New+York&state=New+York&capacity=12.1&orderId=12001",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"trucks",
+								"forOrder"
+							],
+							"query": [
+								{
+									"key": "city",
+									"value": "New+York"
+								},
+								{
+									"key": "state",
+									"value": "New+York"
+								},
+								{
+									"key": "capacity",
+									"value": "12.1"
+								},
+								{
+									"key": "orderId",
+									"value": "12001"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Truck create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"number\": \"ABC4208\",\r\n    \"model\": \"Ford New Model\",\r\n    \"capacity\": 20.7,\r\n    \"totalOperatingTime\": 15,\r\n    \"currentCity\": \"Pittsburg\",\r\n    \"currentState\": \"Pennsylvania\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/trucks",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"trucks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Truck updateByLogistician",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"model\": \"Ford New Model-12\",\r\n    \"capacity\": 12.7,\r\n    \"totalOperatingTime\": 5,\r\n    \"technicalCondition\": \"NOK\",\r\n    \"currentCity\": \"Pittsburg091\",\r\n    \"currentState\": \"Pennsylvania091\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/trucks/byLogistician/ABC4209",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"trucks",
+								"byLogistician",
+								"ABC4209"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Truck updateByDriver",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"technicalCondition\": \"NOK\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/trucks/byDriver/ANY3292",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"trucks",
+								"byDriver",
+								"ANY3292"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Truck delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/trucks/ABC4208",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"trucks",
+								"ABC4208"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Truck findByDriver",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/trucks/byDriver/153010",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"trucks",
+								"byDriver",
+								"153010"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GoogleMaps",
+			"item": [
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://maps.googleapis.com/maps/api/distancematrix/json?destinations=New%20York%20City%2C%20NY&origins=Washington%2C%20DC&units=imperial&key=AIzaSyAtLh6L4CHkuyG24S6S7sdIUB7GKt0hE7w",
+							"protocol": "https",
+							"host": [
+								"maps",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"maps",
+								"api",
+								"distancematrix",
+								"json"
+							],
+							"query": [
+								{
+									"key": "destinations",
+									"value": "New%20York%20City%2C%20NY"
+								},
+								{
+									"key": "origins",
+									"value": "Washington%2C%20DC"
+								},
+								{
+									"key": "units",
+									"value": "imperial"
+								},
+								{
+									"key": "key",
+									"value": "AIzaSyAtLh6L4CHkuyG24S6S7sdIUB7GKt0hE7w"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

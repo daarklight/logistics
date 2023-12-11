@@ -8,6 +8,7 @@ import com.tsystems.logistics.logistics_vp.entity.Driver;
 import com.tsystems.logistics.logistics_vp.entity.Truck;
 import com.tsystems.logistics.logistics_vp.enums.Busy;
 import com.tsystems.logistics.logistics_vp.enums.TechnicalCondition;
+import com.tsystems.logistics.logistics_vp.exceptions.custom.ImpossibleBusyTruckDeleteException;
 import com.tsystems.logistics.logistics_vp.exceptions.custom.NoProperTrucksException;
 import com.tsystems.logistics.logistics_vp.exceptions.custom.NoSuchTruckException;
 import com.tsystems.logistics.logistics_vp.mapper.TruckMapper;
@@ -63,8 +64,14 @@ public class TruckServiceImpl implements TruckService {
 
     @Override
     public void truckDelete(String number) {
-        getTruckFromDb(number);
-        truckRepository.deleteById(number);
+        Truck truck = getTruckFromDb(number);
+        Busy truckBusyStatus = truck.getBusy();
+        if (truckBusyStatus == Busy.NO) {
+            truckRepository.deleteById(number);
+        } else {
+            throw new ImpossibleBusyTruckDeleteException("It is impossible to delete busy truck");
+        }
+
     }
 
     @Override

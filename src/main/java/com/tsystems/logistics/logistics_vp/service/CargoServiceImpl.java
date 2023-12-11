@@ -139,8 +139,14 @@ public class CargoServiceImpl implements CargoService {
 
     @Override
     public void cargoDelete(Integer cargoId) {
-        getCargoFromDb(cargoId);
-        cargoRepository.deleteById(cargoId);
+        Cargo cargo = getCargoFromDb(cargoId);
+        OrderStatus orderStatus = cargo.getOrderForCargoId().getStatus();
+        if (orderStatus == OrderStatus.NEW || orderStatus == OrderStatus.DECLINED_BY_DRIVERS) {
+            cargoRepository.deleteById(cargoId);
+        } else {
+            throw new ImpossibleCargoDeleteException("It is impossible to delete cargo when order status " +
+                    "is not equal to NEW or DECLINED_BY DRIVERS");
+        }
     }
 
     @Override

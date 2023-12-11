@@ -392,4 +392,49 @@ public class GlobalErrorHandler {
                                 .dateAndTime(LocalDateTime.now())
                                 .build());
     }
+
+    @ExceptionHandler(ImpossibleCargoDeleteException.class)
+    public ResponseEntity<ErrorRepresentation> handleImpossibleCargoDeleteException(
+            ImpossibleCargoDeleteException exception) {
+        String message = "It is impossible to delete cargo when order status is not equal to NEW or DECLINED_BY_DRIVERS";
+        log.error(message);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(
+                        ErrorRepresentation.builder()
+                                .error("error.business.16")
+                                .message(message)
+                                .dateAndTime(LocalDateTime.now())
+                                .build());
+    }
+
+    @ExceptionHandler(ImpossibleBusyTruckDeleteException.class)
+    public ResponseEntity<ErrorRepresentation> handleImpossibleBusyTruckDeleteException(
+            ImpossibleBusyTruckDeleteException exception) {
+        String message = "It is impossible to delete busy truck";
+        log.error(message);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(
+                        ErrorRepresentation.builder()
+                                .error("error.business.17")
+                                .message(message)
+                                .dateAndTime(LocalDateTime.now())
+                                .build());
+    }
+
+    @ExceptionHandler(ImpossibleBusyDriverDeleteException.class)
+    public ResponseEntity<ErrorRepresentation> handleImpossibleBusyDriverDeleteException(
+            ImpossibleBusyDriverDeleteException exception) {
+        String message = "It is impossible to delete busy driver";
+        log.error(message);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(
+                        ErrorRepresentation.builder()
+                                .error("error.business.18")
+                                .message(message)
+                                .dateAndTime(LocalDateTime.now())
+                                .build());
+    }
 }

@@ -96,8 +96,13 @@ public class DriverServiceImpl implements DriverService {
     }
 
     public void driverDelete(Integer personalNumber) {
-        getDriverFromDb(personalNumber);
-        driverRepository.deleteById(personalNumber);
+        Driver driver = getDriverFromDb(personalNumber);
+        Busy driverBusyStatus = driver.getBusy();
+        if (driverBusyStatus == Busy.NO) {
+            driverRepository.deleteById(personalNumber);
+        } else {
+            throw new ImpossibleBusyDriverDeleteException("It is impossible to delete busy driver");
+        }
     }
 
     @Override

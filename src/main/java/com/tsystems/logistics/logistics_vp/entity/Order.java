@@ -56,6 +56,6 @@ public class Order {
     @OneToMany(mappedBy = "currentOrderId")
     private List<Driver> drivers;
 
-    @OneToMany(mappedBy = "orderForCargoId")
+    @OneToMany(mappedBy = "orderForCargoId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Cargo> cargos;
 }
